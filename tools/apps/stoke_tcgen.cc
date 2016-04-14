@@ -21,9 +21,11 @@
 #include "src/validator/filters/forbidden_dereference.h"
 #include "src/validator/filters/has_written_rsp.h"
 #include "src/validator/obligation_checker.h"
+#include "src/validator/invariants/equality.h"
 #include "src/validator/invariants/has_written_rsp.h"
 #include "src/validator/invariants/false.h"
 #include "src/validator/invariants/negation.h"
+#include "src/validator/invariants/top_zero.h"
 #include "src/validator/invariants/true.h"
 
 #include "src/ext/cpputil/include/command_line/command_line.h"
@@ -160,6 +162,18 @@ int main(int argc, char** argv) {
   TrueInvariant _true;
   HasWrittenRspInvariant rsp_written;
   NegationInvariant not_rsp_written(&rsp_written);
+  TopZeroInvariant tzi(rsi, false);
+
+  /*
+  std::map<std::pair<R, bool>, long> coeff_map;
+  auto my_rdi = std::pair<R, bool>(rdi, false);
+  auto my_rsp = std::pair<R, bool>(rsp, false);
+  coeff_map[my_rdi] = 1;
+  coeff_map[my_rsp] = -1;
+
+  EqualityInvariant eqi(coeff_map, coeff_map, 0x10000);
+  */
+
 
   CpuStates outputs;
   for (auto p : paths) {
@@ -168,8 +182,8 @@ int main(int argc, char** argv) {
       cerr << "Looking for testcase on path " << p << endl;
     }
 
-    checker.set_filter(new DefaultFilter(handler));
-    checker.check(target, rewrite, p, rewrite_path, _true, not_rsp_written);
+    checker.set_filter(new HasWrittenRspFilter(handler));
+    checker.check(target, rewrite, p, rewrite_path, tzi, not_rsp_written);
 
     if (checker.checker_has_ceg()) {
       auto tc = checker.checker_get_target_ceg();

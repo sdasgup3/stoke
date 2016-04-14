@@ -13,8 +13,8 @@
 // limitations under the License.
 
 
-#ifndef STOKE_SRC_VALIDATOR_FILTERS_FORBIDDENDEREFERENCE_H
-#define STOKE_SRC_VALIDATOR_FILTERS_FORBIDDENDEREFERENCE_H
+#ifndef STOKE_SRC_VALIDATOR_FILTERS_RSPWRITTENFILTER_H
+#define STOKE_SRC_VALIDATOR_FILTERS_RSPWRITTENFILTER_H
 
 #include <string>
 #include <sstream>
@@ -26,12 +26,12 @@
 
 namespace stoke {
 
-class ForbiddenDereferenceFilter : public Filter {
+class HasWrittenRspFilter : public Filter {
 
 public:
 
-  ForbiddenDereferenceFilter(Handler& handler, uint64_t low, uint64_t high) :
-    Filter(handler), low_(low), high_(high) { }
+  HasWrittenRspFilter(Handler& handler) :
+    Filter(handler) { }
 
   /** Apply handler, and any custom logic; modify the symbolic state appropriately, and also
     generate any needed additional constraints. */
@@ -39,17 +39,23 @@ public:
     std::vector<SymBool> constraints;
     error_ = "";
 
-    if (!state.shadow_bools.count("has_written"))
+    if (!state.shadow_bools.count("has_written")) {
+      state.shadow_bvs["orig_rsp"] = state[x64asm::rsp];
       state.shadow_bools["has_written"] = SymBool::_false();
+    }
 
     auto has_written = state.shadow_bools["has_written"];
+    auto orig_rsp = state.shadow_bvs["orig_rsp"];
+    //auto orig_rsp = state[x64asm::rsp];
 
     // Require memory dereferences to not touch forbidden address
-    if (instr.is_explicit_memory_dereference()) {
+    if (instr.is_explicit_memory_dereference() &&
+        instr.must_write_memory()) {
       auto mem = instr.get_operand<x64asm::M8>(instr.mem_index());
       auto addr = state.get_addr(mem);
 
-      has_written = has_written & (addr == state[rsp]);
+      has_written = has_written | ((addr >= orig_rsp) & 
+                                   (addr <= orig_rsp + SymBitVector::constant(64, 128)));
       state.shadow_bools["has_written"] = has_written;
     }
 
@@ -65,10 +71,6 @@ public:
     return constraints;
   }
 
-private:
-
-  uint64_t low_;
-  uint64_t high_;
 
 };
 

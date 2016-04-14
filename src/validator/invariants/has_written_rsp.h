@@ -30,10 +30,11 @@ public:
 
   SymBool operator()(SymState& left, SymState& right, size_t& tln, size_t& rln) const {
 
-    if (!left.shadow_bools.count("has_written"))
+    if (!left.shadow_bools.count("has_written")) {
       return SymBool::_false();
-    else
+    } else {
       return left.shadow_bools["has_written"];
+    }
   }
 
   std::ostream& write(std::ostream& os) const {
@@ -42,7 +43,7 @@ public:
   }
 
   bool check(const CpuState& target, const CpuState& rewrite) const {
-    return false;
+    return true;
   }
 
 
