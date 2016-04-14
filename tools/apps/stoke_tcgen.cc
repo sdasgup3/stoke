@@ -19,8 +19,11 @@
 #include "src/validator/handlers/combo_handler.h"
 #include "src/validator/filters/default.h"
 #include "src/validator/filters/forbidden_dereference.h"
+#include "src/validator/filters/has_written_rsp.h"
 #include "src/validator/obligation_checker.h"
+#include "src/validator/invariants/has_written_rsp.h"
 #include "src/validator/invariants/false.h"
+#include "src/validator/invariants/negation.h"
 #include "src/validator/invariants/true.h"
 
 #include "src/ext/cpputil/include/command_line/command_line.h"
@@ -155,6 +158,8 @@ int main(int argc, char** argv) {
 
   FalseInvariant _false;
   TrueInvariant _true;
+  HasWrittenRspInvariant rsp_written;
+  NegationInvariant not_rsp_written(&rsp_written);
 
   CpuStates outputs;
   for (auto p : paths) {
@@ -164,44 +169,13 @@ int main(int argc, char** argv) {
     }
 
     checker.set_filter(new DefaultFilter(handler));
-    checker.check(target, rewrite, p, rewrite_path, _true, _false);
+    checker.check(target, rewrite, p, rewrite_path, _true, not_rsp_written);
 
     if (checker.checker_has_ceg()) {
       auto tc = checker.checker_get_target_ceg();
       outputs.push_back(tc);
       if (debug_arg.value()) {
         cerr << " * Found testcase" << endl;
-      }
-
-      for (size_t i = 0; i < mutants_arg.value(); ++i) {
-        auto mutated = mutate(tc, target, iterations_arg.value(), sb, gen);
-        outputs.push_back(mutated);
-      }
-
-      // Now, lets find another testcase that touches *different* memory.
-      if (tc.heap.size() > 0) {
-        uint64_t bad_addr = gen() % tc.heap.size() + tc.heap.lower_bound();
-
-        if (debug_arg.value()) {
-          cerr << " * Looking for testcase that doesn't dereference " << bad_addr << endl;
-        }
-
-        checker.set_filter(new ForbiddenDereferenceFilter(handler,
-                           tc.heap.lower_bound(), tc.heap.upper_bound()));
-
-        checker.check(target, rewrite, p, rewrite_path, _true, _false);
-
-        if (checker.checker_has_ceg()) {
-          auto tc2 = checker.checker_get_target_ceg();
-          cerr << "tc2: " << tc2 << endl;
-          outputs.push_back(tc2);
-
-          for (size_t i = 0; i < mutants_arg.value(); ++i) {
-            auto mutated = mutate(tc2, target, iterations_arg.value(), sb, gen);
-            outputs.push_back(mutated);
-          }
-        }
-
       }
 
     } else {

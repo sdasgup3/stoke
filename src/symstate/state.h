@@ -59,6 +59,10 @@ public:
   SymBool sigfpe;
   /** Has a #OF, #BR, #TS, #GP or #PF exception occurred? These trigger SIGSEGV on linux) */
   SymBool sigsegv;
+  /** Shadow bools */
+  std::map<std::string, SymBool> shadow_bools;
+  /** Shadow bit-vectors */
+  std::map<std::string, SymBitVector> shadow_bvs;
 
   /** Get the address corresponding to a memory location */
   template <typename T>
