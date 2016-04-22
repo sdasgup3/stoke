@@ -24,6 +24,7 @@
 #include "src/ext/cpputil/include/system/terminal.h"
 
 #include "src/cfg/dot_writer.h"
+#include "src/cfg/sccs.h"
 #include "tools/gadgets/functions.h"
 #include "tools/gadgets/target.h"
 
@@ -53,7 +54,8 @@ auto& view = FlagArg::create("view")
              .description("View cfg immediately");
 auto& no_skip_checks = FlagArg::create("no_skip_checks")
                        .description("Run all the checks for creating a Cfg; don't skip.");
-
+auto& stats = FlagArg::create("stats")
+              .description("Print stats; don't print a CFG");
 
 
 string tempfile(const string& temp) {
@@ -64,9 +66,7 @@ string tempfile(const string& temp) {
   return string(v.begin(), v.end()-1);
 }
 
-void to_dot(const string& dot_file) {
-  ofstream ofs(dot_file);
-
+Cfg* make_cfg() {
   Cfg* target;
 
   if (no_skip_checks)  {
@@ -75,6 +75,14 @@ void to_dot(const string& dot_file) {
   } {
     target = new Cfg(target_arg.value().get_code());
   }
+
+  return target;
+}
+
+void to_dot(const string& dot_file) {
+  ofstream ofs(dot_file);
+
+  auto target = make_cfg();
 
   DotWriter dw;
   dw.set_def_in(dib, dii)
@@ -102,8 +110,20 @@ int main(int argc, char** argv) {
 
   const auto dot_file = tempfile("/tmp/stoke_debug_cfg.dot.XXXXXX");
 
-  to_dot(dot_file);
-  if (!to_pdf(dot_file, out.value())) {
+  if(!stats.value())
+    to_dot(dot_file);
+
+  if(stats.value()) {
+    auto cfg = make_cfg();
+
+    CfgSccs sccs(*cfg);
+
+    cout << "LOC: " << cfg->get_code().size() << endl;
+    if(sccs.count()) {
+      cout << "Loops: " << sccs.count() << endl;
+    }
+
+  } else if (!to_pdf(dot_file, out.value())) {
     Console::error(1) << "Unable to save file!" << endl;
   } else if (view && !view_pdf(out.value())) {
     Console::error(1) << "Unable to open file for viewing!" << endl;

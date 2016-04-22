@@ -1,0 +1,1 @@
+stoke debug verify --target swab.s --rewrite swab.s --live_out { %rax %rdx } --heap_out --sound_nullspace --no_try_sign_extend --testcases ../swab.tc --strategy ddec
