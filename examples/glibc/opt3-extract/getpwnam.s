@@ -1,0 +1,133 @@
+  .text
+  .globl getpwnam
+  .type getpwnam, @function
+
+#! file-offset 0xc7e80
+#! rip-offset  0xc7e80
+#! capacity    384 bytes
+
+# Text                              #  Line  RIP      Bytes  Opcode                
+.getpwnam:                          #        0xc7e80  0      OPC=<label>           
+  pushq %r13                        #  1     0xc7e80  2      OPC=pushq_r64_1       
+  pushq %r12                        #  2     0xc7e82  2      OPC=pushq_r64_1       
+  movl $0x1, %esi                   #  3     0xc7e84  5      OPC=movl_r32_imm32    
+  pushq %rbp                        #  4     0xc7e89  1      OPC=pushq_r64_1       
+  pushq %rbx                        #  5     0xc7e8a  1      OPC=pushq_r64_1       
+  movq %rdi, %rbp                   #  6     0xc7e8b  3      OPC=movq_r64_r64      
+  xorl %eax, %eax                   #  7     0xc7e8e  2      OPC=xorl_r32_r32      
+  subq $0x18, %rsp                  #  8     0xc7e90  4      OPC=subq_r64_imm8     
+  cmpl $0x0, 0x2fed65(%rip)         #  9     0xc7e94  7      OPC=cmpl_m32_imm8     
+  je .L_c7ea9                       #  10    0xc7e9b  2      OPC=je_label          
+  lock                              #  11    0xc7e9d  1      OPC=lock              
+  cmpxchgl %esi, 0x2fc233(%rip)     #  12    0xc7e9e  7      OPC=cmpxchgl_m32_r32  
+  nop                               #  13    0xc7ea5  1      OPC=nop               
+  jne .L_c7eb2                      #  14    0xc7ea6  2      OPC=jne_label         
+  jmpq .L_c7ecc                     #  15    0xc7ea8  2      OPC=jmpq_label        
+.L_c7ea9:                           #        0xc7eaa  0      OPC=<label>           
+  cmpxchgl %esi, 0x2fc228(%rip)     #  16    0xc7eaa  7      OPC=cmpxchgl_m32_r32  
+  je .L_c7ecc                       #  17    0xc7eb1  2      OPC=je_label          
+.L_c7eb2:                           #        0xc7eb3  0      OPC=<label>           
+  leaq 0x2fc21f(%rip), %rdi         #  18    0xc7eb3  7      OPC=leaq_r64_m16      
+  subq $0x80, %rsp                  #  19    0xc7eba  7      OPC=subq_r64_imm32    
+  callq .__lll_lock_wait_private    #  20    0xc7ec1  5      OPC=callq_label       
+  addq $0x80, %rsp                  #  21    0xc7ec6  7      OPC=addq_r64_imm32    
+.L_c7ecc:                           #        0xc7ecd  0      OPC=<label>           
+  movq 0x2faa0d(%rip), %rdx         #  22    0xc7ecd  7      OPC=movq_r64_m64      
+  movq 0x2fc1f6(%rip), %rbx         #  23    0xc7ed4  7      OPC=movq_r64_m64      
+  testq %rdx, %rdx                  #  24    0xc7edb  3      OPC=testq_r64_r64     
+  je .L_c7fc8                       #  25    0xc7ede  6      OPC=je_label_1        
+.L_c7ee3:                           #        0xc7ee4  0      OPC=<label>           
+  leaq 0x8(%rsp), %r12              #  26    0xc7ee4  5      OPC=leaq_r64_m16      
+  jmpq .L_c7efa                     #  27    0xc7ee9  2      OPC=jmpq_label        
+  nop                               #  28    0xc7eeb  1      OPC=nop               
+  nop                               #  29    0xc7eec  1      OPC=nop               
+  nop                               #  30    0xc7eed  1      OPC=nop               
+  nop                               #  31    0xc7eee  1      OPC=nop               
+  nop                               #  32    0xc7eef  1      OPC=nop               
+  nop                               #  33    0xc7ef0  1      OPC=nop               
+.L_c7ef0:                           #        0xc7ef1  0      OPC=<label>           
+  movq %rax, 0x2fa9e9(%rip)         #  34    0xc7ef1  7      OPC=movq_m64_r64      
+  movq %rax, %rdx                   #  35    0xc7ef8  3      OPC=movq_r64_r64      
+.L_c7efa:                           #        0xc7efb  0      OPC=<label>           
+  leaq 0x2fc19f(%rip), %rsi         #  36    0xc7efb  7      OPC=leaq_r64_m16      
+  movq %r12, %r8                    #  37    0xc7f02  3      OPC=movq_r64_r64      
+  movq %rbx, %rcx                   #  38    0xc7f05  3      OPC=movq_r64_r64      
+  movq %rbp, %rdi                   #  39    0xc7f08  3      OPC=movq_r64_r64      
+  callq .getpwnam_r__GLIBC_2_2_5    #  40    0xc7f0b  5      OPC=callq_label       
+  cmpl $0x22, %eax                  #  41    0xc7f10  3      OPC=cmpl_r32_imm8     
+  jne .L_c7fb8                      #  42    0xc7f13  6      OPC=jne_label_1       
+  movq 0x2fc1b1(%rip), %rax         #  43    0xc7f19  7      OPC=movq_r64_m64      
+  movq 0x2fa9ba(%rip), %r13         #  44    0xc7f20  7      OPC=movq_r64_m64      
+  leaq (%rax,%rax,1), %rbx          #  45    0xc7f27  4      OPC=leaq_r64_m16      
+  movq %r13, %rdi                   #  46    0xc7f2b  3      OPC=movq_r64_r64      
+  movq %rbx, %rsi                   #  47    0xc7f2e  3      OPC=movq_r64_r64      
+  movq %rbx, 0x2fc199(%rip)         #  48    0xc7f31  7      OPC=movq_m64_r64      
+  callq .__tls_get_addr_plt         #  49    0xc7f38  5      OPC=callq_label       
+  testq %rax, %rax                  #  50    0xc7f3d  3      OPC=testq_r64_r64     
+  jne .L_c7ef0                      #  51    0xc7f40  2      OPC=jne_label         
+  movq %r13, %rdi                   #  52    0xc7f42  3      OPC=movq_r64_r64      
+  callq .L_1f8c0                    #  53    0xc7f45  5      OPC=callq_label       
+  movq 0x2f8f30(%rip), %rax         #  54    0xc7f4a  7      OPC=movq_r64_m64      
+  movq $0x0, 0x2fa985(%rip)         #  55    0xc7f51  11     OPC=movq_m64_imm32    
+  movl $0xc, (%rax)                 #  56    0xc7f5c  6      OPC=movl_m32_imm32    
+  nop                               #  57    0xc7f62  1      OPC=nop               
+.L_c7f62:                           #        0xc7f63  0      OPC=<label>           
+  movq $0x0, 0x8(%rsp)              #  58    0xc7f63  9      OPC=movq_m64_imm32    
+.L_c7f6b:                           #        0xc7f6c  0      OPC=<label>           
+  cmpl $0x0, 0x2fec8e(%rip)         #  59    0xc7f6c  7      OPC=cmpl_m32_imm8     
+  je .L_c7f7f                       #  60    0xc7f73  2      OPC=je_label          
+  lock                              #  61    0xc7f75  1      OPC=lock              
+  decl 0x2fc15d(%rip)               #  62    0xc7f76  6      OPC=decl_m32          
+  nop                               #  63    0xc7f7c  1      OPC=nop               
+  jne .L_c7f87                      #  64    0xc7f7d  2      OPC=jne_label         
+  jmpq .L_c7fa1                     #  65    0xc7f7f  2      OPC=jmpq_label        
+.L_c7f7f:                           #        0xc7f81  0      OPC=<label>           
+  decl 0x2fc153(%rip)               #  66    0xc7f81  6      OPC=decl_m32          
+  je .L_c7fa1                       #  67    0xc7f87  2      OPC=je_label          
+.L_c7f87:                           #        0xc7f89  0      OPC=<label>           
+  leaq 0x2fc14a(%rip), %rdi         #  68    0xc7f89  7      OPC=leaq_r64_m16      
+  subq $0x80, %rsp                  #  69    0xc7f90  7      OPC=subq_r64_imm32    
+  callq .__lll_unlock_wake_private  #  70    0xc7f97  5      OPC=callq_label       
+  addq $0x80, %rsp                  #  71    0xc7f9c  7      OPC=addq_r64_imm32    
+.L_c7fa1:                           #        0xc7fa3  0      OPC=<label>           
+  movq 0x8(%rsp), %rax              #  72    0xc7fa3  5      OPC=movq_r64_m64      
+  addq $0x18, %rsp                  #  73    0xc7fa8  4      OPC=addq_r64_imm8     
+  popq %rbx                         #  74    0xc7fac  1      OPC=popq_r64_1        
+  popq %rbp                         #  75    0xc7fad  1      OPC=popq_r64_1        
+  popq %r12                         #  76    0xc7fae  2      OPC=popq_r64_1        
+  popq %r13                         #  77    0xc7fb0  2      OPC=popq_r64_1        
+  retq                              #  78    0xc7fb2  1      OPC=retq              
+  nop                               #  79    0xc7fb3  1      OPC=nop               
+  nop                               #  80    0xc7fb4  1      OPC=nop               
+  nop                               #  81    0xc7fb5  1      OPC=nop               
+  nop                               #  82    0xc7fb6  1      OPC=nop               
+  nop                               #  83    0xc7fb7  1      OPC=nop               
+  nop                               #  84    0xc7fb8  1      OPC=nop               
+  nop                               #  85    0xc7fb9  1      OPC=nop               
+.L_c7fb8:                           #        0xc7fba  0      OPC=<label>           
+  cmpq $0x0, 0x2fa920(%rip)         #  86    0xc7fba  8      OPC=cmpq_m64_imm8     
+  jne .L_c7f6b                      #  87    0xc7fc2  2      OPC=jne_label         
+  jmpq .L_c7f62                     #  88    0xc7fc4  2      OPC=jmpq_label        
+  nop                               #  89    0xc7fc6  1      OPC=nop               
+  nop                               #  90    0xc7fc7  1      OPC=nop               
+  nop                               #  91    0xc7fc8  1      OPC=nop               
+  nop                               #  92    0xc7fc9  1      OPC=nop               
+.L_c7fc8:                           #        0xc7fca  0      OPC=<label>           
+  movl $0x400, %edi                 #  93    0xc7fca  5      OPC=movl_r32_imm32    
+  movq $0x400, 0x2fc0f8(%rip)       #  94    0xc7fcf  11     OPC=movq_m64_imm32    
+  callq .memalign_plt               #  95    0xc7fda  5      OPC=callq_label       
+  testq %rax, %rax                  #  96    0xc7fdf  3      OPC=testq_r64_r64     
+  movq %rax, 0x2fa8f9(%rip)         #  97    0xc7fe2  7      OPC=movq_m64_r64      
+  je .L_c7f62                       #  98    0xc7fe9  6      OPC=je_label_1        
+  movq %rax, %rdx                   #  99    0xc7fef  3      OPC=movq_r64_r64      
+  movl $0x400, %ebx                 #  100   0xc7ff2  5      OPC=movl_r32_imm32    
+  jmpq .L_c7ee3                     #  101   0xc7ff7  5      OPC=jmpq_label_1      
+  nop                               #  102   0xc7ffc  1      OPC=nop               
+  nop                               #  103   0xc7ffd  1      OPC=nop               
+  nop                               #  104   0xc7ffe  1      OPC=nop               
+  nop                               #  105   0xc7fff  1      OPC=nop               
+  nop                               #  106   0xc8000  1      OPC=nop               
+  nop                               #  107   0xc8001  1      OPC=nop               
+                                                                                   
+.size getpwnam, .-getpwnam
+

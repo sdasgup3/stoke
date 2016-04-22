@@ -1,0 +1,130 @@
+  .text
+  .globl __wmemcmp_sse2
+  .type __wmemcmp_sse2, @function
+
+#! file-offset 0xa1a97
+#! rip-offset  0xa1a97
+#! capacity    266 bytes
+
+# Text                          #  Line  RIP      Bytes  Opcode              
+.__wmemcmp_sse2:                #        0xa1a97  0      OPC=<label>         
+  cmpq $0x3, %rdx               #  1     0xa1a97  4      OPC=cmpq_r64_imm8   
+  jbe .L_a1b35                  #  2     0xa1a9b  6      OPC=jbe_label_1     
+  movl (%rdi), %ecx             #  3     0xa1aa1  2      OPC=movl_r32_m32    
+  movl (%rsi), %eax             #  4     0xa1aa3  2      OPC=movl_r32_m32    
+  cmpl %eax, %ecx               #  5     0xa1aa5  2      OPC=cmpl_r32_r32    
+  jne .L_a1ad1                  #  6     0xa1aa7  2      OPC=jne_label       
+  movl 0x4(%rdi), %ecx          #  7     0xa1aa9  3      OPC=movl_r32_m32    
+  movl 0x4(%rsi), %eax          #  8     0xa1aac  3      OPC=movl_r32_m32    
+  cmpl %eax, %ecx               #  9     0xa1aaf  2      OPC=cmpl_r32_r32    
+  jne .L_a1ae8                  #  10    0xa1ab1  2      OPC=jne_label       
+  movl 0x8(%rdi), %ecx          #  11    0xa1ab3  3      OPC=movl_r32_m32    
+  movl 0x8(%rsi), %eax          #  12    0xa1ab6  3      OPC=movl_r32_m32    
+  cmpl %eax, %ecx               #  13    0xa1ab9  2      OPC=cmpl_r32_r32    
+  jne .L_a1aff                  #  14    0xa1abb  2      OPC=jne_label       
+  movl 0xc(%rdi), %ecx          #  15    0xa1abd  3      OPC=movl_r32_m32    
+  movl 0xc(%rsi), %eax          #  16    0xa1ac0  3      OPC=movl_r32_m32    
+  cmpl %eax, %ecx               #  17    0xa1ac3  2      OPC=cmpl_r32_r32    
+  je .L_a1b23                   #  18    0xa1ac5  2      OPC=je_label        
+  jmpq .L_a1b16                 #  19    0xa1ac7  2      OPC=jmpq_label      
+.L_a1ac9:                       #        0xa1ac9  0      OPC=<label>         
+  movl (%rdi), %ecx             #  20    0xa1ac9  2      OPC=movl_r32_m32    
+  movl (%rsi), %eax             #  21    0xa1acb  2      OPC=movl_r32_m32    
+  cmpl %eax, %ecx               #  22    0xa1acd  2      OPC=cmpl_r32_r32    
+  je .L_a1ade                   #  23    0xa1acf  2      OPC=je_label        
+.L_a1ad1:                       #        0xa1ad1  0      OPC=<label>         
+  cmpl %eax, %ecx               #  24    0xa1ad1  2      OPC=cmpl_r32_r32    
+  setg %al                      #  25    0xa1ad3  3      OPC=setg_r8         
+  movzbl %al, %eax              #  26    0xa1ad6  3      OPC=movzbl_r32_r8   
+  leal -0x1(%rax,%rax,1), %eax  #  27    0xa1ad9  4      OPC=leal_r32_m16    
+  retq                          #  28    0xa1add  1      OPC=retq            
+.L_a1ade:                       #        0xa1ade  0      OPC=<label>         
+  movl 0x4(%rdi), %ecx          #  29    0xa1ade  3      OPC=movl_r32_m32    
+  movl 0x4(%rsi), %eax          #  30    0xa1ae1  3      OPC=movl_r32_m32    
+  cmpl %eax, %ecx               #  31    0xa1ae4  2      OPC=cmpl_r32_r32    
+  je .L_a1af5                   #  32    0xa1ae6  2      OPC=je_label        
+.L_a1ae8:                       #        0xa1ae8  0      OPC=<label>         
+  cmpl %eax, %ecx               #  33    0xa1ae8  2      OPC=cmpl_r32_r32    
+  setg %al                      #  34    0xa1aea  3      OPC=setg_r8         
+  movzbl %al, %eax              #  35    0xa1aed  3      OPC=movzbl_r32_r8   
+  leal -0x1(%rax,%rax,1), %eax  #  36    0xa1af0  4      OPC=leal_r32_m16    
+  retq                          #  37    0xa1af4  1      OPC=retq            
+.L_a1af5:                       #        0xa1af5  0      OPC=<label>         
+  movl 0x8(%rdi), %ecx          #  38    0xa1af5  3      OPC=movl_r32_m32    
+  movl 0x8(%rsi), %eax          #  39    0xa1af8  3      OPC=movl_r32_m32    
+  cmpl %eax, %ecx               #  40    0xa1afb  2      OPC=cmpl_r32_r32    
+  je .L_a1b0c                   #  41    0xa1afd  2      OPC=je_label        
+.L_a1aff:                       #        0xa1aff  0      OPC=<label>         
+  cmpl %eax, %ecx               #  42    0xa1aff  2      OPC=cmpl_r32_r32    
+  setg %al                      #  43    0xa1b01  3      OPC=setg_r8         
+  movzbl %al, %eax              #  44    0xa1b04  3      OPC=movzbl_r32_r8   
+  leal -0x1(%rax,%rax,1), %eax  #  45    0xa1b07  4      OPC=leal_r32_m16    
+  retq                          #  46    0xa1b0b  1      OPC=retq            
+.L_a1b0c:                       #        0xa1b0c  0      OPC=<label>         
+  movl 0xc(%rdi), %ecx          #  47    0xa1b0c  3      OPC=movl_r32_m32    
+  movl 0xc(%rsi), %eax          #  48    0xa1b0f  3      OPC=movl_r32_m32    
+  cmpl %eax, %ecx               #  49    0xa1b12  2      OPC=cmpl_r32_r32    
+  je .L_a1b23                   #  50    0xa1b14  2      OPC=je_label        
+.L_a1b16:                       #        0xa1b16  0      OPC=<label>         
+  cmpl %eax, %ecx               #  51    0xa1b16  2      OPC=cmpl_r32_r32    
+  setg %al                      #  52    0xa1b18  3      OPC=setg_r8         
+  movzbl %al, %eax              #  53    0xa1b1b  3      OPC=movzbl_r32_r8   
+  leal -0x1(%rax,%rax,1), %eax  #  54    0xa1b1e  4      OPC=leal_r32_m16    
+  retq                          #  55    0xa1b22  1      OPC=retq            
+.L_a1b23:                       #        0xa1b23  0      OPC=<label>         
+  addq $0x10, %rdi              #  56    0xa1b23  4      OPC=addq_r64_imm8   
+  addq $0x10, %rsi              #  57    0xa1b27  4      OPC=addq_r64_imm8   
+  subq $0x4, %rdx               #  58    0xa1b2b  4      OPC=subq_r64_imm8   
+  cmpq $0x3, %rdx               #  59    0xa1b2f  4      OPC=cmpq_r64_imm8   
+  ja .L_a1ac9                   #  60    0xa1b33  2      OPC=ja_label        
+.L_a1b35:                       #        0xa1b35  0      OPC=<label>         
+  movl $0x0, %eax               #  61    0xa1b35  5      OPC=movl_r32_imm32  
+  testq %rdx, %rdx              #  62    0xa1b3a  3      OPC=testq_r64_r64   
+  je .L_a1b9f                   #  63    0xa1b3d  2      OPC=je_label        
+  movl (%rdi), %ecx             #  64    0xa1b3f  2      OPC=movl_r32_m32    
+  movl (%rsi), %eax             #  65    0xa1b41  2      OPC=movl_r32_m32    
+  cmpl %eax, %ecx               #  66    0xa1b43  2      OPC=cmpl_r32_r32    
+  je .L_a1b54                   #  67    0xa1b45  2      OPC=je_label        
+  cmpl %eax, %ecx               #  68    0xa1b47  2      OPC=cmpl_r32_r32    
+  setg %al                      #  69    0xa1b49  3      OPC=setg_r8         
+  movzbl %al, %eax              #  70    0xa1b4c  3      OPC=movzbl_r32_r8   
+  leal -0x1(%rax,%rax,1), %eax  #  71    0xa1b4f  4      OPC=leal_r32_m16    
+  retq                          #  72    0xa1b53  1      OPC=retq            
+.L_a1b54:                       #        0xa1b54  0      OPC=<label>         
+  cmpq $0x1, %rdx               #  73    0xa1b54  4      OPC=cmpq_r64_imm8   
+  je .L_a1b8e                   #  74    0xa1b58  2      OPC=je_label        
+  movl 0x4(%rdi), %ecx          #  75    0xa1b5a  3      OPC=movl_r32_m32    
+  movl 0x4(%rsi), %eax          #  76    0xa1b5d  3      OPC=movl_r32_m32    
+  cmpl %eax, %ecx               #  77    0xa1b60  2      OPC=cmpl_r32_r32    
+  je .L_a1b71                   #  78    0xa1b62  2      OPC=je_label        
+  cmpl %eax, %ecx               #  79    0xa1b64  2      OPC=cmpl_r32_r32    
+  setg %al                      #  80    0xa1b66  3      OPC=setg_r8         
+  movzbl %al, %eax              #  81    0xa1b69  3      OPC=movzbl_r32_r8   
+  leal -0x1(%rax,%rax,1), %eax  #  82    0xa1b6c  4      OPC=leal_r32_m16    
+  retq                          #  83    0xa1b70  1      OPC=retq            
+.L_a1b71:                       #        0xa1b71  0      OPC=<label>         
+  cmpq $0x2, %rdx               #  84    0xa1b71  4      OPC=cmpq_r64_imm8   
+  je .L_a1b94                   #  85    0xa1b75  2      OPC=je_label        
+  movl 0x8(%rdi), %edx          #  86    0xa1b77  3      OPC=movl_r32_m32    
+  movl 0x8(%rsi), %eax          #  87    0xa1b7a  3      OPC=movl_r32_m32    
+  cmpl %eax, %edx               #  88    0xa1b7d  2      OPC=cmpl_r32_r32    
+  je .L_a1b9a                   #  89    0xa1b7f  2      OPC=je_label        
+  cmpl %eax, %edx               #  90    0xa1b81  2      OPC=cmpl_r32_r32    
+  setg %al                      #  91    0xa1b83  3      OPC=setg_r8         
+  movzbl %al, %eax              #  92    0xa1b86  3      OPC=movzbl_r32_r8   
+  leal -0x1(%rax,%rax,1), %eax  #  93    0xa1b89  4      OPC=leal_r32_m16    
+  retq                          #  94    0xa1b8d  1      OPC=retq            
+.L_a1b8e:                       #        0xa1b8e  0      OPC=<label>         
+  movl $0x0, %eax               #  95    0xa1b8e  5      OPC=movl_r32_imm32  
+  retq                          #  96    0xa1b93  1      OPC=retq            
+.L_a1b94:                       #        0xa1b94  0      OPC=<label>         
+  movl $0x0, %eax               #  97    0xa1b94  5      OPC=movl_r32_imm32  
+  retq                          #  98    0xa1b99  1      OPC=retq            
+.L_a1b9a:                       #        0xa1b9a  0      OPC=<label>         
+  movl $0x0, %eax               #  99    0xa1b9a  5      OPC=movl_r32_imm32  
+.L_a1b9f:                       #        0xa1b9f  0      OPC=<label>         
+  retq                          #  100   0xa1b9f  1      OPC=retq            
+  nop                           #  101   0xa1ba0  1      OPC=nop             
+                                                                             
+.size __wmemcmp_sse2, .-__wmemcmp_sse2
+
