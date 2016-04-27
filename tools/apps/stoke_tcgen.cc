@@ -62,7 +62,6 @@ auto& iterations_arg = ValueArg<size_t>::create("iterations")
 
 auto& output_arg = ValueArg<string>::create("output")
                    .description("file to write testcases");
-.description("file to write testcases");
 
 /** Get a vector of all non-empty memory segments for a testcase */
 vector<Memory*> get_segments(CpuState& cs) {
