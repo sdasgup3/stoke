@@ -76,8 +76,11 @@ def unsupported_err(filename)
   end
 
   File.open(filename, "r").each do |line|
-    if /Instruction.*unsupported/.match(line) then
-      return true
+    begin
+      if /Instruction.*unsupported/.match(line) then
+        return true
+      end
+    rescue
     end
   end
   return false
@@ -90,7 +93,7 @@ puts "name,cutpoints,o1loc,o2loc,o3loc,testcases,tc_time,o1o1_equiv,o1o2_equiv,o
 ARGF.each do |name|
   name = name.strip
 
-  stamp="2016.04.21.1400"
+  stamp="2016.04.27.1625"
 
   cutpoints = get_cutpoints("o1o1-#{stamp}/#{name}.out")
 

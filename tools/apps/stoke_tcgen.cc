@@ -63,6 +63,10 @@ auto& iterations_arg = ValueArg<size_t>::create("iterations")
 auto& output_arg = ValueArg<string>::create("output")
                    .description("file to write testcases");
 
+auto& stop_at = ValueArg<size_t>::create("max_tcs")
+                .description("once this many testcases are generated, stop")
+                .default_val(250);
+
 /** Get a vector of all non-empty memory segments for a testcase */
 vector<Memory*> get_segments(CpuState& cs) {
 
@@ -180,6 +184,8 @@ int main(int argc, char** argv) {
   FalseInvariant _false;
   TrueInvariant _true;
 
+  size_t found = 0;
+
   CpuStates outputs;
   for (auto p : paths) {
 
@@ -189,6 +195,11 @@ int main(int argc, char** argv) {
     } else if (outputs.size()) {
       ofstream ofs(output_arg.value(), ios_base::app);
       outputs.write_text(ofs);
+    }
+
+    found += outputs.size();
+    if(found > stop_at.value()) {
+      return 0;
     }
 
     // Clear anything we have so far
