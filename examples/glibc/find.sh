@@ -8,7 +8,7 @@ for F in opt1-extract/*.s; do
   filename="${base%.*}"
 
   ## Nothing forbidden
-  V=`grep "call\|mul\|(%rip\|jmp.*_plt" $F`
+  V=`grep "call\|mul\|div\|jmp.*_plt" $F`
   if [ ! "$V" == "" ]; then
     echo "Blacklist $filename"
     continue

@@ -198,7 +198,7 @@ int main(int argc, char** argv) {
     }
 
     found += outputs.size();
-    if(found > stop_at.value()) {
+    if (found > stop_at.value()) {
       return 0;
     }
 

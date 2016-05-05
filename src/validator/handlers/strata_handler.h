@@ -62,7 +62,7 @@ private:
 
   void init();
 
-  const std::string strata_path_ = "/home/sheule/dev/strata-data/data-regs/circuits";
+  const std::string strata_path_ = "/home/berkeley/dev/strata-data/data-regs/circuits";
 
   /** Should circuits be simplified on the fly. */
   const bool simplify_;
