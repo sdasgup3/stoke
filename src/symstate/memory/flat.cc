@@ -27,15 +27,15 @@ SymBool FlatMemory::write(SymBitVector address, SymBitVector value, uint16_t siz
     heap_ = heap_.update(address + SymBitVector::constant(64, i), value[8*i+7][8*i]);
   }
 
+  // Ensure we don't bypass bounds
+  constraints_.push_back(address <= SymBitVector::constant(64, -0x3f - size/8));
+  constraints_.push_back(address >= SymBitVector::constant(64, 0x40));
+
   // Update the access list
   auto access_var = SymBitVector::tmp_var(64);
   if (!no_constraints_)
     constraints_.push_back(access_var == address);
   access_list_[access_var.ptr] = size;
-
-  // Ensure we don't bypass bounds
-  constraints_.push_back(address <= SymBitVector::constant(64, 0xffffffffffffffc0 - size));
-  constraints_.push_back(address >= SymBitVector::constant(64, 0x0000000000000040));
 
   // Get a new array variable and update the heap
   if (!no_constraints_) {
