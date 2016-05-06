@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NAME=$1
-STAMP="testing"
+STAMP="2016.05.06.0400"
 TDIR="opt1-extract"
 RDIR="opt1-extract"
 NDIR="opt2-extract"
@@ -26,7 +26,7 @@ cp ./verify.sh $TEMP
        --def_in "{ $ALL }" \
        --live_out "{ }" \
        --live_dangerously \
-       --bound 3 \
+       --bound 25 \
        --output $TEMP/"$NAME".tc \
        > /dev/null \
        2> $TEMP/"$NAME".tc_err

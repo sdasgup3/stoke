@@ -93,7 +93,7 @@ puts "name,cutpoints,o1loc,o2loc,o3loc,testcases,tc_time,o1o1_equiv,o1o2_equiv,o
 ARGF.each do |name|
   name = name.strip
 
-  stamp="2016.04.27.1625"
+  stamp="2016.05.06.0400"
 
   cutpoints = get_cutpoints("o1o1-#{stamp}/#{name}.out")
 

@@ -275,6 +275,14 @@ int main(int argc, char** argv) {
     }
   }
 
+  // Print anything we have so far
+  if (outputs.size() && output_arg.value() == "") {
+    outputs.write_text(cout);
+  } else if (outputs.size()) {
+    ofstream ofs(output_arg.value(), ios_base::app);
+    outputs.write_text(ofs);
+  }
+
   return 0;
 }
 
