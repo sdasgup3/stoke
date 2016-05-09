@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NAME=$1
-STAMP="2016.05.06.0400"
+STAMP="2016.05.08.0800"
 TDIR="opt1-extract"
 RDIR="opt1-extract"
 NDIR="opt2-extract"
