@@ -15,7 +15,7 @@
 all: orig extract testcase synthesize replace
 
 orig:
-	g++ -std=c++11 -fno-inline -O3 main.cc
+	g++ -std=c++11 -fno-inline -O1 main.cc
 
 time:
 	time ./a.out 100000000
