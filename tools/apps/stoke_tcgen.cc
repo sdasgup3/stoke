@@ -67,6 +67,29 @@ auto& stop_at = ValueArg<size_t>::create("max_tcs")
                 .description("once this many testcases are generated, stop")
                 .default_val(250);
 
+typedef struct {
+     unsigned long size,resident,share,text,lib,data,dt;
+} statm_t;
+
+// source: https://stackoverflow.com/questions/1558402/memory-usage-of-current-process-in-c
+void read_memory_status(statm_t& result)
+{
+  unsigned long dummy;
+  const char* statm_path = "/proc/self/statm";
+
+  FILE *f = fopen(statm_path,"r");
+  if(!f){
+    perror(statm_path);
+    abort();
+  }
+  if(7 != fscanf(f,"%ld %ld %ld %ld %ld %ld %ld",
+        &result.size,&result.resident,&result.share,&result.text,&result.lib,&result.data,&result.dt)) {
+    perror(statm_path);
+    abort();
+  }
+  fclose(f);
+}
+
 /** Get a vector of all non-empty memory segments for a testcase */
 vector<Memory*> get_segments(CpuState& cs) {
 
@@ -133,6 +156,9 @@ CpuState mutate(CpuState cs, size_t iterations,
 
 
 int main(int argc, char** argv) {
+
+  statm_t memory_usage;
+
   CommandLineConfig::strict_with_convenience(argc, argv);
 
   FunctionsGadget aux_fxns;
@@ -188,6 +214,8 @@ int main(int argc, char** argv) {
 
   CpuStates outputs;
   for (auto p : paths) {
+
+    cout << "Working on path " << p << endl;
 
     // Print anything we have so far
     if (outputs.size() && output_arg.value() == "") {

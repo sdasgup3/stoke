@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NAME=$1
-STAMP="2016.05.08.0800"
+STAMP="2016.05.09.1300"
 TDIR="opt1-extract"
 RDIR="opt1-extract"
 NDIR="opt2-extract"
@@ -20,7 +20,7 @@ mkdir -p $TEMP3
 
 cp ./verify.sh $TEMP
 
-/usr/bin/time -o $TEMP/"$NAME".gen_time \
+/usr/bin/time -o $TEMP/"$NAME".tc_time \
     timeout $TIMEOUT stoke_tcgen \
        --target $TDIR/"$NAME".s \
        --def_in "{ $ALL }" \
@@ -28,7 +28,7 @@ cp ./verify.sh $TEMP
        --live_dangerously \
        --bound 25 \
        --output $TEMP/"$NAME".tc \
-       > /dev/null \
+       > $TEMP/"$NAME".tc_out \
        2> $TEMP/"$NAME".tc_err
 
 /usr/bin/time -o $TEMP/"$NAME".ver_time \

@@ -93,11 +93,11 @@ puts "name,cutpoints,o1loc,o2loc,o3loc,testcases,tc_time,o1o1_equiv,o1o2_equiv,o
 ARGF.each do |name|
   name = name.strip
 
-  stamp="2016.05.06.0400"
+  stamp="2016.05.09.1300"
 
   cutpoints = get_cutpoints("o1o1-#{stamp}/#{name}.out")
 
-  tc_time = read_time("o1o1-#{stamp}/#{name}.gen_time")
+  tc_time = read_time("o1o1-#{stamp}/#{name}.tc_time")
   o1o1_time = read_time("o1o1-#{stamp}/#{name}.ver_time")
   o1o2_time = read_time("o1o2-#{stamp}/#{name}.ver_time")
   o1o3_time = read_time("o1o3-#{stamp}/#{name}.ver_time")
