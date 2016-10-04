@@ -22,6 +22,7 @@
 
 #include "src/validator/obligation_checker.h"
 #include "src/validator/bounded.h"
+#include "src/validator/variable.h"
 
 #include "src/validator/invariants/conjunction.h"
 #include "src/validator/invariants/equality.h"
@@ -244,7 +245,11 @@ private:
 // (helper for build_invariant)
 void generate_invariant(ConjunctionInvariant* ci, Operand r, Operand r2) {
   for (size_t i = 0; i < r.size()/64; ++i) {
-    EqualityInvariant::Term t1;
+    Variable t1(r, false, 1, i*8);
+    Variable t2(r2, true, 1, i*8);
+    t2.coefficient = -1;
+
+    /*
     t1.reg = r;
     t1.sign_extend = false;
     t1.index = i;
@@ -255,8 +260,9 @@ void generate_invariant(ConjunctionInvariant* ci, Operand r, Operand r2) {
     t2.reg = r2;
     t2.coefficient = -1;
     t2.is_rewrite = true;
+    */
 
-    vector<EqualityInvariant::Term> terms;
+    vector<Variable> terms;
     terms.push_back(t1);
     terms.push_back(t2);
 

@@ -419,9 +419,9 @@ const Invariant& assume) {
 
 vector<pair<CellMemory*, CellMemory*>> ObligationChecker::enumerate_aliasing(const Cfg& target, const Cfg& rewrite, const CfgPath& P, const CfgPath& Q, const Invariant& assume, const Invariant& prove) {
   switch (alias_strategy_) {
+  //  return enumerate_aliasing_string(target, rewrite, P, Q, assume, prove);
   case AliasStrategy::STRING:
   case AliasStrategy::STRING_NO_ALIAS:
-    return enumerate_aliasing_string(target, rewrite, P, Q, assume, prove);
   case AliasStrategy::FLAT: {
     auto res = vector<pair<CellMemory*, CellMemory*>>();
     res.push_back(pair<CellMemory*,CellMemory*>(NULL, NULL));
