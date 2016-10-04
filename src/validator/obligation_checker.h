@@ -75,9 +75,9 @@ public:
 
   /** Set strategy for aliasing */
   ObligationChecker& set_alias_strategy(AliasStrategy as) {
-    if(as == AliasStrategy::STRING || as == AliasStrategy::STRING_NO_ALIAS || as == BASIC)
+    if (as == AliasStrategy::STRING || as == AliasStrategy::STRING_NO_ALIAS || as == BASIC)
       as = AliasStrategy::FLAT;
-      
+
     alias_strategy_ = as;
     return *this;
   }
