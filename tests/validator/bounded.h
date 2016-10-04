@@ -756,7 +756,7 @@ TEST_F(BoundedValidatorBaseTest, MemoryOverlapBad) {
     check_ceg(it, target, rewrite);
 }
 
-TEST_F(BoundedValidatorBaseTest, LoopMemoryEquiv) {
+TEST_F(BoundedValidatorBaseTest, DISABLED_LoopMemoryEquiv) {
 
   auto def_ins = x64asm::RegSet::empty() + x64asm::rax + x64asm::ecx + x64asm::rdx;
   auto live_outs = x64asm::RegSet::empty() + x64asm::rax;
@@ -1157,7 +1157,7 @@ TEST_F(BoundedValidatorBaseTest, MemcpyVectorizedWrongWithAliasing) {
 }
 
 
-TEST_F(BoundedValidatorBaseTest, MemcpyVectorizedCorrectWithoutAliasing) {
+TEST_F(BoundedValidatorBaseTest, DISABLED_MemcpyVectorizedCorrectWithoutAliasing) {
 
   auto def_ins = x64asm::RegSet::empty() + x64asm::rsi + x64asm::rdi + x64asm::edx;
   auto live_outs = x64asm::RegSet::empty();

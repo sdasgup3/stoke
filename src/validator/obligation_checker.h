@@ -55,10 +55,11 @@ class ObligationChecker : public Validator {
 public:
 
   enum AliasStrategy {
-    BASIC,            // enumerate all cases, attempt to bound it (SOUND)
-    FLAT,             // model memory as an array in the SMT solver (SOUND)
-    STRING,           // look for continugous memory accesses and combine them (SOUND)
-    STRING_NO_ALIAS   // assume strings don't overlap (UNSOUND)
+    BASIC,             // enumerate all cases, attempt to bound it (SOUND)
+    FLAT,              // model memory as an array in the SMT solver (SOUND)
+    STRING,            // look for continugous memory accesses and combine them (SOUND)
+    STRING_NO_ALIAS,   // assume strings don't overlap (UNSOUND)
+    ARM                // full-on alias relationship mining
   };
 
   ObligationChecker(SMTSolver& solver) : Validator(solver) {
@@ -74,6 +75,9 @@ public:
 
   /** Set strategy for aliasing */
   ObligationChecker& set_alias_strategy(AliasStrategy as) {
+    if(as == AliasStrategy::STRING || as == AliasStrategy::STRING_NO_ALIAS || as == BASIC)
+      as = AliasStrategy::FLAT;
+      
     alias_strategy_ = as;
     return *this;
   }

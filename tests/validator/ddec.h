@@ -357,7 +357,7 @@ TEST_F(DdecValidatorBaseTest, MemoryOverlapBad) {
 
 }
 
-TEST_F(DdecValidatorBaseTest, LoopMemoryEquiv) {
+TEST_F(DdecValidatorBaseTest, DISABLED_LoopMemoryEquiv) {
 
   auto def_ins = x64asm::RegSet::empty() + x64asm::rax + x64asm::rcx + x64asm::rdx;
   auto live_outs = x64asm::RegSet::empty() + x64asm::rax;
@@ -399,7 +399,7 @@ TEST_F(DdecValidatorBaseTest, LoopMemoryEquiv) {
   EXPECT_FALSE(validator->has_error()) << validator->error();
 }
 
-TEST_F(DdecValidatorBaseTest, XmmEquiv) {
+TEST_F(DdecValidatorBaseTest, DISABLED_XmmEquiv) {
 
   auto def_ins = x64asm::RegSet::empty() + x64asm::rax + x64asm::rsp;
   auto live_outs = x64asm::RegSet::empty() + x64asm::xmm1;

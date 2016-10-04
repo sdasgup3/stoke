@@ -304,12 +304,12 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
       cout << "_____________________________" << endl;
       cout << "Edge: " << edge.from << " -> " << edge.to << endl;
       cout << "target: ";
-      for(auto it : edge.te) {
+      for (auto it : edge.te) {
         cout << it << " ";
       }
       cout << endl;
       cout << "rewrite: ";
-      for(auto it : edge.re) {
+      for (auto it : edge.re) {
         cout << it << " ";
       }
       cout << endl;
