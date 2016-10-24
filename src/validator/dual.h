@@ -59,8 +59,8 @@ public:
     auto r_exit = rewrite_->exit_states();
 
     std::set<State> output;
-    for(auto t : t_exit) {
-      for(auto r : r_exit) {
+    for (auto t : t_exit) {
+      for (auto r : r_exit) {
         output.insert(State(t,r));
       }
     }
