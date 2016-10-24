@@ -401,31 +401,50 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
     }
   }
 
-  // Finally, print the learned invariant at all the exit states
+  // Print the learned invariant at all the exit states; check they imply our final invariant
+  auto final_invariant = new ConjunctionInvariant();
+  final_invariant->add_invariant(new MemoryEqualityInvariant());
+  final_invariant->add_invariant(new StateEqualityInvariant(init_target.live_outs()));
+
+  bool all_correct = true;
+
   auto exit_states = dual.exit_states();
-  for(auto exit : exit_states) {
+  for (auto exit : exit_states) {
     auto return_inv = static_cast<ConjunctionInvariant*>(dual.get_invariant(exit));
     cout << endl << " XXXXXXX PROVEN RELATIONSHIPS XXXXXXX " << endl << endl;
     for (size_t i = 0; i < return_inv->size(); ++i) {
       cout << *(*return_inv)[i] << endl;
     }
+
+    // Now make sure that the invariants imply what we want them to imply,
+    // i.e. live-outs and memory are equal
+    bool valid = false;
+    try {
+      valid = check(init_target, init_rewrite, {}, {}, *return_inv, *final_invariant);
+    } catch (validator_error e) {
+      valid = false;
+      cout << "   * encountered " << e.what() << "; assuming false.";
+    }
+
+    if (valid)
+      cout << "Paths ending here are verified!" << endl;
+    else
+      all_correct = false;
   }
-
-
-  //auto return_state = edge_1_19_0.to;
-  /*
-  auto return_inv = static_cast<ConjunctionInvariant*>(dual.get_invariant(return_state));
-  cout << endl << " XXXXXXX PROVEN RELATIONSHIPS AT RETURN XXXXXXX " << endl << endl;
-  for (size_t i = 0; i < return_inv->size(); ++i) {
-    cout << *(*return_inv)[i] << endl;
-  }
-  */
-
-  // For each pair of return states, check if postcondition is met
-  // Need to check if all the paths are handled properly
-
 
   reset_mm();
+
+  if (all_correct) {
+    cout << endl;
+    cout << "VERIFIED." << endl;
+    cout << endl;
+    return true;
+  } else {
+    cout << endl;
+    cout << "" << endl;
+    cout << endl;
+  }
+
   return false;
 }
 
