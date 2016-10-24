@@ -33,6 +33,18 @@ public:
     return cfg_.get_entry();
   }
 
+  /** Get the exit states for this abstraction. */
+  virtual std::set<State> exit_states() {
+    std::set<State> exits;
+
+    auto the_exit = cfg_.get_exit();
+    for (auto it = cfg_.pred_begin(the_exit); it != cfg_.pred_end(the_exit); ++it) {
+      exits.insert(*it);
+    }
+
+    return exits;
+  }
+
   /** Get the next states from a start state. */
   virtual std::vector<State> next_states(State s) {
     std::vector<State> next;

@@ -177,7 +177,7 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
   ifstream ifs;
   ifs.open("correspondences");
   string line;
-  while(getline(ifs, line)) {
+  while (getline(ifs, line)) {
     std::istringstream ss(line);
 
     CfgPath target;
@@ -187,12 +187,12 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
     string token;
 
     ss >> token;
-    if(!ss.good() || token[0] == '#')
+    if (!ss.good() || token[0] == '#')
       continue;
 
     uint64_t a = stoi(token);
     ss >> token;
-    if(token != ",") {
+    if (token != ",") {
       cout << "Got invalid line; should have format:  <target start>, <rewrite start> | <target path> | <rewrite path>" << endl;
       exit(0);
     }
@@ -202,13 +202,13 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
     DualAutomata::State start_state(a, b);
 
     ss >> token;
-    if(token != "|") {
+    if (token != "|") {
       cout << "Got invalid line; should have format:  <target start>, <rewrite start> | <target path> | <rewrite path>" << endl;
       exit(0);
     }
 
 
-    while(ss.good()) {
+    while (ss.good()) {
       ss >> token;
       if (token == "|") {
         current_path = &rewrite;
@@ -401,7 +401,17 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
     }
   }
 
-  // Finally, print the learned invariant at (5,19)
+  // Finally, print the learned invariant at all the exit states
+  auto exit_states = dual.exit_states();
+  for(auto exit : exit_states) {
+    auto return_inv = static_cast<ConjunctionInvariant*>(dual.get_invariant(exit));
+    cout << endl << " XXXXXXX PROVEN RELATIONSHIPS XXXXXXX " << endl << endl;
+    for (size_t i = 0; i < return_inv->size(); ++i) {
+      cout << *(*return_inv)[i] << endl;
+    }
+  }
+
+
   //auto return_state = edge_1_19_0.to;
   /*
   auto return_inv = static_cast<ConjunctionInvariant*>(dual.get_invariant(return_state));

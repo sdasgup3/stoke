@@ -53,6 +53,20 @@ public:
     return start;
   }
 
+  /** Get the exit states */
+  std::set<State> exit_states() {
+    auto t_exit = target_->exit_states();
+    auto r_exit = rewrite_->exit_states();
+
+    std::set<State> output;
+    for(auto t : t_exit) {
+      for(auto r : r_exit) {
+        output.insert(State(t,r));
+      }
+    }
+    return output;
+  }
+
   /** Add a feastible path. */
   void add_edge(Edge path) {
     next_edges_[path.from].push_back(path);
