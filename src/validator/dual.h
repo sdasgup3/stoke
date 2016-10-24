@@ -22,6 +22,13 @@ public:
 
     bool operator<(const State& other) const;
     bool operator==(const State& other) const;
+
+    State() { }
+
+    State(Abstraction::State a_ts, Abstraction::State a_rs) {
+      ts = a_ts;
+      rs = a_rs;
+    }
   };
 
   struct Edge {

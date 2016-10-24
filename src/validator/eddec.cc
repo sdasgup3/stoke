@@ -26,7 +26,9 @@
 #include "src/validator/eddec.h"
 #include "src/validator/variable.h"
 
-
+#include <istream>
+#include <fstream>
+#include <iostream>
 #include <set>
 
 using namespace std;
@@ -172,6 +174,55 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
   // Manually program in some correspondences
   auto start_state = dual.start_state();
 
+  ifstream ifs;
+  ifs.open("correspondences");
+  string line;
+  while(getline(ifs, line)) {
+    std::istringstream ss(line);
+
+    CfgPath target;
+    CfgPath rewrite;
+    CfgPath* current_path = &target;
+
+    string token;
+
+    ss >> token;
+    if(!ss.good() || token[0] == '#')
+      continue;
+
+    uint64_t a = stoi(token);
+    ss >> token;
+    if(token != ",") {
+      cout << "Got invalid line; should have format:  <target start>, <rewrite start> | <target path> | <rewrite path>" << endl;
+      exit(0);
+    }
+
+    ss >> token;
+    uint64_t b = stoi(token);
+    DualAutomata::State start_state(a, b);
+
+    ss >> token;
+    if(token != "|") {
+      cout << "Got invalid line; should have format:  <target start>, <rewrite start> | <target path> | <rewrite path>" << endl;
+      exit(0);
+    }
+
+
+    while(ss.good()) {
+      ss >> token;
+      if (token == "|") {
+        current_path = &rewrite;
+      } else {
+        current_path->push_back(std::stoi(token));
+      }
+    }
+
+    cout << "Adding correspondence " << start_state << " -> " << target << " | " << rewrite << endl;
+    DualAutomata::Edge edge(start_state, target, rewrite);
+    dual.add_edge(edge);
+  }
+
+  /*
   // 1 -> 3
   DualAutomata::Edge edge_1_3(start_state, {1,4}, {1,2,3});
   dual.add_edge(edge_1_3);
@@ -229,6 +280,7 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
   dual.add_edge(edge_16_19_5);
   dual.add_edge(edge_16_19_6);
   dual.add_edge(edge_16_19_7);
+  */
 
   // Learn invariants at each of the reachable states.
   InvariantLearner learner(init_target, init_rewrite);
@@ -350,12 +402,17 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
   }
 
   // Finally, print the learned invariant at (5,19)
-  auto return_state = edge_1_19_0.to;
+  //auto return_state = edge_1_19_0.to;
+  /*
   auto return_inv = static_cast<ConjunctionInvariant*>(dual.get_invariant(return_state));
   cout << endl << " XXXXXXX PROVEN RELATIONSHIPS AT RETURN XXXXXXX " << endl << endl;
   for (size_t i = 0; i < return_inv->size(); ++i) {
     cout << *(*return_inv)[i] << endl;
   }
+  */
+
+  // For each pair of return states, check if postcondition is met
+  // Need to check if all the paths are handled properly
 
 
   reset_mm();
