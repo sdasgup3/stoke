@@ -36,9 +36,11 @@ public:
 
   EDdecValidator(SMTSolver& solver) : ObligationChecker(solver) {
     /** For testing only */
+    /*
     set_string(x64asm::rsi);
     set_string(x64asm::rdi);
     set_no_string_overlap();
+    */
   }
 
   ~EDdecValidator() {

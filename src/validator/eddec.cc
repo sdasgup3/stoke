@@ -411,7 +411,7 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
   auto exit_states = dual.exit_states();
   for (auto exit : exit_states) {
     auto return_inv = static_cast<ConjunctionInvariant*>(dual.get_invariant(exit));
-    cout << endl << " XXXXXXX PROVEN RELATIONSHIPS XXXXXXX " << endl << endl;
+    cout << endl << " XXXXXXX PROVEN RELATIONSHIPS at " << exit << " XXXXXXX " << endl << endl;
     for (size_t i = 0; i < return_inv->size(); ++i) {
       cout << *(*return_inv)[i] << endl;
     }
@@ -426,10 +426,12 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
       cout << "   * encountered " << e.what() << "; assuming false.";
     }
 
-    if (valid)
+    if (valid) {
       cout << "Paths ending here are verified!" << endl;
-    else
+    } else {
+      cout << "Couldn't verify paths ending here." << endl;
       all_correct = false;
+    }
   }
 
   reset_mm();

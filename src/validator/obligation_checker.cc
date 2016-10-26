@@ -1075,6 +1075,7 @@ void ObligationChecker::delete_memories(std::vector<std::pair<CellMemory*, CellM
   }
 }
 
+
 bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite, const CfgPath& P, const CfgPath& Q, const Invariant& assume, const Invariant& prove) {
 
 #ifdef DEBUG_CHECKER_PERFORMANCE
