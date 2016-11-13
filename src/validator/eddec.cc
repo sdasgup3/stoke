@@ -169,6 +169,9 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
   Abstraction* target_automata = new BlockAbstraction(init_target, *sandbox_);
   Abstraction* rewrite_automata = new BlockAbstraction(init_rewrite, *sandbox_);
 
+  DualBuilder db;
+  db.build_dual(target_automata, rewrite_automata, transformed_inputs);
+
   DualAutomata dual(target_automata, rewrite_automata);
 
   // Manually program in some correspondences
