@@ -34,25 +34,25 @@ public:
   /** Verify if target and rewrite are equivalent. */
   DualAutomata
   build_dual(Abstraction* target_abstraction,
-             Abstraction* rewrite_abstraction,      
+             Abstraction* rewrite_abstraction,
              std::vector<CpuState> testcases) {
 
     DualAutomata dual(target_abstraction, rewrite_abstraction);
 
-    for(auto tc : testcases) {
+    for (auto tc : testcases) {
       auto target_trace = target_abstraction->learn_trace(tc);
       auto rewrite_trace = rewrite_abstraction->learn_trace(tc);
 
       bool match_table[target_trace.size()][rewrite_trace.size()];
 
       // Build table of memory equivalences
-      for(size_t i = 0; i < target_trace.size(); ++i) {
+      for (size_t i = 0; i < target_trace.size(); ++i) {
         auto target_state = target_trace[i].second;
 
-        for(size_t j = 0; j < rewrite_trace.size(); ++j) {
+        for (size_t j = 0; j < rewrite_trace.size(); ++j) {
           auto rewrite_state = rewrite_trace[j].second;
 
-          if(hash_memory(target_state) == hash_memory(rewrite_state)) {
+          if (hash_memory(target_state) == hash_memory(rewrite_state)) {
             match_table[i][j] = 1;
           } else {
             match_table[i][j] = 0;
@@ -61,9 +61,9 @@ public:
       }
 
       // Make sure table is of the correct form
-      for(size_t i = 0; i < target_trace.size(); ++i) {
-        for(size_t j = 0; j < rewrite_trace.size(); ++j) {
-          if(match_table[i][j])
+      for (size_t i = 0; i < target_trace.size(); ++i) {
+        for (size_t j = 0; j < rewrite_trace.size(); ++j) {
+          if (match_table[i][j])
             std::cout << " X ";
           else
             std::cout << " - ";
@@ -88,7 +88,7 @@ private:
     tc.data.write_text(ss);
     ss << "----" << std::endl;
 
-    for(auto s : tc.segments) {
+    for (auto s : tc.segments) {
       s.write_text(ss);
       ss << "----" << std::endl;
     }
