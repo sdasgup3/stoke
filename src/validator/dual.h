@@ -35,6 +35,8 @@ public:
 
     Edge(State, const std::vector<Abstraction::State>&, const std::vector<Abstraction::State>&);
 
+    bool operator==(const Edge& other) const; 
+
     State from;
     State to;
     std::vector<Abstraction::State> te;
@@ -69,6 +71,14 @@ public:
 
   /** Add a feastible path. */
   void add_edge(Edge path) {
+
+    for(auto e : next_edges_[path.from]) {
+      if (e == path) {
+        std::cout << "      > edge already exists -- skipping" << std::endl;
+        return;
+      }
+    }
+
     next_edges_[path.from].push_back(path);
     prev_edges_[path.to].push_back(path);
   }
@@ -133,6 +143,17 @@ public:
   /** Get set of reachable states (from data). */
   std::set<State> get_reachable_states() {
     return reachable_states_;
+  }
+
+  void print_all() {
+
+    for(auto p : next_edges_) {
+      std::cout << "STATE (" << p.first.ts << ", " << p.first.rs << ")" << std::endl;
+      for(auto e : p.second) {
+        std::cout << "    to (" << e.to.ts << ", " << e.to.rs << ")" << std::endl;
+      }
+    }
+
   }
 
 

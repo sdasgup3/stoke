@@ -170,12 +170,15 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
   Abstraction* rewrite_automata = new BlockAbstraction(init_rewrite, *sandbox_);
 
   DualBuilder db;
-  db.build_dual(target_automata, rewrite_automata, transformed_inputs);
+  auto dual = db.build_dual(target_automata, rewrite_automata, transformed_inputs);
+  std::cout << "BUILT IT" << std::endl;
+  auto start_state = dual.start_state();
+  dual.print_all();
 
-  DualAutomata dual(target_automata, rewrite_automata);
+  //DualAutomata dual(target_automata, rewrite_automata);
 
   // Manually program in some correspondences
-  auto start_state = dual.start_state();
+  /*
 
   ifstream ifs;
   ifs.open("correspondences");
@@ -224,6 +227,7 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
     DualAutomata::Edge edge(start_state, target, rewrite);
     dual.add_edge(edge);
   }
+  */
 
   /*
   // 1 -> 3
@@ -286,6 +290,7 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
   */
 
   // Learn invariants at each of the reachable states.
+  std::cout << "LEARNING INVARIANTS " << std::endl;
   InvariantLearner learner(init_target, init_rewrite);
   for (auto p : string_params_) {
     Variable a(string_ghost_start(p), false, 8);

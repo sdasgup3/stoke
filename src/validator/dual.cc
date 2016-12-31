@@ -18,6 +18,10 @@ bool DualAutomata::State::operator==(const DualAutomata::State& other) const {
   return (ts == other.ts && rs == other.rs);
 }
 
+bool DualAutomata::Edge::operator==(const DualAutomata::Edge& other) const {
+  return (from == other.from && to == other.to && te == other.te && re == other.re);
+}
+
 DualAutomata::Edge::Edge(DualAutomata::State tail, const vector<Abstraction::State>& tp, const vector<Abstraction::State>& rp) {
   from = tail;
   te = tp;
@@ -115,18 +119,18 @@ void DualAutomata::learn_invariants(Sandbox& sb, InvariantLearner& learner) {
       next.clear();
 
       for (auto tr_state : current) {
-        //cout << "processing trace state @ " << tr_state.state << endl;
+        cout << "processing trace state @ " << tr_state.state << endl;
         for (auto edge : next_edges_[tr_state.state]) {
-          //cout << "  Considering edge: " << edge.from << " -> " << edge.to << endl;
+          cout << "  Considering edge: " << edge.from << " -> " << edge.to << endl;
           // check if edge's target path is prefix of tr_state's target path
           if (!is_prefix(edge.te, tr_state.target_trace)) {
-            //cout << "  target prefix fail" << endl;
+            cout << "  target prefix fail" << endl;
             continue;
           }
 
           // check if edge's rewrite path is prefix of tr_state's rewrite path
           if (!is_prefix(edge.re, tr_state.rewrite_trace)) {
-            //cout << "  rewrite prefix fail" << endl;
+            cout << "  rewrite prefix fail" << endl;
             continue;
           }
 
@@ -146,6 +150,7 @@ void DualAutomata::learn_invariants(Sandbox& sb, InvariantLearner& learner) {
 
           next.push_back(follow);
           reachable_states_.insert(follow.state);
+          std::cout << "REACHABLE: " << follow.state << std::endl;
         }
       }
     }
