@@ -40,7 +40,7 @@ private:
 
   /** Split test cases into equivalence classes (take same path through target and rewrite) */
   std::vector<std::vector<CpuState>> equivalence_classes(Abstraction* target, Abstraction* rewrite,
-                                                         std::vector<CpuState> testcases);
+                                  std::vector<CpuState> testcases);
 
   /** Check if two particular traces are equal (same path through target/rewrite).*/
   bool traces_equiv(Abstraction::FullTrace&, Abstraction::FullTrace&);

@@ -13,7 +13,7 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
   auto classes = equivalence_classes(target_abstraction, rewrite_abstraction, testcases);
   cout << "NUM TCS: " << testcases.size() << endl;
   int debug_tc_count = 0;
-  for(auto cls : classes) {
+  for (auto cls : classes) {
     cout << "CLASS: " << cls.size() << endl;
     debug_tc_count += cls.size();
   }
@@ -101,35 +101,35 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
   return dual;
 }
 
-/** Split test cases into equivalence classes.  O(nmk) where n is number of test cases and 
+/** Split test cases into equivalence classes.  O(nmk) where n is number of test cases and
     m is number of classes, and k is the trace length. */
 vector<vector<CpuState>> DualBuilder::equivalence_classes(Abstraction* target, Abstraction* rewrite,
-                                                          vector<CpuState> testcases) {
+vector<CpuState> testcases) {
 
   vector<vector<CpuState>> classes;
-  
-  for(auto tc : testcases) {
-     auto target_trace = target->learn_trace(tc);
-     auto rewrite_trace = rewrite->learn_trace(tc);
+
+  for (auto tc : testcases) {
+    auto target_trace = target->learn_trace(tc);
+    auto rewrite_trace = rewrite->learn_trace(tc);
 
     // consider previous classes and see if they match
     bool match = false;
-    for(auto& prev_class : classes) {
+    for (auto& prev_class : classes) {
       auto prev_tc = prev_class[0];
       auto prev_target = target->learn_trace(prev_tc);
       auto prev_rewrite = rewrite->learn_trace(prev_tc);
 
-      if(traces_equiv(target_trace, prev_target) &&
-         traces_equiv(rewrite_trace, prev_rewrite)) {
+      if (traces_equiv(target_trace, prev_target) &&
+          traces_equiv(rewrite_trace, prev_rewrite)) {
         prev_class.push_back(tc);
         match = true;
         break;
       }
     }
 
-    if(!match) {
+    if (!match) {
       // create a new class
-      vector<CpuState> new_class; 
+      vector<CpuState> new_class;
       new_class.push_back(tc);
       classes.push_back(new_class);
     }
@@ -141,12 +141,12 @@ vector<vector<CpuState>> DualBuilder::equivalence_classes(Abstraction* target, A
 
 /** Are two traces equivalent? */
 bool DualBuilder::traces_equiv(Abstraction::FullTrace& p1, Abstraction::FullTrace& p2) {
-    
-  if(p1.size() != p2.size())
+
+  if (p1.size() != p2.size())
     return false;
 
-  for(size_t i = 0; i < p1.size(); ++i) {
-    if(p1[i].first != p2[i].first)
+  for (size_t i = 0; i < p1.size(); ++i) {
+    if (p1[i].first != p2[i].first)
       return false;
   }
 
