@@ -246,6 +246,7 @@ bool checkInvariants(uint64_t* augmented,size_t rows,size_t cols)
   return true;
 }
 
+// Write a = 2^k*m where m is odd, and return k.
 size_t rank(uint64_t a)
 {
   if (a==0) return 64;

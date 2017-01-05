@@ -35,7 +35,7 @@ public:
 
     Edge(State, const std::vector<Abstraction::State>&, const std::vector<Abstraction::State>&);
 
-    bool operator==(const Edge& other) const; 
+    bool operator==(const Edge& other) const;
 
     State from;
     State to;
@@ -72,7 +72,7 @@ public:
   /** Add a feastible path. */
   void add_edge(Edge path) {
 
-    for(auto e : next_edges_[path.from]) {
+    for (auto e : next_edges_[path.from]) {
       if (e == path) {
         std::cout << "      > edge already exists -- skipping" << std::endl;
         return;
@@ -147,9 +147,9 @@ public:
 
   void print_all() {
 
-    for(auto p : next_edges_) {
+    for (auto p : next_edges_) {
       std::cout << "STATE (" << p.first.ts << ", " << p.first.rs << ")" << std::endl;
-      for(auto e : p.second) {
+      for (auto e : p.second) {
         std::cout << "    to (" << e.to.ts << ", " << e.to.rs << ")" << std::endl;
       }
     }

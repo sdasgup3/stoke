@@ -1,0 +1,1720 @@
+Z3: setting timeout to : 15000
+Target                    Rewrite                   
+                                                    
+.test_strcpy:             .test_strcpy:             
+cmpb $0x0, (%rsi)         cmpb $0x0, (%rsi)         
+movq %rdi, %rax           movq %rdi, %rax           
+je .L_400654              jne .L_400654             
+nop                       jmpq .L_400664            
+nop                       nop                       
+nop                       nop                       
+nop                       nop                       
+nop                       nop                       
+nop                       nop                       
+nop                       nop                       
+nop                       .L_400640:                
+.L_400640:                addq $0x2, %rsi           
+addq $0x1, %rsi           addq $0x1, %rax           
+addq $0x1, %rax           movzbl -0x1(%rax), %ecx   
+movzbl -0x1(%rax), %edx   cmpb $0x0, (%rsi)         
+cmpb $0x0, (%rsi)         movb %cl, -0x1(%rsi)      
+movb %dl, -0x1(%rsi)      je .L_400670              
+jne .L_400640             .L_400654:                
+.L_400654:                addq $0x1, %rax           
+retq                      movzbl -0x1(%rax), %edx   
+nop                       cmpb $0x0, 0x1(%rsi)      
+nop                       movb %dl, (%rsi)          
+nop                       jne .L_400640             
+nop                       .L_400664:                
+nop                       retq                      
+nop                       nop                       
+nop                       nop                       
+nop                       nop                       
+nop                       nop                       
+nop                       nop                       
+nop                       nop                       
+                          nop                       
+                          nop                       
+                          nop                       
+                          nop                       
+                          nop                       
+                          .L_400670:                
+                          retq                      
+                          nop                       
+                          nop                       
+                          nop                       
+                          nop                       
+                          nop                       
+                          nop                       
+                          nop                       
+                          nop                       
+                          nop                       
+                          nop                       
+                          nop                       
+                          nop                       
+                          nop                       
+                          nop                       
+                          nop                       
+                                                    
+_________________________________________
+ X  X  X 
+ X  X  X 
+_________________________________________
+Adding correspondence (0, 0) ->(2, 3)
+Starting at state (1, 1)
+  target path: 4
+  rewrite path: 2
+  rewrite path: 6
+_________________________________________
+ X  X  X 
+ X  X  X 
+_________________________________________
+      > edge already exists -- skipping
+Adding correspondence (0, 0) ->(2, 3)
+Starting at state (1, 1)
+  target path: 4
+  rewrite path: 2
+  rewrite path: 6
+      > edge already exists -- skipping
+_________________________________________
+ X  X  X 
+ X  X  X 
+_________________________________________
+      > edge already exists -- skipping
+Adding correspondence (0, 0) ->(2, 3)
+Starting at state (1, 1)
+  target path: 4
+  rewrite path: 2
+  rewrite path: 6
+      > edge already exists -- skipping
+_________________________________________
+ X  X  X 
+ X  X  X 
+_________________________________________
+      > edge already exists -- skipping
+Adding correspondence (0, 0) ->(2, 3)
+Starting at state (1, 1)
+  target path: 4
+  rewrite path: 2
+  rewrite path: 6
+      > edge already exists -- skipping
+_________________________________________
+ X  X  X 
+ X  X  X 
+_________________________________________
+      > edge already exists -- skipping
+Adding correspondence (0, 0) ->(2, 3)
+Starting at state (1, 1)
+  target path: 4
+  rewrite path: 2
+  rewrite path: 6
+      > edge already exists -- skipping
+_________________________________________
+ X  X  X 
+ X  X  X 
+_________________________________________
+      > edge already exists -- skipping
+Adding correspondence (0, 0) ->(2, 3)
+Starting at state (1, 1)
+  target path: 4
+  rewrite path: 2
+  rewrite path: 6
+      > edge already exists -- skipping
+_________________________________________
+ X  X  X 
+ X  X  X 
+_________________________________________
+      > edge already exists -- skipping
+Adding correspondence (0, 0) ->(2, 3)
+Starting at state (1, 1)
+  target path: 4
+  rewrite path: 2
+  rewrite path: 6
+      > edge already exists -- skipping
+_________________________________________
+ X  X  X 
+ X  X  X 
+_________________________________________
+      > edge already exists -- skipping
+Adding correspondence (0, 0) ->(2, 3)
+Starting at state (1, 1)
+  target path: 4
+  rewrite path: 2
+  rewrite path: 6
+      > edge already exists -- skipping
+_________________________________________
+ X  X  X 
+ X  X  X 
+_________________________________________
+      > edge already exists -- skipping
+Adding correspondence (0, 0) ->(2, 3)
+Starting at state (1, 1)
+  target path: 4
+  rewrite path: 2
+  rewrite path: 6
+      > edge already exists -- skipping
+_________________________________________
+ X  X  X 
+ X  X  X 
+_________________________________________
+      > edge already exists -- skipping
+Adding correspondence (0, 0) ->(2, 3)
+Starting at state (1, 1)
+  target path: 4
+  rewrite path: 2
+  rewrite path: 6
+      > edge already exists -- skipping
+_________________________________________
+ X  X  X 
+ X  X  X 
+_________________________________________
+      > edge already exists -- skipping
+Adding correspondence (0, 0) ->(2, 3)
+Starting at state (1, 1)
+  target path: 4
+  rewrite path: 2
+  rewrite path: 6
+      > edge already exists -- skipping
+_________________________________________
+ X  X  X 
+ X  X  X 
+_________________________________________
+      > edge already exists -- skipping
+Adding correspondence (0, 0) ->(2, 3)
+Starting at state (1, 1)
+  target path: 4
+  rewrite path: 2
+  rewrite path: 6
+      > edge already exists -- skipping
+_________________________________________
+ X  X  X 
+ X  X  X 
+_________________________________________
+      > edge already exists -- skipping
+Adding correspondence (0, 0) ->(2, 3)
+Starting at state (1, 1)
+  target path: 4
+  rewrite path: 2
+  rewrite path: 6
+      > edge already exists -- skipping
+_________________________________________
+ X  X  X 
+ X  X  X 
+_________________________________________
+      > edge already exists -- skipping
+Adding correspondence (0, 0) ->(2, 3)
+Starting at state (1, 1)
+  target path: 4
+  rewrite path: 2
+  rewrite path: 6
+      > edge already exists -- skipping
+BUILT IT
+STATE (0, 0)
+    to (1, 1)
+STATE (1, 1)
+    to (4, 6)
+LEARNING INVARIANTS 
+target trace: 1 4 
+rewrite trace: 1 2 6 
+processing trace state @ (0, 0)
+  Considering edge: (0, 0) -> (1, 1)
+REACHABLE: (1, 1)
+processing trace state @ (1, 1)
+  Considering edge: (1, 1) -> (4, 6)
+REACHABLE: (4, 6)
+processing trace state @ (4, 6)
+target trace: 1 4 
+rewrite trace: 1 2 6 
+processing trace state @ (0, 0)
+  Considering edge: (0, 0) -> (1, 1)
+REACHABLE: (1, 1)
+processing trace state @ (1, 1)
+  Considering edge: (1, 1) -> (4, 6)
+REACHABLE: (4, 6)
+processing trace state @ (4, 6)
+target trace: 1 4 
+rewrite trace: 1 2 6 
+processing trace state @ (0, 0)
+  Considering edge: (0, 0) -> (1, 1)
+REACHABLE: (1, 1)
+processing trace state @ (1, 1)
+  Considering edge: (1, 1) -> (4, 6)
+REACHABLE: (4, 6)
+processing trace state @ (4, 6)
+target trace: 1 4 
+rewrite trace: 1 2 6 
+processing trace state @ (0, 0)
+  Considering edge: (0, 0) -> (1, 1)
+REACHABLE: (1, 1)
+processing trace state @ (1, 1)
+  Considering edge: (1, 1) -> (4, 6)
+REACHABLE: (4, 6)
+processing trace state @ (4, 6)
+target trace: 1 4 
+rewrite trace: 1 2 6 
+processing trace state @ (0, 0)
+  Considering edge: (0, 0) -> (1, 1)
+REACHABLE: (1, 1)
+processing trace state @ (1, 1)
+  Considering edge: (1, 1) -> (4, 6)
+REACHABLE: (4, 6)
+processing trace state @ (4, 6)
+target trace: 1 4 
+rewrite trace: 1 2 6 
+processing trace state @ (0, 0)
+  Considering edge: (0, 0) -> (1, 1)
+REACHABLE: (1, 1)
+processing trace state @ (1, 1)
+  Considering edge: (1, 1) -> (4, 6)
+REACHABLE: (4, 6)
+processing trace state @ (4, 6)
+target trace: 1 4 
+rewrite trace: 1 2 6 
+processing trace state @ (0, 0)
+  Considering edge: (0, 0) -> (1, 1)
+REACHABLE: (1, 1)
+processing trace state @ (1, 1)
+  Considering edge: (1, 1) -> (4, 6)
+REACHABLE: (4, 6)
+processing trace state @ (4, 6)
+target trace: 1 4 
+rewrite trace: 1 2 6 
+processing trace state @ (0, 0)
+  Considering edge: (0, 0) -> (1, 1)
+REACHABLE: (1, 1)
+processing trace state @ (1, 1)
+  Considering edge: (1, 1) -> (4, 6)
+REACHABLE: (4, 6)
+processing trace state @ (4, 6)
+target trace: 1 4 
+rewrite trace: 1 2 6 
+processing trace state @ (0, 0)
+  Considering edge: (0, 0) -> (1, 1)
+REACHABLE: (1, 1)
+processing trace state @ (1, 1)
+  Considering edge: (1, 1) -> (4, 6)
+REACHABLE: (4, 6)
+processing trace state @ (4, 6)
+target trace: 1 4 
+rewrite trace: 1 2 6 
+processing trace state @ (0, 0)
+  Considering edge: (0, 0) -> (1, 1)
+REACHABLE: (1, 1)
+processing trace state @ (1, 1)
+  Considering edge: (1, 1) -> (4, 6)
+REACHABLE: (4, 6)
+processing trace state @ (4, 6)
+target trace: 1 4 
+rewrite trace: 1 2 6 
+processing trace state @ (0, 0)
+  Considering edge: (0, 0) -> (1, 1)
+REACHABLE: (1, 1)
+processing trace state @ (1, 1)
+  Considering edge: (1, 1) -> (4, 6)
+REACHABLE: (4, 6)
+processing trace state @ (4, 6)
+target trace: 1 4 
+rewrite trace: 1 2 6 
+processing trace state @ (0, 0)
+  Considering edge: (0, 0) -> (1, 1)
+REACHABLE: (1, 1)
+processing trace state @ (1, 1)
+  Considering edge: (1, 1) -> (4, 6)
+REACHABLE: (4, 6)
+processing trace state @ (4, 6)
+target trace: 1 4 
+rewrite trace: 1 2 6 
+processing trace state @ (0, 0)
+  Considering edge: (0, 0) -> (1, 1)
+REACHABLE: (1, 1)
+processing trace state @ (1, 1)
+  Considering edge: (1, 1) -> (4, 6)
+REACHABLE: (4, 6)
+processing trace state @ (4, 6)
+target trace: 1 4 
+rewrite trace: 1 2 6 
+processing trace state @ (0, 0)
+  Considering edge: (0, 0) -> (1, 1)
+REACHABLE: (1, 1)
+processing trace state @ (1, 1)
+  Considering edge: (1, 1) -> (4, 6)
+REACHABLE: (4, 6)
+processing trace state @ (4, 6)
+Checking mem var: -0x1(%rax)
+ * size 8 :)
+Checking mem var: -0x1(%rax)'
+ * size 8 :)
+Checking mem var: 0x7(%rax)
+ * size 8 :)
+Checking mem var: 0x7(%rax)'
+ * size 8 :)
+Checking mem var: -0x9(%rax)
+ * size 8 :)
+Checking mem var: -0x9(%rax)'
+ * size 8 :)
+Checking mem var: (%rsi)
+ * size 8 :)
+Checking mem var: (%rsi)'
+ * size 8 :)
+Checking mem var: 0x8(%rsi)
+ * size 8 :)
+Checking mem var: 0x8(%rsi)'
+ * size 8 :)
+Checking mem var: -0x8(%rsi)
+ * size 8 :)
+Checking mem var: -0x8(%rsi)'
+ * size 8 :)
+Checking mem var: 0x1(%rsi)
+ * size 8 :)
+Checking mem var: 0x1(%rsi)'
+ * size 8 :)
+Checking mem var: 0x9(%rsi)
+ * size 8 :)
+Checking mem var: 0x9(%rsi)'
+ * size 8 :)
+Checking mem var: -0x7(%rsi)
+ * size 8 :)
+Checking mem var: -0x7(%rsi)'
+ * size 8 :)
+Checking mem var: -0x1(%rsi)
+ * size 8 :)
+Checking mem var: -0x1(%rsi)'
+ * size 8 :)
+Checking mem var: 0x7(%rsi)
+ * size 8 :)
+Checking mem var: 0x7(%rsi)'
+ * size 8 :)
+Checking mem var: -0x9(%rsi)
+ * size 8 :)
+Checking mem var: -0x9(%rsi)'
+ * size 8 :)
+Columns
+%rbx
+%rsp
+%rbp
+%rsi
+%rdi
+%r12
+%r13
+%r14
+%r15
+%rbx'
+%rsp'
+%rbp'
+%rsi'
+%rdi'
+%r12'
+%r13'
+%r14'
+%r15'
+-0x1(%rax)
+-0x1(%rax)'
+0x7(%rax)
+0x7(%rax)'
+-0x9(%rax)
+-0x9(%rax)'
+(%rsi)
+(%rsi)'
+0x8(%rsi)
+0x8(%rsi)'
+-0x8(%rsi)
+-0x8(%rsi)'
+0x1(%rsi)
+0x1(%rsi)'
+0x9(%rsi)
+0x9(%rsi)'
+-0x7(%rsi)
+-0x7(%rsi)'
+-0x1(%rsi)
+-0x1(%rsi)'
+0x7(%rsi)
+0x7(%rsi)'
+-0x9(%rsi)
+-0x9(%rsi)'
+looking for simple equalities
+generating %rbx + -1*%rbx' = 0x0
+generating %rsp + -1*%rsp' = 0x0
+generating %rbp + -1*%rbp' = 0x0
+generating %rsi + -1*%rsi' = 0x0
+generating %rdi + -1*%rdi' = 0x0
+generating %r12 + -1*%r12' = 0x0
+generating %r13 + -1*%r13' = 0x0
+generating %r14 + -1*%r14' = 0x0
+generating %r15 + -1*%r15' = 0x0
+generating -0x1(%rax) + -1*-0x1(%rax)' = 0x0
+generating -0x1(%rax) + -1*0x7(%rax) = 0x0
+generating -0x1(%rax) + -1*0x7(%rax)' = 0x0
+generating -0x1(%rax) + -1*-0x9(%rax) = 0x0
+generating -0x1(%rax) + -1*-0x9(%rax)' = 0x0
+generating -0x1(%rax) + -1*-0x8(%rsi) = 0x0
+generating -0x1(%rax) + -1*-0x8(%rsi)' = 0x0
+generating -0x1(%rax) + -1*-0x7(%rsi) = 0x0
+generating -0x1(%rax) + -1*-0x7(%rsi)' = 0x0
+generating -0x1(%rax) + -1*-0x9(%rsi) = 0x0
+generating -0x1(%rax) + -1*-0x9(%rsi)' = 0x0
+generating -0x1(%rax)' + -1*0x7(%rax) = 0x0
+generating -0x1(%rax)' + -1*0x7(%rax)' = 0x0
+generating -0x1(%rax)' + -1*-0x9(%rax) = 0x0
+generating -0x1(%rax)' + -1*-0x9(%rax)' = 0x0
+generating -0x1(%rax)' + -1*-0x8(%rsi) = 0x0
+generating -0x1(%rax)' + -1*-0x8(%rsi)' = 0x0
+generating -0x1(%rax)' + -1*-0x7(%rsi) = 0x0
+generating -0x1(%rax)' + -1*-0x7(%rsi)' = 0x0
+generating -0x1(%rax)' + -1*-0x9(%rsi) = 0x0
+generating -0x1(%rax)' + -1*-0x9(%rsi)' = 0x0
+generating 0x7(%rax) + -1*0x7(%rax)' = 0x0
+generating 0x7(%rax) + -1*-0x9(%rax) = 0x0
+generating 0x7(%rax) + -1*-0x9(%rax)' = 0x0
+generating 0x7(%rax) + -1*-0x8(%rsi) = 0x0
+generating 0x7(%rax) + -1*-0x8(%rsi)' = 0x0
+generating 0x7(%rax) + -1*-0x7(%rsi) = 0x0
+generating 0x7(%rax) + -1*-0x7(%rsi)' = 0x0
+generating 0x7(%rax) + -1*-0x9(%rsi) = 0x0
+generating 0x7(%rax) + -1*-0x9(%rsi)' = 0x0
+generating 0x7(%rax)' + -1*-0x9(%rax) = 0x0
+generating 0x7(%rax)' + -1*-0x9(%rax)' = 0x0
+generating 0x7(%rax)' + -1*-0x8(%rsi) = 0x0
+generating 0x7(%rax)' + -1*-0x8(%rsi)' = 0x0
+generating 0x7(%rax)' + -1*-0x7(%rsi) = 0x0
+generating 0x7(%rax)' + -1*-0x7(%rsi)' = 0x0
+generating 0x7(%rax)' + -1*-0x9(%rsi) = 0x0
+generating 0x7(%rax)' + -1*-0x9(%rsi)' = 0x0
+generating -0x9(%rax) + -1*-0x9(%rax)' = 0x0
+generating -0x9(%rax) + -1*-0x8(%rsi) = 0x0
+generating -0x9(%rax) + -1*-0x8(%rsi)' = 0x0
+generating -0x9(%rax) + -1*-0x7(%rsi) = 0x0
+generating -0x9(%rax) + -1*-0x7(%rsi)' = 0x0
+generating -0x9(%rax) + -1*-0x9(%rsi) = 0x0
+generating -0x9(%rax) + -1*-0x9(%rsi)' = 0x0
+generating -0x9(%rax)' + -1*-0x8(%rsi) = 0x0
+generating -0x9(%rax)' + -1*-0x8(%rsi)' = 0x0
+generating -0x9(%rax)' + -1*-0x7(%rsi) = 0x0
+generating -0x9(%rax)' + -1*-0x7(%rsi)' = 0x0
+generating -0x9(%rax)' + -1*-0x9(%rsi) = 0x0
+generating -0x9(%rax)' + -1*-0x9(%rsi)' = 0x0
+generating (%rsi) + -1*(%rsi)' = 0x0
+generating 0x8(%rsi) + -1*0x8(%rsi)' = 0x0
+generating -0x8(%rsi) + -1*-0x8(%rsi)' = 0x0
+generating -0x8(%rsi) + -1*-0x7(%rsi) = 0x0
+generating -0x8(%rsi) + -1*-0x7(%rsi)' = 0x0
+generating -0x8(%rsi) + -1*-0x9(%rsi) = 0x0
+generating -0x8(%rsi) + -1*-0x9(%rsi)' = 0x0
+generating -0x8(%rsi)' + -1*-0x7(%rsi) = 0x0
+generating -0x8(%rsi)' + -1*-0x7(%rsi)' = 0x0
+generating -0x8(%rsi)' + -1*-0x9(%rsi) = 0x0
+generating -0x8(%rsi)' + -1*-0x9(%rsi)' = 0x0
+generating 0x1(%rsi) + -1*0x1(%rsi)' = 0x0
+generating 0x9(%rsi) + -1*0x9(%rsi)' = 0x0
+generating -0x7(%rsi) + -1*-0x7(%rsi)' = 0x0
+generating -0x7(%rsi) + -1*-0x9(%rsi) = 0x0
+generating -0x7(%rsi) + -1*-0x9(%rsi)' = 0x0
+generating -0x7(%rsi)' + -1*-0x9(%rsi) = 0x0
+generating -0x7(%rsi)' + -1*-0x9(%rsi)' = 0x0
+generating -0x1(%rsi) + -1*-0x1(%rsi)' = 0x0
+generating 0x7(%rsi) + -1*0x7(%rsi)' = 0x0
+generating -0x9(%rsi) + -1*-0x9(%rsi)' = 0x0
+allocating the matrix of size 14 x 43
+148ade99ab7ad686 14529158a03ea393 a42e0acd2b4655d1 946b091fac9e2562 86b1d783f0b36f8 30dbafc19b1564e d8951f5dac1727c3 2967f942f08b626c d057dfc86f31f520 148ade99ab7ad686 14529158a03ea393 a42e0acd2b4655d1 946b091fac9e2562 86b1d783f0b36f8 30dbafc19b1564e d8951f5dac1727c3 2967f942f08b626c d057dfc86f31f520 0 0 0 0 0 0 b945a0ccd603da00 b945a0ccd603da00 d1b1b79a52d43e90 d1b1b79a52d43e90 0 0 90b945a0ccd603da 90b945a0ccd603da 3d1b1b79a52d43e 3d1b1b79a52d43e 0 0 45a0ccd603da0000 45a0ccd603da0000 b1b79a52d43e90b9 b1b79a52d43e90b9 0 0 1 
+de560c92218711a cd2302b33683c3a5 c6519b851e37f439 a66cd9d6cef27366 c99f16eab0b9fe95 cf08b0c5a63f52a7 c0c3600be1d3b1af daab1c83ad79c70a 2053de6a4cc4bfdb de560c92218711a cd2302b33683c3a5 c6519b851e37f439 a66cd9d6cef27366 c99f16eab0b9fe95 cf08b0c5a63f52a7 c0c3600be1d3b1af daab1c83ad79c70a 2053de6a4cc4bfdb 0 0 0 0 0 0 4b62948808117700 4b62948808117700 4e6be1f898946201 4e6be1f898946201 0 0 14b629488081177 14b629488081177 964e6be1f8989462 964e6be1f8989462 0 0 6294880811770000 6294880811770000 6be1f8989462014b 6be1f8989462014b 0 0 1 
+1e8c968a92ec615b 703f4984d4ec0ad3 4cf5e72171e5e6e0 b70df00e0be15700 f5098d0c37f3f898 fa336a1187b86e11 4186b5150307df29 ea5a98fce46d4069 8655f57918fd3076 1e8c968a92ec615b 703f4984d4ec0ad3 4cf5e72171e5e6e0 b70df00e0be15700 f5098d0c37f3f898 fa336a1187b86e11 4186b5150307df29 ea5a98fce46d4069 8655f57918fd3076 0 0 0 0 0 0 d8a7085d70071600 d8a7085d70071600 59023eea8e201b59 59023eea8e201b59 0 0 59d8a7085d700716 59d8a7085d700716 7559023eea8e201b 7559023eea8e201b 0 0 0 0 23eea8e201b59d8 23eea8e201b59d8 0 0 1 
+9b81c899c4f6b5b0 69caf124ee115874 30385b2375c444c5 eb7a2dbb16bbacba 1fb9670f0b551b2c 3d837703b8a095e8 f227f4057d89508d 50bca8ce1f050afa c449d0015c73c4c1 9b81c899c4f6b5b0 69caf124ee115874 30385b2375c444c5 eb7a2dbb16bbacba 1fb9670f0b551b2c 3d837703b8a095e8 f227f4057d89508d 50bca8ce1f050afa c449d0015c73c4c1 0 0 0 0 0 0 3390ce847fc3ce00 3390ce847fc3ce00 66cf61a7b45e1c82 66cf61a7b45e1c82 0 0 823390ce847fc3ce 823390ce847fc3ce 1866cf61a7b45e1c 1866cf61a7b45e1c 0 0 90ce847fc3ce0000 90ce847fc3ce0000 cf61a7b45e1c8233 cf61a7b45e1c8233 0 0 1 
+b5ad2ff0d77c9203 823109f3ba46cbf8 29c073c1cf4be18d dd9454aaf4376e3 ca397853dd332433 2da2fc5a3f7120e d5afe5fd1be74d4b da47af5487131d1f ddea919c30eef050 b5ad2ff0d77c9203 823109f3ba46cbf8 29c073c1cf4be18d dd9454aaf4376e3 ca397853dd332433 2da2fc5a3f7120e d5afe5fd1be74d4b da47af5487131d1f ddea919c30eef050 0 0 0 0 0 0 eecfe375ff928a00 eecfe375ff928a00 f9be51b0e4e21451 f9be51b0e4e21451 0 0 51eecfe375ff928a 51eecfe375ff928a 9f9be51b0e4e214 9f9be51b0e4e214 0 0 cfe375ff928a0000 cfe375ff928a0000 be51b0e4e21451ee be51b0e4e21451ee 0 0 1 
+604d8b08aed03e75 1aa78889ef4c72e1 692a26dd42e2199e 3e78ad6d4fa1ed87 3033ffc28ae92a76 309cc077b632e1d9 92b8bbbf3d6cd9b 241d65650d1c78ce 4fed17bbd88721d3 604d8b08aed03e75 1aa78889ef4c72e1 692a26dd42e2199e 3e78ad6d4fa1ed87 3033ffc28ae92a76 309cc077b632e1d9 92b8bbbf3d6cd9b 241d65650d1c78ce 4fed17bbd88721d3 0 0 0 0 0 0 40050bc0bdffd500 40050bc0bdffd500 7ecc4878436655a 7ecc4878436655a 0 0 5a40050bc0bdffd5 5a40050bc0bdffd5 2c07ecc487843665 2c07ecc487843665 0 0 50bc0bdffd50000 50bc0bdffd50000 ecc4878436655a40 ecc4878436655a40 0 0 1 
+595b8399a9b9128b d9c67d7e059b304a 6806a6683744c452 2b2e2ae29b4afc8f 86e5314dc67d3ecf aebfd206915e6d1c d7793e30e715fa90 e7111bf650a18d9a 7bf74ac4fca11da6 595b8399a9b9128b d9c67d7e059b304a 6806a6683744c452 2b2e2ae29b4afc8f 86e5314dc67d3ecf aebfd206915e6d1c d7793e30e715fa90 e7111bf650a18d9a 7bf74ac4fca11da6 0 0 0 0 0 0 2f992b4130be3400 2f992b4130be3400 96892653428e6e8c 96892653428e6e8c 0 0 8c2f992b4130be34 8c2f992b4130be34 4596892653428e6e 4596892653428e6e 0 0 992b4130be340000 992b4130be340000 892653428e6e8c2f 892653428e6e8c2f 0 0 1 
+8949e282d94eeeed 167d374c937e7a54 86f3a73062847a00 1c786c9fda65a51a 409d6a653af3b911 c1b309193a0909cb 320f922536f0b0e1 49380961579a812 8218950035e31532 8949e282d94eeeed 167d374c937e7a54 86f3a73062847a00 1c786c9fda65a51a 409d6a653af3b911 c1b309193a0909cb 320f922536f0b0e1 49380961579a812 8218950035e31532 0 0 0 0 0 0 c1dc825d2f962500 c1dc825d2f962500 8ca7348b478a747f 8ca7348b478a747f 0 0 7fc1dc825d2f9625 7fc1dc825d2f9625 ea8ca7348b478a74 ea8ca7348b478a74 0 0 dc825d2f96250000 dc825d2f96250000 a7348b478a747fc1 a7348b478a747fc1 0 0 1 
+b40954978af861ff 5879744db9a0e9e5 2b1461851127b2c6 ee07715e1d2da576 6a54cb1f20754945 471aa0be7cc162be 218ab33b06078b3f 6d190be094b2b2e9 f00083af0e554318 b40954978af861ff 5879744db9a0e9e5 2b1461851127b2c6 ee07715e1d2da576 6a54cb1f20754945 471aa0be7cc162be 218ab33b06078b3f 6d190be094b2b2e9 f00083af0e554318 0 0 0 0 0 0 3dbfd6afd4d57700 3dbfd6afd4d57700 43627ca2ad42d481 43627ca2ad42d481 0 0 813dbfd6afd4d577 813dbfd6afd4d577 e643627ca2ad42d4 e643627ca2ad42d4 0 0 bfd6afd4d5770000 bfd6afd4d5770000 627ca2ad42d4813d 627ca2ad42d4813d 0 0 1 
+66b5bce935d6ab9d 8c647e9301d42b0a 1541bcbeb407863a 3346555ed005025a 41236427f07c7353 74eff5510a3ec0a5 fb84f14f453a75c1 3e28e1d6c4f1abbb 8f54fb890f60509 66b5bce935d6ab9d 8c647e9301d42b0a 1541bcbeb407863a 3346555ed005025a 41236427f07c7353 74eff5510a3ec0a5 fb84f14f453a75c1 3e28e1d6c4f1abbb 8f54fb890f60509 0 0 0 0 0 0 59771c329f6f7f00 59771c329f6f7f00 4a1f4653d338ed6f 4a1f4653d338ed6f 0 0 6f59771c329f6f7f 6f59771c329f6f7f 14a1f4653d338ed 14a1f4653d338ed 0 0 771c329f6f7f0000 771c329f6f7f0000 1f4653d338ed6f59 1f4653d338ed6f59 0 0 1 
+4b70ecd9c27e3b97 9210138cf2a92f1f 271478b16f6fae0e 360e97dd97eef945 612048e918a5fa38 119d45469036d1ff b70da3de65ff0599 b93badd45d50e27a 24955ab5bc27d4f 4b70ecd9c27e3b97 9210138cf2a92f1f 271478b16f6fae0e 360e97dd97eef945 612048e918a5fa38 119d45469036d1ff b70da3de65ff0599 b93badd45d50e27a 24955ab5bc27d4f 0 0 0 0 0 0 b3cb7061b48f0800 b3cb7061b48f0800 fd0bf8b24300e6cf fd0bf8b24300e6cf 0 0 cfb3cb7061b48f08 cfb3cb7061b48f08 40fd0bf8b24300e6 40fd0bf8b24300e6 0 0 cb7061b48f080000 cb7061b48f080000 bf8b24300e6cfb3 bf8b24300e6cfb3 0 0 1 
+991cc1d14a515799 3f124126929e8e44 6b8b883a0b99e288 6ef8652d2f950013 b76ed25d3bb170df 46dc24a48c7ef7d3 ddf0b6e0037b8cdf 6eb7e228a131f63d 8406e7e9db41346f 991cc1d14a515799 3f124126929e8e44 6b8b883a0b99e288 6ef8652d2f950013 b76ed25d3bb170df 46dc24a48c7ef7d3 ddf0b6e0037b8cdf 6eb7e228a131f63d 8406e7e9db41346f 0 0 0 0 0 0 f4fc667d22ea8500 f4fc667d22ea8500 f4ef7467fa4b49e9 f4ef7467fa4b49e9 0 0 e9f4fc667d22ea85 e9f4fc667d22ea85 38f4ef7467fa4b49 38f4ef7467fa4b49 0 0 fc667d22ea850000 fc667d22ea850000 ef7467fa4b49e9f4 ef7467fa4b49e9f4 0 0 1 
+9e0285fe54298d86 98894faf5b7a3f3c 5408aa8f792da51e 3fa88739a3ea895c 3d804d096e82e3a0 3038439d4ebb82c4 4d259fead287c316 20e0bc834803b383 6f5141f594670d43 9e0285fe54298d86 98894faf5b7a3f3c 5408aa8f792da51e 3fa88739a3ea895c 3d804d096e82e3a0 3038439d4ebb82c4 4d259fead287c316 20e0bc834803b383 6f5141f594670d43 0 0 0 0 0 0 cf52776aef518c00 cf52776aef518c00 2961f6b7e656d148 2961f6b7e656d148 0 0 48cf52776aef518c 48cf52776aef518c 472961f6b7e656d1 472961f6b7e656d1 0 0 52776aef518c0000 52776aef518c0000 61f6b7e656d148cf 61f6b7e656d148cf 0 0 1 
+68ce60a280ce733a ac359de4b74e4f61 ca6dfe1350590913 9f229194b07fc2d8 5a27b0ca5ef21d1b 4f5825acd82492cc ea68287b940297cc 268f8c12cc489898 32ee4a020b25a0b7 68ce60a280ce733a ac359de4b74e4f61 ca6dfe1350590913 9f229194b07fc2d8 5a27b0ca5ef21d1b 4f5825acd82492cc ea68287b940297cc 268f8c12cc489898 32ee4a020b25a0b7 0 0 0 0 0 0 4174f1c11b4ad00 4174f1c11b4ad00 e276e314a8f066b4 e276e314a8f066b4 0 0 b404174f1c11b4ad b404174f1c11b4ad b5e276e314a8f066 b5e276e314a8f066 0 0 174f1c11b4ad0000 174f1c11b4ad0000 76e314a8f066b404 76e314a8f066b404 0 0 1 
+-1*%r12 + %r12' = 0x0
+-1*%r13 + %r13' = 0x0
+-1*%r14 + %r14' = 0x0
+-1*%r15 + %r15' = 0x0
+-0x1(%rax) = 0x0
+-0x1(%rax)' = 0x0
+0x7(%rax) = 0x0
+0x7(%rax)' = 0x0
+-0x9(%rax) = 0x0
+-0x9(%rax)' = 0x0
+(%rsi) + -100*0x1(%rsi) = 0x0
+(%rsi)' + -100*0x1(%rsi) = 0x0
+-1*%rbx + %rbx' = 0x0
+-1*0x8(%rsi) + 0x8(%rsi)' = 0x0
+-0x8(%rsi) = 0x0
+-0x8(%rsi)' = 0x0
+-1*%rsp + %rsp' = 0x0
+-1*0x1(%rsi) + 0x1(%rsi)' = 0x0
+-1*%rbp + %rbp' = 0x0
+-1*0x9(%rsi) + 0x9(%rsi)' = 0x0
+-0x7(%rsi) = 0x0
+-0x7(%rsi)' = 0x0
+36a4b6962a100000*%rbx + -53642904ba520000*%rsp + -29fc00cb72dc0000*%rbp + 47b2fc49ea650000*%rsi + -40820665a7970000*%rdi + e17f5b0bc780000*%r12 + -3a25e280a7100000*%r13 + 696b3414b92c0000*%r14 + -250f66bb03be0000*%r15 + 750616d1f3670000*0x8(%rsi) + -267d1702dd290000*0x1(%rsi) + 722b3c0864a00000*0x9(%rsi) + -0x1(%rsi) + 168d8eb6737b0000*0x7(%rsi) = 0xe9e9b181c5c30000
+36a4b6962a100000*%rbx + -53642904ba520000*%rsp + -29fc00cb72dc0000*%rbp + 47b2fc49ea650000*%rsi + -40820665a7970000*%rdi + e17f5b0bc780000*%r12 + -3a25e280a7100000*%r13 + 696b3414b92c0000*%r14 + -250f66bb03be0000*%r15 + 750616d1f3670000*0x8(%rsi) + -267d1702dd290000*0x1(%rsi) + 722b3c0864a00000*0x9(%rsi) + -0x1(%rsi)' + 168d8eb6737b0000*0x7(%rsi) = 0xe9e9b181c5c30000
+-1*%rsi + %rsi' = 0x0
+-1*0x7(%rsi) + 0x7(%rsi)' = 0x0
+-0x9(%rsi) = 0x0
+-0x9(%rsi)' = 0x0
+-1*%rdi + %rdi' = 0x0
+-100000000*%r12 + 100000000*%r12' = 0x0
+-100000000*%r13 + 100000000*%r13' = 0x0
+-100000000*%r14 + 100000000*%r14' = 0x0
+-100000000*%r15 + 100000000*%r15' = 0x0
+100000000*-0x1(%rax) = 0x0
+100000000*-0x1(%rax)' = 0x0
+100000000*0x7(%rax) = 0x0
+100000000*0x7(%rax)' = 0x0
+100000000*-0x9(%rax) = 0x0
+100000000*-0x9(%rax)' = 0x0
+100000000*(%rsi) + -10000000000*0x1(%rsi) = 0x0
+100000000*(%rsi)' + -10000000000*0x1(%rsi) = 0x0
+-100000000*%rbx + 100000000*%rbx' = 0x0
+-100000000*0x8(%rsi) + 100000000*0x8(%rsi)' = 0x0
+100000000*-0x8(%rsi) = 0x0
+100000000*-0x8(%rsi)' = 0x0
+-100000000*%rsp + 100000000*%rsp' = 0x0
+-100000000*0x1(%rsi) + 100000000*0x1(%rsi)' = 0x0
+-100000000*%rbp + 100000000*%rbp' = 0x0
+-100000000*0x9(%rsi) + 100000000*0x9(%rsi)' = 0x0
+100000000*-0x7(%rsi) = 0x0
+100000000*-0x7(%rsi)' = 0x0
+2a10000000000000*%rbx + 45ae000000000000*%rsp + -72dc000000000000*%rbp + -159b000000000000*%rsi + 5869000000000000*%rdi + -4388000000000000*%r12 + 58f0000000000000*%r13 + -46d4000000000000*%r14 + -3be000000000000*%r15 + -c99000000000000*0x8(%rsi) + 22d7000000000000*0x1(%rsi) + 64a0000000000000*0x9(%rsi) + 100000000*-0x1(%rsi) + 737b000000000000*0x7(%rsi) = 0xc5c3000000000000
+2a10000000000000*%rbx + 45ae000000000000*%rsp + -72dc000000000000*%rbp + -159b000000000000*%rsi + 5869000000000000*%rdi + -4388000000000000*%r12 + 58f0000000000000*%r13 + -46d4000000000000*%r14 + -3be000000000000*%r15 + -c99000000000000*0x8(%rsi) + 22d7000000000000*0x1(%rsi) + 64a0000000000000*0x9(%rsi) + 100000000*-0x1(%rsi)' + 737b000000000000*0x7(%rsi) = 0xc5c3000000000000
+-100000000*%rsi + 100000000*%rsi' = 0x0
+-100000000*0x7(%rsi) + 100000000*0x7(%rsi)' = 0x0
+100000000*-0x9(%rsi) = 0x0
+100000000*-0x9(%rsi)' = 0x0
+-100000000*%rdi + 100000000*%rdi' = 0x0
+Nullspace dimension:58
+Column count: 43
+Invariant at (0, 0): no signals ^ (t/r agree on memory) ^ %rbx != 0 ^ %rsp != 0 ^ %rbp != 0 ^ %rsi != 0 ^ %rdi != 0 ^ %r12 != 0 ^ %r13 != 0 ^ %r14 != 0 ^ %r15 != 0 ^ %rbx' != 0 ^ %rsp' != 0 ^ %rbp' != 0 ^ %rsi' != 0 ^ %rdi' != 0 ^ %r12' != 0 ^ %r13' != 0 ^ %r14' != 0 ^ %r15' != 0 ^ %rbx + -1*%rbx' = 0x0 ^ %rsp + -1*%rsp' = 0x0 ^ %rbp + -1*%rbp' = 0x0 ^ %rsi + -1*%rsi' = 0x0 ^ %rdi + -1*%rdi' = 0x0 ^ %r12 + -1*%r12' = 0x0 ^ %r13 + -1*%r13' = 0x0 ^ %r14 + -1*%r14' = 0x0 ^ %r15 + -1*%r15' = 0x0 ^ -0x1(%rax) + -1*-0x1(%rax)' = 0x0 ^ -0x1(%rax) + -1*0x7(%rax) = 0x0 ^ -0x1(%rax) + -1*0x7(%rax)' = 0x0 ^ -0x1(%rax) + -1*-0x9(%rax) = 0x0 ^ -0x1(%rax) + -1*-0x9(%rax)' = 0x0 ^ -0x1(%rax) + -1*-0x8(%rsi) = 0x0 ^ -0x1(%rax) + -1*-0x8(%rsi)' = 0x0 ^ -0x1(%rax) + -1*-0x7(%rsi) = 0x0 ^ -0x1(%rax) + -1*-0x7(%rsi)' = 0x0 ^ -0x1(%rax) + -1*-0x9(%rsi) = 0x0 ^ -0x1(%rax) + -1*-0x9(%rsi)' = 0x0 ^ -0x1(%rax)' + -1*0x7(%rax) = 0x0 ^ -0x1(%rax)' + -1*0x7(%rax)' = 0x0 ^ -0x1(%rax)' + -1*-0x9(%rax) = 0x0 ^ -0x1(%rax)' + -1*-0x9(%rax)' = 0x0 ^ -0x1(%rax)' + -1*-0x8(%rsi) = 0x0 ^ -0x1(%rax)' + -1*-0x8(%rsi)' = 0x0 ^ -0x1(%rax)' + -1*-0x7(%rsi) = 0x0 ^ -0x1(%rax)' + -1*-0x7(%rsi)' = 0x0 ^ -0x1(%rax)' + -1*-0x9(%rsi) = 0x0 ^ -0x1(%rax)' + -1*-0x9(%rsi)' = 0x0 ^ 0x7(%rax) + -1*0x7(%rax)' = 0x0 ^ 0x7(%rax) + -1*-0x9(%rax) = 0x0 ^ 0x7(%rax) + -1*-0x9(%rax)' = 0x0 ^ 0x7(%rax) + -1*-0x8(%rsi) = 0x0 ^ 0x7(%rax) + -1*-0x8(%rsi)' = 0x0 ^ 0x7(%rax) + -1*-0x7(%rsi) = 0x0 ^ 0x7(%rax) + -1*-0x7(%rsi)' = 0x0 ^ 0x7(%rax) + -1*-0x9(%rsi) = 0x0 ^ 0x7(%rax) + -1*-0x9(%rsi)' = 0x0 ^ 0x7(%rax)' + -1*-0x9(%rax) = 0x0 ^ 0x7(%rax)' + -1*-0x9(%rax)' = 0x0 ^ 0x7(%rax)' + -1*-0x8(%rsi) = 0x0 ^ 0x7(%rax)' + -1*-0x8(%rsi)' = 0x0 ^ 0x7(%rax)' + -1*-0x7(%rsi) = 0x0 ^ 0x7(%rax)' + -1*-0x7(%rsi)' = 0x0 ^ 0x7(%rax)' + -1*-0x9(%rsi) = 0x0 ^ 0x7(%rax)' + -1*-0x9(%rsi)' = 0x0 ^ -0x9(%rax) + -1*-0x9(%rax)' = 0x0 ^ -0x9(%rax) + -1*-0x8(%rsi) = 0x0 ^ -0x9(%rax) + -1*-0x8(%rsi)' = 0x0 ^ -0x9(%rax) + -1*-0x7(%rsi) = 0x0 ^ -0x9(%rax) + -1*-0x7(%rsi)' = 0x0 ^ -0x9(%rax) + -1*-0x9(%rsi) = 0x0 ^ -0x9(%rax) + -1*-0x9(%rsi)' = 0x0 ^ -0x9(%rax)' + -1*-0x8(%rsi) = 0x0 ^ -0x9(%rax)' + -1*-0x8(%rsi)' = 0x0 ^ -0x9(%rax)' + -1*-0x7(%rsi) = 0x0 ^ -0x9(%rax)' + -1*-0x7(%rsi)' = 0x0 ^ -0x9(%rax)' + -1*-0x9(%rsi) = 0x0 ^ -0x9(%rax)' + -1*-0x9(%rsi)' = 0x0 ^ (%rsi) + -1*(%rsi)' = 0x0 ^ 0x8(%rsi) + -1*0x8(%rsi)' = 0x0 ^ -0x8(%rsi) + -1*-0x8(%rsi)' = 0x0 ^ -0x8(%rsi) + -1*-0x7(%rsi) = 0x0 ^ -0x8(%rsi) + -1*-0x7(%rsi)' = 0x0 ^ -0x8(%rsi) + -1*-0x9(%rsi) = 0x0 ^ -0x8(%rsi) + -1*-0x9(%rsi)' = 0x0 ^ -0x8(%rsi)' + -1*-0x7(%rsi) = 0x0 ^ -0x8(%rsi)' + -1*-0x7(%rsi)' = 0x0 ^ -0x8(%rsi)' + -1*-0x9(%rsi) = 0x0 ^ -0x8(%rsi)' + -1*-0x9(%rsi)' = 0x0 ^ 0x1(%rsi) + -1*0x1(%rsi)' = 0x0 ^ 0x9(%rsi) + -1*0x9(%rsi)' = 0x0 ^ -0x7(%rsi) + -1*-0x7(%rsi)' = 0x0 ^ -0x7(%rsi) + -1*-0x9(%rsi) = 0x0 ^ -0x7(%rsi) + -1*-0x9(%rsi)' = 0x0 ^ -0x7(%rsi)' + -1*-0x9(%rsi) = 0x0 ^ -0x7(%rsi)' + -1*-0x9(%rsi)' = 0x0 ^ -0x1(%rsi) + -1*-0x1(%rsi)' = 0x0 ^ 0x7(%rsi) + -1*0x7(%rsi)' = 0x0 ^ -0x9(%rsi) + -1*-0x9(%rsi)' = 0x0 ^ -1*%r12 + %r12' = 0x0 ^ -1*%r13 + %r13' = 0x0 ^ -1*%r14 + %r14' = 0x0 ^ -1*%r15 + %r15' = 0x0 ^ -0x1(%rax) = 0x0 ^ -0x1(%rax)' = 0x0 ^ 0x7(%rax) = 0x0 ^ 0x7(%rax)' = 0x0 ^ -0x9(%rax) = 0x0 ^ -0x9(%rax)' = 0x0 ^ (%rsi) + -100*0x1(%rsi) = 0x0 ^ (%rsi)' + -100*0x1(%rsi) = 0x0 ^ -1*%rbx + %rbx' = 0x0 ^ -1*0x8(%rsi) + 0x8(%rsi)' = 0x0 ^ -0x8(%rsi) = 0x0 ^ -0x8(%rsi)' = 0x0 ^ -1*%rsp + %rsp' = 0x0 ^ -1*0x1(%rsi) + 0x1(%rsi)' = 0x0 ^ -1*%rbp + %rbp' = 0x0 ^ -1*0x9(%rsi) + 0x9(%rsi)' = 0x0 ^ -0x7(%rsi) = 0x0 ^ -0x7(%rsi)' = 0x0 ^ 36a4b6962a100000*%rbx + -53642904ba520000*%rsp + -29fc00cb72dc0000*%rbp + 47b2fc49ea650000*%rsi + -40820665a7970000*%rdi + e17f5b0bc780000*%r12 + -3a25e280a7100000*%r13 + 696b3414b92c0000*%r14 + -250f66bb03be0000*%r15 + 750616d1f3670000*0x8(%rsi) + -267d1702dd290000*0x1(%rsi) + 722b3c0864a00000*0x9(%rsi) + -0x1(%rsi) + 168d8eb6737b0000*0x7(%rsi) = 0xe9e9b181c5c30000 ^ 36a4b6962a100000*%rbx + -53642904ba520000*%rsp + -29fc00cb72dc0000*%rbp + 47b2fc49ea650000*%rsi + -40820665a7970000*%rdi + e17f5b0bc780000*%r12 + -3a25e280a7100000*%r13 + 696b3414b92c0000*%r14 + -250f66bb03be0000*%r15 + 750616d1f3670000*0x8(%rsi) + -267d1702dd290000*0x1(%rsi) + 722b3c0864a00000*0x9(%rsi) + -0x1(%rsi)' + 168d8eb6737b0000*0x7(%rsi) = 0xe9e9b181c5c30000 ^ -1*%rsi + %rsi' = 0x0 ^ -1*0x7(%rsi) + 0x7(%rsi)' = 0x0 ^ -0x9(%rsi) = 0x0 ^ -0x9(%rsi)' = 0x0 ^ -1*%rdi + %rdi' = 0x0 ^ -100000000*%r12 + 100000000*%r12' = 0x0 ^ -100000000*%r13 + 100000000*%r13' = 0x0 ^ -100000000*%r14 + 100000000*%r14' = 0x0 ^ -100000000*%r15 + 100000000*%r15' = 0x0 ^ 100000000*-0x1(%rax) = 0x0 ^ 100000000*-0x1(%rax)' = 0x0 ^ 100000000*0x7(%rax) = 0x0 ^ 100000000*0x7(%rax)' = 0x0 ^ 100000000*-0x9(%rax) = 0x0 ^ 100000000*-0x9(%rax)' = 0x0 ^ 100000000*(%rsi) + -10000000000*0x1(%rsi) = 0x0 ^ 100000000*(%rsi)' + -10000000000*0x1(%rsi) = 0x0 ^ -100000000*%rbx + 100000000*%rbx' = 0x0 ^ -100000000*0x8(%rsi) + 100000000*0x8(%rsi)' = 0x0 ^ 100000000*-0x8(%rsi) = 0x0 ^ 100000000*-0x8(%rsi)' = 0x0 ^ -100000000*%rsp + 100000000*%rsp' = 0x0 ^ -100000000*0x1(%rsi) + 100000000*0x1(%rsi)' = 0x0 ^ -100000000*%rbp + 100000000*%rbp' = 0x0 ^ -100000000*0x9(%rsi) + 100000000*0x9(%rsi)' = 0x0 ^ 100000000*-0x7(%rsi) = 0x0 ^ 100000000*-0x7(%rsi)' = 0x0 ^ 2a10000000000000*%rbx + 45ae000000000000*%rsp + -72dc000000000000*%rbp + -159b000000000000*%rsi + 5869000000000000*%rdi + -4388000000000000*%r12 + 58f0000000000000*%r13 + -46d4000000000000*%r14 + -3be000000000000*%r15 + -c99000000000000*0x8(%rsi) + 22d7000000000000*0x1(%rsi) + 64a0000000000000*0x9(%rsi) + 100000000*-0x1(%rsi) + 737b000000000000*0x7(%rsi) = 0xc5c3000000000000 ^ 2a10000000000000*%rbx + 45ae000000000000*%rsp + -72dc000000000000*%rbp + -159b000000000000*%rsi + 5869000000000000*%rdi + -4388000000000000*%r12 + 58f0000000000000*%r13 + -46d4000000000000*%r14 + -3be000000000000*%r15 + -c99000000000000*0x8(%rsi) + 22d7000000000000*0x1(%rsi) + 64a0000000000000*0x9(%rsi) + 100000000*-0x1(%rsi)' + 737b000000000000*0x7(%rsi) = 0xc5c3000000000000 ^ -100000000*%rsi + 100000000*%rsi' = 0x0 ^ -100000000*0x7(%rsi) + 100000000*0x7(%rsi)' = 0x0 ^ 100000000*-0x9(%rsi) = 0x0 ^ 100000000*-0x9(%rsi)' = 0x0 ^ -100000000*%rdi + 100000000*%rdi' = 0x0
+Checking mem var: -0x1(%rax)
+ * size 8 :)
+Checking mem var: -0x1(%rax)'
+ * size 8 :)
+Checking mem var: 0x7(%rax)
+ * size 8 :)
+Checking mem var: 0x7(%rax)'
+ * size 8 :)
+Checking mem var: -0x9(%rax)
+ * size 8 :)
+Checking mem var: -0x9(%rax)'
+ * size 8 :)
+Checking mem var: (%rsi)
+ * size 8 :)
+Checking mem var: (%rsi)'
+ * size 8 :)
+Checking mem var: 0x8(%rsi)
+ * size 8 :)
+Checking mem var: 0x8(%rsi)'
+ * size 8 :)
+Checking mem var: -0x8(%rsi)
+ * size 8 :)
+Checking mem var: -0x8(%rsi)'
+ * size 8 :)
+Checking mem var: 0x1(%rsi)
+ * size 8 :)
+Checking mem var: 0x1(%rsi)'
+ * size 8 :)
+Checking mem var: 0x9(%rsi)
+ * size 8 :)
+Checking mem var: 0x9(%rsi)'
+ * size 8 :)
+Checking mem var: -0x7(%rsi)
+ * size 8 :)
+Checking mem var: -0x7(%rsi)'
+ * size 8 :)
+Checking mem var: -0x1(%rsi)
+ * size 8 :)
+Checking mem var: -0x1(%rsi)'
+ * size 8 :)
+Checking mem var: 0x7(%rsi)
+ * size 8 :)
+Checking mem var: 0x7(%rsi)'
+ * size 8 :)
+Checking mem var: -0x9(%rsi)
+ * size 8 :)
+Checking mem var: -0x9(%rsi)'
+ * size 8 :)
+Columns
+%rax
+%rbx
+%rsp
+%rbp
+%rsi
+%rdi
+%r12
+%r13
+%r14
+%r15
+%rax'
+%rbx'
+%rsp'
+%rbp'
+%rsi'
+%rdi'
+%r12'
+%r13'
+%r14'
+%r15'
+-0x1(%rax)
+-0x1(%rax)'
+0x7(%rax)
+0x7(%rax)'
+-0x9(%rax)
+-0x9(%rax)'
+(%rsi)
+(%rsi)'
+0x8(%rsi)
+0x8(%rsi)'
+-0x8(%rsi)
+-0x8(%rsi)'
+0x1(%rsi)
+0x1(%rsi)'
+0x9(%rsi)
+0x9(%rsi)'
+-0x7(%rsi)
+-0x7(%rsi)'
+-0x1(%rsi)
+-0x1(%rsi)'
+0x7(%rsi)
+0x7(%rsi)'
+-0x9(%rsi)
+-0x9(%rsi)'
+looking for simple equalities
+generating %rax + -1*%rdi = 0x0
+generating %rax + -1*%rax' = 0x0
+generating %rax + -1*%rdi' = 0x0
+generating %rbx + -1*%rbx' = 0x0
+generating %rsp + -1*%rsp' = 0x0
+generating %rbp + -1*%rbp' = 0x0
+generating %rsi + -1*%rsi' = 0x0
+generating %rdi + -1*%rax' = 0x0
+generating %rdi + -1*%rdi' = 0x0
+generating %r12 + -1*%r12' = 0x0
+generating %r13 + -1*%r13' = 0x0
+generating %r14 + -1*%r14' = 0x0
+generating %r15 + -1*%r15' = 0x0
+generating %rax' + -1*%rdi' = 0x0
+generating -0x1(%rax) + -1*-0x1(%rax)' = 0x0
+generating 0x7(%rax) + -1*0x7(%rax)' = 0x0
+generating -0x9(%rax) + -1*-0x9(%rax)' = 0x0
+generating -0x9(%rax) + -1*-0x8(%rsi) = 0x0
+generating -0x9(%rax) + -1*-0x8(%rsi)' = 0x0
+generating -0x9(%rax) + -1*-0x7(%rsi) = 0x0
+generating -0x9(%rax) + -1*-0x7(%rsi)' = 0x0
+generating -0x9(%rax) + -1*-0x9(%rsi) = 0x0
+generating -0x9(%rax) + -1*-0x9(%rsi)' = 0x0
+generating -0x9(%rax)' + -1*-0x8(%rsi) = 0x0
+generating -0x9(%rax)' + -1*-0x8(%rsi)' = 0x0
+generating -0x9(%rax)' + -1*-0x7(%rsi) = 0x0
+generating -0x9(%rax)' + -1*-0x7(%rsi)' = 0x0
+generating -0x9(%rax)' + -1*-0x9(%rsi) = 0x0
+generating -0x9(%rax)' + -1*-0x9(%rsi)' = 0x0
+generating (%rsi) + -1*(%rsi)' = 0x0
+generating 0x8(%rsi) + -1*0x8(%rsi)' = 0x0
+generating -0x8(%rsi) + -1*-0x8(%rsi)' = 0x0
+generating -0x8(%rsi) + -1*-0x7(%rsi) = 0x0
+generating -0x8(%rsi) + -1*-0x7(%rsi)' = 0x0
+generating -0x8(%rsi) + -1*-0x9(%rsi) = 0x0
+generating -0x8(%rsi) + -1*-0x9(%rsi)' = 0x0
+generating -0x8(%rsi)' + -1*-0x7(%rsi) = 0x0
+generating -0x8(%rsi)' + -1*-0x7(%rsi)' = 0x0
+generating -0x8(%rsi)' + -1*-0x9(%rsi) = 0x0
+generating -0x8(%rsi)' + -1*-0x9(%rsi)' = 0x0
+generating 0x1(%rsi) + -1*0x1(%rsi)' = 0x0
+generating 0x9(%rsi) + -1*0x9(%rsi)' = 0x0
+generating -0x7(%rsi) + -1*-0x7(%rsi)' = 0x0
+generating -0x7(%rsi) + -1*-0x9(%rsi) = 0x0
+generating -0x7(%rsi) + -1*-0x9(%rsi)' = 0x0
+generating -0x7(%rsi)' + -1*-0x9(%rsi) = 0x0
+generating -0x7(%rsi)' + -1*-0x9(%rsi)' = 0x0
+generating -0x1(%rsi) + -1*-0x1(%rsi)' = 0x0
+generating 0x7(%rsi) + -1*0x7(%rsi)' = 0x0
+generating -0x9(%rsi) + -1*-0x9(%rsi)' = 0x0
+allocating the matrix of size 14 x 45
+86b1d783f0b36f8 148ade99ab7ad686 14529158a03ea393 a42e0acd2b4655d1 946b091fac9e2562 86b1d783f0b36f8 30dbafc19b1564e d8951f5dac1727c3 2967f942f08b626c d057dfc86f31f520 86b1d783f0b36f8 148ade99ab7ad686 14529158a03ea393 a42e0acd2b4655d1 946b091fac9e2562 86b1d783f0b36f8 30dbafc19b1564e d8951f5dac1727c3 2967f942f08b626c d057dfc86f31f520 914258ad3480000 914258ad3480000 18799476ac7eb094 18799476ac7eb094 0 0 b945a0ccd603da00 b945a0ccd603da00 d1b1b79a52d43e90 d1b1b79a52d43e90 0 0 90b945a0ccd603da 90b945a0ccd603da 3d1b1b79a52d43e 3d1b1b79a52d43e 0 0 45a0ccd603da0000 45a0ccd603da0000 b1b79a52d43e90b9 b1b79a52d43e90b9 0 0 1 
+c99f16eab0b9fe95 de560c92218711a cd2302b33683c3a5 c6519b851e37f439 a66cd9d6cef27366 c99f16eab0b9fe95 cf08b0c5a63f52a7 c0c3600be1d3b1af daab1c83ad79c70a 2053de6a4cc4bfdb c99f16eab0b9fe95 de560c92218711a cd2302b33683c3a5 c6519b851e37f439 a66cd9d6cef27366 c99f16eab0b9fe95 cf08b0c5a63f52a7 c0c3600be1d3b1af daab1c83ad79c70a 2053de6a4cc4bfdb b1036a8fbdf00000 b1036a8fbdf00000 e61f70db91814c23 e61f70db91814c23 0 0 4b62948808117700 4b62948808117700 4e6be1f898946201 4e6be1f898946201 0 0 14b629488081177 14b629488081177 964e6be1f8989462 964e6be1f8989462 0 0 6294880811770000 6294880811770000 6be1f8989462014b 6be1f8989462014b 0 0 1 
+f5098d0c37f3f898 1e8c968a92ec615b 703f4984d4ec0ad3 4cf5e72171e5e6e0 b70df00e0be15700 f5098d0c37f3f898 fa336a1187b86e11 4186b5150307df29 ea5a98fce46d4069 8655f57918fd3076 f5098d0c37f3f898 1e8c968a92ec615b 703f4984d4ec0ad3 4cf5e72171e5e6e0 b70df00e0be15700 f5098d0c37f3f898 fa336a1187b86e11 4186b5150307df29 ea5a98fce46d4069 8655f57918fd3076 bae53d61b07e0000 bae53d61b07e0000 3873b95393acb447 3873b95393acb447 0 0 d8a7085d70071600 d8a7085d70071600 59023eea8e201b59 59023eea8e201b59 0 0 59d8a7085d700716 59d8a7085d700716 7559023eea8e201b 7559023eea8e201b 0 0 0 0 23eea8e201b59d8 23eea8e201b59d8 0 0 1 
+1fb9670f0b551b2c 9b81c899c4f6b5b0 69caf124ee115874 30385b2375c444c5 eb7a2dbb16bbacba 1fb9670f0b551b2c 3d837703b8a095e8 f227f4057d89508d 50bca8ce1f050afa c449d0015c73c4c1 1fb9670f0b551b2c 9b81c899c4f6b5b0 69caf124ee115874 30385b2375c444c5 eb7a2dbb16bbacba 1fb9670f0b551b2c 3d837703b8a095e8 f227f4057d89508d 50bca8ce1f050afa c449d0015c73c4c1 792872c7092b0000 792872c7092b0000 738c3b81b59d0d55 738c3b81b59d0d55 0 0 3390ce847fc3ce00 3390ce847fc3ce00 66cf61a7b45e1c82 66cf61a7b45e1c82 0 0 823390ce847fc3ce 823390ce847fc3ce 1866cf61a7b45e1c 1866cf61a7b45e1c 0 0 90ce847fc3ce0000 90ce847fc3ce0000 cf61a7b45e1c8233 cf61a7b45e1c8233 0 0 1 
+ca397853dd332433 b5ad2ff0d77c9203 823109f3ba46cbf8 29c073c1cf4be18d dd9454aaf4376e3 ca397853dd332433 2da2fc5a3f7120e d5afe5fd1be74d4b da47af5487131d1f ddea919c30eef050 ca397853dd332433 b5ad2ff0d77c9203 823109f3ba46cbf8 29c073c1cf4be18d dd9454aaf4376e3 ca397853dd332433 2da2fc5a3f7120e d5afe5fd1be74d4b da47af5487131d1f ddea919c30eef050 288f616e7a8c0000 288f616e7a8c0000 77117fe34424d929 77117fe34424d929 0 0 eecfe375ff928a00 eecfe375ff928a00 f9be51b0e4e21451 f9be51b0e4e21451 0 0 51eecfe375ff928a 51eecfe375ff928a 9f9be51b0e4e214 9f9be51b0e4e214 0 0 cfe375ff928a0000 cfe375ff928a0000 be51b0e4e21451ee be51b0e4e21451ee 0 0 1 
+3033ffc28ae92a76 604d8b08aed03e75 1aa78889ef4c72e1 692a26dd42e2199e 3e78ad6d4fa1ed87 3033ffc28ae92a76 309cc077b632e1d9 92b8bbbf3d6cd9b 241d65650d1c78ce 4fed17bbd88721d3 3033ffc28ae92a76 604d8b08aed03e75 1aa78889ef4c72e1 692a26dd42e2199e 3e78ad6d4fa1ed87 3033ffc28ae92a76 309cc077b632e1d9 92b8bbbf3d6cd9b 241d65650d1c78ce 4fed17bbd88721d3 7e077969aa80000 7e077969aa80000 943227cc988accd5 943227cc988accd5 0 0 40050bc0bdffd500 40050bc0bdffd500 7ecc4878436655a 7ecc4878436655a 0 0 5a40050bc0bdffd5 5a40050bc0bdffd5 2c07ecc487843665 2c07ecc487843665 0 0 50bc0bdffd50000 50bc0bdffd50000 ecc4878436655a40 ecc4878436655a40 0 0 1 
+86e5314dc67d3ecf 595b8399a9b9128b d9c67d7e059b304a 6806a6683744c452 2b2e2ae29b4afc8f 86e5314dc67d3ecf aebfd206915e6d1c d7793e30e715fa90 e7111bf650a18d9a 7bf74ac4fca11da6 86e5314dc67d3ecf 595b8399a9b9128b d9c67d7e059b304a 6806a6683744c452 2b2e2ae29b4afc8f 86e5314dc67d3ecf aebfd206915e6d1c d7793e30e715fa90 e7111bf650a18d9a 7bf74ac4fca11da6 2a39f5b4d0cc0000 2a39f5b4d0cc0000 93c32805080c554 93c32805080c554 0 0 2f992b4130be3400 2f992b4130be3400 96892653428e6e8c 96892653428e6e8c 0 0 8c2f992b4130be34 8c2f992b4130be34 4596892653428e6e 4596892653428e6e 0 0 992b4130be340000 992b4130be340000 892653428e6e8c2f 892653428e6e8c2f 0 0 1 
+409d6a653af3b911 8949e282d94eeeed 167d374c937e7a54 86f3a73062847a00 1c786c9fda65a51a 409d6a653af3b911 c1b309193a0909cb 320f922536f0b0e1 49380961579a812 8218950035e31532 409d6a653af3b911 8949e282d94eeeed 167d374c937e7a54 86f3a73062847a00 1c786c9fda65a51a 409d6a653af3b911 c1b309193a0909cb 320f922536f0b0e1 49380961579a812 8218950035e31532 e531034cf3180000 e531034cf3180000 61bed0c98bb07799 61bed0c98bb07799 0 0 c1dc825d2f962500 c1dc825d2f962500 8ca7348b478a747f 8ca7348b478a747f 0 0 7fc1dc825d2f9625 7fc1dc825d2f9625 ea8ca7348b478a74 ea8ca7348b478a74 0 0 dc825d2f96250000 dc825d2f96250000 a7348b478a747fc1 a7348b478a747fc1 0 0 1 
+6a54cb1f20754945 b40954978af861ff 5879744db9a0e9e5 2b1461851127b2c6 ee07715e1d2da576 6a54cb1f20754945 471aa0be7cc162be 218ab33b06078b3f 6d190be094b2b2e9 f00083af0e554318 6a54cb1f20754945 b40954978af861ff 5879744db9a0e9e5 2b1461851127b2c6 ee07715e1d2da576 6a54cb1f20754945 471aa0be7cc162be 218ab33b06078b3f 6d190be094b2b2e9 f00083af0e554318 d0fe66a955410000 d0fe66a955410000 49a63484ca44da35 49a63484ca44da35 0 0 3dbfd6afd4d57700 3dbfd6afd4d57700 43627ca2ad42d481 43627ca2ad42d481 0 0 813dbfd6afd4d577 813dbfd6afd4d577 e643627ca2ad42d4 e643627ca2ad42d4 0 0 bfd6afd4d5770000 bfd6afd4d5770000 627ca2ad42d4813d 627ca2ad42d4813d 0 0 1 
+41236427f07c7353 66b5bce935d6ab9d 8c647e9301d42b0a 1541bcbeb407863a 3346555ed005025a 41236427f07c7353 74eff5510a3ec0a5 fb84f14f453a75c1 3e28e1d6c4f1abbb 8f54fb890f60509 41236427f07c7353 66b5bce935d6ab9d 8c647e9301d42b0a 1541bcbeb407863a 3346555ed005025a 41236427f07c7353 74eff5510a3ec0a5 fb84f14f453a75c1 3e28e1d6c4f1abbb 8f54fb890f60509 87575bbdf74c0000 87575bbdf74c0000 2749c3d9869c805f 2749c3d9869c805f 0 0 59771c329f6f7f00 59771c329f6f7f00 4a1f4653d338ed6f 4a1f4653d338ed6f 0 0 6f59771c329f6f7f 6f59771c329f6f7f 14a1f4653d338ed 14a1f4653d338ed 0 0 771c329f6f7f0000 771c329f6f7f0000 1f4653d338ed6f59 1f4653d338ed6f59 0 0 1 
+612048e918a5fa38 4b70ecd9c27e3b97 9210138cf2a92f1f 271478b16f6fae0e 360e97dd97eef945 612048e918a5fa38 119d45469036d1ff b70da3de65ff0599 b93badd45d50e27a 24955ab5bc27d4f 612048e918a5fa38 4b70ecd9c27e3b97 9210138cf2a92f1f 271478b16f6fae0e 360e97dd97eef945 612048e918a5fa38 119d45469036d1ff b70da3de65ff0599 b93badd45d50e27a 24955ab5bc27d4f 728dd25962990000 728dd25962990000 27429a725b457692 27429a725b457692 0 0 b3cb7061b48f0800 b3cb7061b48f0800 fd0bf8b24300e6cf fd0bf8b24300e6cf 0 0 cfb3cb7061b48f08 cfb3cb7061b48f08 40fd0bf8b24300e6 40fd0bf8b24300e6 0 0 cb7061b48f080000 cb7061b48f080000 bf8b24300e6cfb3 bf8b24300e6cfb3 0 0 1 
+b76ed25d3bb170df 991cc1d14a515799 3f124126929e8e44 6b8b883a0b99e288 6ef8652d2f950013 b76ed25d3bb170df 46dc24a48c7ef7d3 ddf0b6e0037b8cdf 6eb7e228a131f63d 8406e7e9db41346f b76ed25d3bb170df 991cc1d14a515799 3f124126929e8e44 6b8b883a0b99e288 6ef8652d2f950013 b76ed25d3bb170df 46dc24a48c7ef7d3 ddf0b6e0037b8cdf 6eb7e228a131f63d 8406e7e9db41346f abb237f236b50000 abb237f236b50000 b9dbcd6139bc4b08 b9dbcd6139bc4b08 0 0 f4fc667d22ea8500 f4fc667d22ea8500 f4ef7467fa4b49e9 f4ef7467fa4b49e9 0 0 e9f4fc667d22ea85 e9f4fc667d22ea85 38f4ef7467fa4b49 38f4ef7467fa4b49 0 0 fc667d22ea850000 fc667d22ea850000 ef7467fa4b49e9f4 ef7467fa4b49e9f4 0 0 1 
+3d804d096e82e3a0 9e0285fe54298d86 98894faf5b7a3f3c 5408aa8f792da51e 3fa88739a3ea895c 3d804d096e82e3a0 3038439d4ebb82c4 4d259fead287c316 20e0bc834803b383 6f5141f594670d43 3d804d096e82e3a0 9e0285fe54298d86 98894faf5b7a3f3c 5408aa8f792da51e 3fa88739a3ea895c 3d804d096e82e3a0 3038439d4ebb82c4 4d259fead287c316 20e0bc834803b383 6f5141f594670d43 0 0 55ad6676553247e6 55ad6676553247e6 0 0 cf52776aef518c00 cf52776aef518c00 2961f6b7e656d148 2961f6b7e656d148 0 0 48cf52776aef518c 48cf52776aef518c 472961f6b7e656d1 472961f6b7e656d1 0 0 52776aef518c0000 52776aef518c0000 61f6b7e656d148cf 61f6b7e656d148cf 0 0 1 
+5a27b0ca5ef21d1b 68ce60a280ce733a ac359de4b74e4f61 ca6dfe1350590913 9f229194b07fc2d8 5a27b0ca5ef21d1b 4f5825acd82492cc ea68287b940297cc 268f8c12cc489898 32ee4a020b25a0b7 5a27b0ca5ef21d1b 68ce60a280ce733a ac359de4b74e4f61 ca6dfe1350590913 9f229194b07fc2d8 5a27b0ca5ef21d1b 4f5825acd82492cc ea68287b940297cc 268f8c12cc489898 32ee4a020b25a0b7 6dc066d671f80000 6dc066d671f80000 28100a6117c1105c 28100a6117c1105c 0 0 4174f1c11b4ad00 4174f1c11b4ad00 e276e314a8f066b4 e276e314a8f066b4 0 0 b404174f1c11b4ad b404174f1c11b4ad b5e276e314a8f066 b5e276e314a8f066 0 0 174f1c11b4ad0000 174f1c11b4ad0000 76e314a8f066b404 76e314a8f066b404 0 0 1 
+-1*%rsi + %rsi' = 0x0
+-1*%rax + %rdi' = 0x0
+-1*%r12 + %r12' = 0x0
+-1*%r13 + %r13' = 0x0
+-1*%r14 + %r14' = 0x0
+-1*%r15 + %r15' = 0x0
+670f5f02c1d00000*%rax + 6b5aa911764c8000*%rbx + 7ec6502183430000*%rsp + 2f7011f8ecb80000*%rbp + 63d43bca2b598000*%rsi + 73a851328bc10000*%r12 + 4ab947b07f890000*%r13 + -ea79f405af70000*%r14 + -6b0e2f16435f8000*%r15 + -0x1(%rax) + -bb64872251d8000*0x7(%rax) + 1af46b441ba8000*0x8(%rsi) + -33287daca3828000*0x1(%rsi) + -4b2f52923dbe8000*0x9(%rsi) + -64f315ca63f20000*0x7(%rsi) = 0x0
+670f5f02c1d00000*%rax + 6b5aa911764c8000*%rbx + 7ec6502183430000*%rsp + 2f7011f8ecb80000*%rbp + 63d43bca2b598000*%rsi + 73a851328bc10000*%r12 + 4ab947b07f890000*%r13 + -ea79f405af70000*%r14 + -6b0e2f16435f8000*%r15 + -0x1(%rax)' + -bb64872251d8000*0x7(%rax) + 1af46b441ba8000*0x8(%rsi) + -33287daca3828000*0x1(%rsi) + -4b2f52923dbe8000*0x9(%rsi) + -64f315ca63f20000*0x7(%rsi) = 0x0
+-1*%rax + %rax' = 0x0
+-1*0x7(%rax) + 0x7(%rax)' = 0x0
+-0x9(%rax) = 0x0
+-0x9(%rax)' = 0x0
+-8000000000000000*%rbx + -8000000000000000*%rsi + -8000000000000000*%r12 + -8000000000000000*%r14 + -8000000000000000*%r15 + -8000000000000000*0x7(%rax) + (%rsi) + 7fffffffffffff00*0x1(%rsi) = 0x0
+-8000000000000000*%rbx + -8000000000000000*%rsi + -8000000000000000*%r12 + -8000000000000000*%r14 + -8000000000000000*%r15 + -8000000000000000*0x7(%rax) + (%rsi)' + 7fffffffffffff00*0x1(%rsi) = 0x0
+-1*%rax + %rdi = 0x0
+-1*0x8(%rsi) + 0x8(%rsi)' = 0x0
+-0x8(%rsi) = 0x0
+-0x8(%rsi)' = 0x0
+-1*%rbx + %rbx' = 0x0
+-1*0x1(%rsi) + 0x1(%rsi)' = 0x0
+-1*%rbp + %rbp' = 0x0
+-1*0x9(%rsi) + 0x9(%rsi)' = 0x0
+-0x7(%rsi) = 0x0
+-0x7(%rsi)' = 0x0
+99b84f1177c0000*%rax + -2da558c18a310000*%rbx + -3111c907a9760000*%rsp + 1f28d00a64ee0000*%rbp + -f8cfbfcb0930000*%rsi + 20e4e843419b0000*%r12 + 8f68c5fc7d00000*%r13 + -7ad20763fb470000*%r14 + -20c0b2a225c30000*%r15 + -78fe2d8cc390000*0x7(%rax) + -7f7b52e236e40000*0x8(%rsi) + 24d929b825460000*0x1(%rsi) + 494b1421f9460000*0x9(%rsi) + -0x1(%rsi) + 7d7a5633f6540000*0x7(%rsi) = 0x0
+99b84f1177c0000*%rax + -2da558c18a310000*%rbx + -3111c907a9760000*%rsp + 1f28d00a64ee0000*%rbp + -f8cfbfcb0930000*%rsi + 20e4e843419b0000*%r12 + 8f68c5fc7d00000*%r13 + -7ad20763fb470000*%r14 + -20c0b2a225c30000*%r15 + -78fe2d8cc390000*0x7(%rax) + -7f7b52e236e40000*0x8(%rsi) + 24d929b825460000*0x1(%rsi) + 494b1421f9460000*0x9(%rsi) + -0x1(%rsi)' + 7d7a5633f6540000*0x7(%rsi) = 0x0
+-1*%rsp + %rsp' = 0x0
+-1*0x7(%rsi) + 0x7(%rsi)' = 0x0
+-0x9(%rsi) = 0x0
+-0x9(%rsi)' = 0x0
+-5b82d704f293838f*%rax + -635edc39da6c49ab*%rbx + 47650946f460f1f4*%rsp + 31f5e873b6dca6e*%rbp + 18e42d869f44e58*%rsi + 3ebed11d238c6d21*%r12 + -19834bca4f167860*%r13 + -6b6891d2a7117b91*%r14 + -1602d889f5b2d497*%r15 + -5c05e0f92432ba53*0x7(%rax) + 4040fde3cba22727*0x8(%rsi) + ac7bf67b635c9e5*0x1(%rsi) + 1926025d9cc6a062*0x9(%rsi) + 42b785cefc059f33*0x7(%rsi) = 0xffffffffffffffff
+-100000000*%rsi + 100000000*%rsi' = 0x0
+-100000000*%rax + 100000000*%rdi' = 0x0
+-100000000*%r12 + 100000000*%r12' = 0x0
+-100000000*%r13 + 100000000*%r13' = 0x0
+-100000000*%r14 + 100000000*%r14' = 0x0
+-100000000*%r15 + 100000000*%r15' = 0x0
+-3e30000000000000*%rax + 764c800000000000*%rbx + -7cbd000000000000*%rsp + -1348000000000000*%rbp + 2b59800000000000*%rsi + -743f000000000000*%r12 + 7f89000000000000*%r13 + -5af7000000000000*%r14 + -435f800000000000*%r15 + 100000000*-0x1(%rax) + -251d800000000000*0x7(%rax) + 41ba800000000000*0x8(%rsi) + 5c7d800000000000*0x1(%rsi) + -3dbe800000000000*0x9(%rsi) + -63f2000000000000*0x7(%rsi) = 0x0
+-3e30000000000000*%rax + 764c800000000000*%rbx + -7cbd000000000000*%rsp + -1348000000000000*%rbp + 2b59800000000000*%rsi + -743f000000000000*%r12 + 7f89000000000000*%r13 + -5af7000000000000*%r14 + -435f800000000000*%r15 + 100000000*-0x1(%rax)' + -251d800000000000*0x7(%rax) + 41ba800000000000*0x8(%rsi) + 5c7d800000000000*0x1(%rsi) + -3dbe800000000000*0x9(%rsi) + -63f2000000000000*0x7(%rsi) = 0x0
+-100000000*%rax + 100000000*%rax' = 0x0
+-100000000*0x7(%rax) + 100000000*0x7(%rax)' = 0x0
+100000000*-0x9(%rax) = 0x0
+100000000*-0x9(%rax)' = 0x0
+100000000*(%rsi) + -10000000000*0x1(%rsi) = 0x0
+100000000*(%rsi)' + -10000000000*0x1(%rsi) = 0x0
+-100000000*%rax + 100000000*%rdi = 0x0
+-100000000*0x8(%rsi) + 100000000*0x8(%rsi)' = 0x0
+100000000*-0x8(%rsi) = 0x0
+100000000*-0x8(%rsi)' = 0x0
+-100000000*%rbx + 100000000*%rbx' = 0x0
+-100000000*0x1(%rsi) + 100000000*0x1(%rsi)' = 0x0
+-100000000*%rbp + 100000000*%rbp' = 0x0
+-100000000*0x9(%rsi) + 100000000*0x9(%rsi)' = 0x0
+100000000*-0x7(%rsi) = 0x0
+100000000*-0x7(%rsi)' = 0x0
+177c000000000000*%rax + 75cf000000000000*%rbx + 568a000000000000*%rsp + 64ee000000000000*%rbp + 4f6d000000000000*%rsi + 419b000000000000*%r12 + -3830000000000000*%r13 + 4b9000000000000*%r14 + -25c3000000000000*%r15 + 33c7000000000000*0x7(%rax) + -36e4000000000000*0x8(%rsi) + 2546000000000000*0x1(%rsi) + -6ba000000000000*0x9(%rsi) + 100000000*-0x1(%rsi) + -9ac000000000000*0x7(%rsi) = 0x0
+177c000000000000*%rax + 75cf000000000000*%rbx + 568a000000000000*%rsp + 64ee000000000000*%rbp + 4f6d000000000000*%rsi + 419b000000000000*%r12 + -3830000000000000*%r13 + 4b9000000000000*%r14 + -25c3000000000000*%r15 + 33c7000000000000*0x7(%rax) + -36e4000000000000*0x8(%rsi) + 2546000000000000*0x1(%rsi) + -6ba000000000000*0x9(%rsi) + 100000000*-0x1(%rsi)' + -9ac000000000000*0x7(%rsi) = 0x0
+-100000000*%rsp + 100000000*%rsp' = 0x0
+-100000000*0x7(%rsi) + 100000000*0x7(%rsi)' = 0x0
+100000000*-0x9(%rsi) = 0x0
+100000000*-0x9(%rsi)' = 0x0
+d6c7c7100000000*%rax + 2593b65500000000*%rbx + -b9f0e0c00000000*%rsp + 3b6dca6e00000000*%rbp + 69f44e5800000000*%rsi + 238c6d2100000000*%r12 + -4f16786000000000*%r13 + 58ee846f00000000*%r14 + a4d2b6900000000*%r15 + -2432ba5300000000*0x7(%rax) + -345dd8d900000000*0x8(%rsi) + -49ca361b00000000*0x1(%rsi) + -63395f9e00000000*0x9(%rsi) + -3fa60cd00000000*0x7(%rsi) = 0xffffffff00000000
+Nullspace dimension:62
+Column count: 45
+Invariant at (1, 1): no signals ^ (t/r agree on memory) ^ %rax != 0 ^ %rbx != 0 ^ %rsp != 0 ^ %rbp != 0 ^ %rsi != 0 ^ %rdi != 0 ^ %r12 != 0 ^ %r13 != 0 ^ %r14 != 0 ^ %r15 != 0 ^ %rax' != 0 ^ %rbx' != 0 ^ %rsp' != 0 ^ %rbp' != 0 ^ %rsi' != 0 ^ %rdi' != 0 ^ %r12' != 0 ^ %r13' != 0 ^ %r14' != 0 ^ %r15' != 0 ^ %rax ≤ %rdi ^ %eax ≤ %edi ^ %rdi ≤ %rax ^ %edi ≤ %eax ^ %rax' ≤ %rdi' ^ %eax' ≤ %edi' ^ %rdi' ≤ %rax' ^ %edi' ≤ %eax' ^ %rax + -1*%rdi = 0x0 ^ %rax + -1*%rax' = 0x0 ^ %rax + -1*%rdi' = 0x0 ^ %rbx + -1*%rbx' = 0x0 ^ %rsp + -1*%rsp' = 0x0 ^ %rbp + -1*%rbp' = 0x0 ^ %rsi + -1*%rsi' = 0x0 ^ %rdi + -1*%rax' = 0x0 ^ %rdi + -1*%rdi' = 0x0 ^ %r12 + -1*%r12' = 0x0 ^ %r13 + -1*%r13' = 0x0 ^ %r14 + -1*%r14' = 0x0 ^ %r15 + -1*%r15' = 0x0 ^ %rax' + -1*%rdi' = 0x0 ^ -0x1(%rax) + -1*-0x1(%rax)' = 0x0 ^ 0x7(%rax) + -1*0x7(%rax)' = 0x0 ^ -0x9(%rax) + -1*-0x9(%rax)' = 0x0 ^ -0x9(%rax) + -1*-0x8(%rsi) = 0x0 ^ -0x9(%rax) + -1*-0x8(%rsi)' = 0x0 ^ -0x9(%rax) + -1*-0x7(%rsi) = 0x0 ^ -0x9(%rax) + -1*-0x7(%rsi)' = 0x0 ^ -0x9(%rax) + -1*-0x9(%rsi) = 0x0 ^ -0x9(%rax) + -1*-0x9(%rsi)' = 0x0 ^ -0x9(%rax)' + -1*-0x8(%rsi) = 0x0 ^ -0x9(%rax)' + -1*-0x8(%rsi)' = 0x0 ^ -0x9(%rax)' + -1*-0x7(%rsi) = 0x0 ^ -0x9(%rax)' + -1*-0x7(%rsi)' = 0x0 ^ -0x9(%rax)' + -1*-0x9(%rsi) = 0x0 ^ -0x9(%rax)' + -1*-0x9(%rsi)' = 0x0 ^ (%rsi) + -1*(%rsi)' = 0x0 ^ 0x8(%rsi) + -1*0x8(%rsi)' = 0x0 ^ -0x8(%rsi) + -1*-0x8(%rsi)' = 0x0 ^ -0x8(%rsi) + -1*-0x7(%rsi) = 0x0 ^ -0x8(%rsi) + -1*-0x7(%rsi)' = 0x0 ^ -0x8(%rsi) + -1*-0x9(%rsi) = 0x0 ^ -0x8(%rsi) + -1*-0x9(%rsi)' = 0x0 ^ -0x8(%rsi)' + -1*-0x7(%rsi) = 0x0 ^ -0x8(%rsi)' + -1*-0x7(%rsi)' = 0x0 ^ -0x8(%rsi)' + -1*-0x9(%rsi) = 0x0 ^ -0x8(%rsi)' + -1*-0x9(%rsi)' = 0x0 ^ 0x1(%rsi) + -1*0x1(%rsi)' = 0x0 ^ 0x9(%rsi) + -1*0x9(%rsi)' = 0x0 ^ -0x7(%rsi) + -1*-0x7(%rsi)' = 0x0 ^ -0x7(%rsi) + -1*-0x9(%rsi) = 0x0 ^ -0x7(%rsi) + -1*-0x9(%rsi)' = 0x0 ^ -0x7(%rsi)' + -1*-0x9(%rsi) = 0x0 ^ -0x7(%rsi)' + -1*-0x9(%rsi)' = 0x0 ^ -0x1(%rsi) + -1*-0x1(%rsi)' = 0x0 ^ 0x7(%rsi) + -1*0x7(%rsi)' = 0x0 ^ -0x9(%rsi) + -1*-0x9(%rsi)' = 0x0 ^ -1*%rsi + %rsi' = 0x0 ^ -1*%rax + %rdi' = 0x0 ^ -1*%r12 + %r12' = 0x0 ^ -1*%r13 + %r13' = 0x0 ^ -1*%r14 + %r14' = 0x0 ^ -1*%r15 + %r15' = 0x0 ^ 670f5f02c1d00000*%rax + 6b5aa911764c8000*%rbx + 7ec6502183430000*%rsp + 2f7011f8ecb80000*%rbp + 63d43bca2b598000*%rsi + 73a851328bc10000*%r12 + 4ab947b07f890000*%r13 + -ea79f405af70000*%r14 + -6b0e2f16435f8000*%r15 + -0x1(%rax) + -bb64872251d8000*0x7(%rax) + 1af46b441ba8000*0x8(%rsi) + -33287daca3828000*0x1(%rsi) + -4b2f52923dbe8000*0x9(%rsi) + -64f315ca63f20000*0x7(%rsi) = 0x0 ^ 670f5f02c1d00000*%rax + 6b5aa911764c8000*%rbx + 7ec6502183430000*%rsp + 2f7011f8ecb80000*%rbp + 63d43bca2b598000*%rsi + 73a851328bc10000*%r12 + 4ab947b07f890000*%r13 + -ea79f405af70000*%r14 + -6b0e2f16435f8000*%r15 + -0x1(%rax)' + -bb64872251d8000*0x7(%rax) + 1af46b441ba8000*0x8(%rsi) + -33287daca3828000*0x1(%rsi) + -4b2f52923dbe8000*0x9(%rsi) + -64f315ca63f20000*0x7(%rsi) = 0x0 ^ -1*%rax + %rax' = 0x0 ^ -1*0x7(%rax) + 0x7(%rax)' = 0x0 ^ -0x9(%rax) = 0x0 ^ -0x9(%rax)' = 0x0 ^ -8000000000000000*%rbx + -8000000000000000*%rsi + -8000000000000000*%r12 + -8000000000000000*%r14 + -8000000000000000*%r15 + -8000000000000000*0x7(%rax) + (%rsi) + 7fffffffffffff00*0x1(%rsi) = 0x0 ^ -8000000000000000*%rbx + -8000000000000000*%rsi + -8000000000000000*%r12 + -8000000000000000*%r14 + -8000000000000000*%r15 + -8000000000000000*0x7(%rax) + (%rsi)' + 7fffffffffffff00*0x1(%rsi) = 0x0 ^ -1*%rax + %rdi = 0x0 ^ -1*0x8(%rsi) + 0x8(%rsi)' = 0x0 ^ -0x8(%rsi) = 0x0 ^ -0x8(%rsi)' = 0x0 ^ -1*%rbx + %rbx' = 0x0 ^ -1*0x1(%rsi) + 0x1(%rsi)' = 0x0 ^ -1*%rbp + %rbp' = 0x0 ^ -1*0x9(%rsi) + 0x9(%rsi)' = 0x0 ^ -0x7(%rsi) = 0x0 ^ -0x7(%rsi)' = 0x0 ^ 99b84f1177c0000*%rax + -2da558c18a310000*%rbx + -3111c907a9760000*%rsp + 1f28d00a64ee0000*%rbp + -f8cfbfcb0930000*%rsi + 20e4e843419b0000*%r12 + 8f68c5fc7d00000*%r13 + -7ad20763fb470000*%r14 + -20c0b2a225c30000*%r15 + -78fe2d8cc390000*0x7(%rax) + -7f7b52e236e40000*0x8(%rsi) + 24d929b825460000*0x1(%rsi) + 494b1421f9460000*0x9(%rsi) + -0x1(%rsi) + 7d7a5633f6540000*0x7(%rsi) = 0x0 ^ 99b84f1177c0000*%rax + -2da558c18a310000*%rbx + -3111c907a9760000*%rsp + 1f28d00a64ee0000*%rbp + -f8cfbfcb0930000*%rsi + 20e4e843419b0000*%r12 + 8f68c5fc7d00000*%r13 + -7ad20763fb470000*%r14 + -20c0b2a225c30000*%r15 + -78fe2d8cc390000*0x7(%rax) + -7f7b52e236e40000*0x8(%rsi) + 24d929b825460000*0x1(%rsi) + 494b1421f9460000*0x9(%rsi) + -0x1(%rsi)' + 7d7a5633f6540000*0x7(%rsi) = 0x0 ^ -1*%rsp + %rsp' = 0x0 ^ -1*0x7(%rsi) + 0x7(%rsi)' = 0x0 ^ -0x9(%rsi) = 0x0 ^ -0x9(%rsi)' = 0x0 ^ -5b82d704f293838f*%rax + -635edc39da6c49ab*%rbx + 47650946f460f1f4*%rsp + 31f5e873b6dca6e*%rbp + 18e42d869f44e58*%rsi + 3ebed11d238c6d21*%r12 + -19834bca4f167860*%r13 + -6b6891d2a7117b91*%r14 + -1602d889f5b2d497*%r15 + -5c05e0f92432ba53*0x7(%rax) + 4040fde3cba22727*0x8(%rsi) + ac7bf67b635c9e5*0x1(%rsi) + 1926025d9cc6a062*0x9(%rsi) + 42b785cefc059f33*0x7(%rsi) = 0xffffffffffffffff ^ -100000000*%rsi + 100000000*%rsi' = 0x0 ^ -100000000*%rax + 100000000*%rdi' = 0x0 ^ -100000000*%r12 + 100000000*%r12' = 0x0 ^ -100000000*%r13 + 100000000*%r13' = 0x0 ^ -100000000*%r14 + 100000000*%r14' = 0x0 ^ -100000000*%r15 + 100000000*%r15' = 0x0 ^ -3e30000000000000*%rax + 764c800000000000*%rbx + -7cbd000000000000*%rsp + -1348000000000000*%rbp + 2b59800000000000*%rsi + -743f000000000000*%r12 + 7f89000000000000*%r13 + -5af7000000000000*%r14 + -435f800000000000*%r15 + 100000000*-0x1(%rax) + -251d800000000000*0x7(%rax) + 41ba800000000000*0x8(%rsi) + 5c7d800000000000*0x1(%rsi) + -3dbe800000000000*0x9(%rsi) + -63f2000000000000*0x7(%rsi) = 0x0 ^ -3e30000000000000*%rax + 764c800000000000*%rbx + -7cbd000000000000*%rsp + -1348000000000000*%rbp + 2b59800000000000*%rsi + -743f000000000000*%r12 + 7f89000000000000*%r13 + -5af7000000000000*%r14 + -435f800000000000*%r15 + 100000000*-0x1(%rax)' + -251d800000000000*0x7(%rax) + 41ba800000000000*0x8(%rsi) + 5c7d800000000000*0x1(%rsi) + -3dbe800000000000*0x9(%rsi) + -63f2000000000000*0x7(%rsi) = 0x0 ^ -100000000*%rax + 100000000*%rax' = 0x0 ^ -100000000*0x7(%rax) + 100000000*0x7(%rax)' = 0x0 ^ 100000000*-0x9(%rax) = 0x0 ^ 100000000*-0x9(%rax)' = 0x0 ^ 100000000*(%rsi) + -10000000000*0x1(%rsi) = 0x0 ^ 100000000*(%rsi)' + -10000000000*0x1(%rsi) = 0x0 ^ -100000000*%rax + 100000000*%rdi = 0x0 ^ -100000000*0x8(%rsi) + 100000000*0x8(%rsi)' = 0x0 ^ 100000000*-0x8(%rsi) = 0x0 ^ 100000000*-0x8(%rsi)' = 0x0 ^ -100000000*%rbx + 100000000*%rbx' = 0x0 ^ -100000000*0x1(%rsi) + 100000000*0x1(%rsi)' = 0x0 ^ -100000000*%rbp + 100000000*%rbp' = 0x0 ^ -100000000*0x9(%rsi) + 100000000*0x9(%rsi)' = 0x0 ^ 100000000*-0x7(%rsi) = 0x0 ^ 100000000*-0x7(%rsi)' = 0x0 ^ 177c000000000000*%rax + 75cf000000000000*%rbx + 568a000000000000*%rsp + 64ee000000000000*%rbp + 4f6d000000000000*%rsi + 419b000000000000*%r12 + -3830000000000000*%r13 + 4b9000000000000*%r14 + -25c3000000000000*%r15 + 33c7000000000000*0x7(%rax) + -36e4000000000000*0x8(%rsi) + 2546000000000000*0x1(%rsi) + -6ba000000000000*0x9(%rsi) + 100000000*-0x1(%rsi) + -9ac000000000000*0x7(%rsi) = 0x0 ^ 177c000000000000*%rax + 75cf000000000000*%rbx + 568a000000000000*%rsp + 64ee000000000000*%rbp + 4f6d000000000000*%rsi + 419b000000000000*%r12 + -3830000000000000*%r13 + 4b9000000000000*%r14 + -25c3000000000000*%r15 + 33c7000000000000*0x7(%rax) + -36e4000000000000*0x8(%rsi) + 2546000000000000*0x1(%rsi) + -6ba000000000000*0x9(%rsi) + 100000000*-0x1(%rsi)' + -9ac000000000000*0x7(%rsi) = 0x0 ^ -100000000*%rsp + 100000000*%rsp' = 0x0 ^ -100000000*0x7(%rsi) + 100000000*0x7(%rsi)' = 0x0 ^ 100000000*-0x9(%rsi) = 0x0 ^ 100000000*-0x9(%rsi)' = 0x0 ^ d6c7c7100000000*%rax + 2593b65500000000*%rbx + -b9f0e0c00000000*%rsp + 3b6dca6e00000000*%rbp + 69f44e5800000000*%rsi + 238c6d2100000000*%r12 + -4f16786000000000*%r13 + 58ee846f00000000*%r14 + a4d2b6900000000*%r15 + -2432ba5300000000*0x7(%rax) + -345dd8d900000000*0x8(%rsi) + -49ca361b00000000*0x1(%rsi) + -63395f9e00000000*0x9(%rsi) + -3fa60cd00000000*0x7(%rsi) = 0xffffffff00000000
+Checking mem var: -0x1(%rax)
+ * size 8 :)
+Checking mem var: -0x1(%rax)'
+ * size 8 :)
+Checking mem var: 0x7(%rax)
+ * size 8 :)
+Checking mem var: 0x7(%rax)'
+ * size 8 :)
+Checking mem var: -0x9(%rax)
+ * size 8 :)
+Checking mem var: -0x9(%rax)'
+ * size 8 :)
+Checking mem var: (%rsi)
+ * size 8 :)
+Checking mem var: (%rsi)'
+ * size 8 :)
+Checking mem var: 0x8(%rsi)
+ * size 8 :)
+Checking mem var: 0x8(%rsi)'
+ * size 8 :)
+Checking mem var: -0x8(%rsi)
+ * size 8 :)
+Checking mem var: -0x8(%rsi)'
+ * size 8 :)
+Checking mem var: 0x1(%rsi)
+ * size 8 :)
+Checking mem var: 0x1(%rsi)'
+ * size 8 :)
+Checking mem var: 0x9(%rsi)
+ * size 8 :)
+Checking mem var: 0x9(%rsi)'
+ * size 8 :)
+Checking mem var: -0x7(%rsi)
+ * size 8 :)
+Checking mem var: -0x7(%rsi)'
+ * size 8 :)
+Checking mem var: -0x1(%rsi)
+ * size 8 :)
+Checking mem var: -0x1(%rsi)'
+ * size 8 :)
+Checking mem var: 0x7(%rsi)
+ * size 8 :)
+Checking mem var: 0x7(%rsi)'
+ * size 8 :)
+Checking mem var: -0x9(%rsi)
+ * size 8 :)
+Checking mem var: -0x9(%rsi)'
+ * size 8 :)
+Columns
+%rax
+%rbx
+%rsp
+%rbp
+%rsi
+%rdi
+%r12
+%r13
+%r14
+%r15
+%rax'
+%rbx'
+%rsp'
+%rbp'
+%rsi'
+%rdi'
+%r12'
+%r13'
+%r14'
+%r15'
+-0x1(%rax)
+-0x1(%rax)'
+0x7(%rax)
+0x7(%rax)'
+-0x9(%rax)
+-0x9(%rax)'
+(%rsi)
+(%rsi)'
+0x8(%rsi)
+0x8(%rsi)'
+-0x8(%rsi)
+-0x8(%rsi)'
+0x1(%rsi)
+0x1(%rsi)'
+0x9(%rsi)
+0x9(%rsi)'
+-0x7(%rsi)
+-0x7(%rsi)'
+-0x1(%rsi)
+-0x1(%rsi)'
+0x7(%rsi)
+0x7(%rsi)'
+-0x9(%rsi)
+-0x9(%rsi)'
+looking for simple equalities
+generating %rax + -1*%rdi = 0x0
+generating %rax + -1*%rax' = 0x0
+generating %rax + -1*%rdi' = 0x0
+generating %rbx + -1*%rbx' = 0x0
+generating %rsp + -1*%rsp' = 0x0
+generating %rbp + -1*%rbp' = 0x0
+generating %rsi + -1*%rsi' = 0x0
+generating %rdi + -1*%rax' = 0x0
+generating %rdi + -1*%rdi' = 0x0
+generating %r12 + -1*%r12' = 0x0
+generating %r13 + -1*%r13' = 0x0
+generating %r14 + -1*%r14' = 0x0
+generating %r15 + -1*%r15' = 0x0
+generating %rax' + -1*%rdi' = 0x0
+generating -0x1(%rax) + -1*-0x1(%rax)' = 0x0
+generating 0x7(%rax) + -1*0x7(%rax)' = 0x0
+generating -0x9(%rax) + -1*-0x9(%rax)' = 0x0
+generating -0x9(%rax) + -1*-0x8(%rsi) = 0x0
+generating -0x9(%rax) + -1*-0x8(%rsi)' = 0x0
+generating -0x9(%rax) + -1*-0x7(%rsi) = 0x0
+generating -0x9(%rax) + -1*-0x7(%rsi)' = 0x0
+generating -0x9(%rax) + -1*-0x9(%rsi) = 0x0
+generating -0x9(%rax) + -1*-0x9(%rsi)' = 0x0
+generating -0x9(%rax)' + -1*-0x8(%rsi) = 0x0
+generating -0x9(%rax)' + -1*-0x8(%rsi)' = 0x0
+generating -0x9(%rax)' + -1*-0x7(%rsi) = 0x0
+generating -0x9(%rax)' + -1*-0x7(%rsi)' = 0x0
+generating -0x9(%rax)' + -1*-0x9(%rsi) = 0x0
+generating -0x9(%rax)' + -1*-0x9(%rsi)' = 0x0
+generating (%rsi) + -1*(%rsi)' = 0x0
+generating 0x8(%rsi) + -1*0x8(%rsi)' = 0x0
+generating -0x8(%rsi) + -1*-0x8(%rsi)' = 0x0
+generating -0x8(%rsi) + -1*-0x7(%rsi) = 0x0
+generating -0x8(%rsi) + -1*-0x7(%rsi)' = 0x0
+generating -0x8(%rsi) + -1*-0x9(%rsi) = 0x0
+generating -0x8(%rsi) + -1*-0x9(%rsi)' = 0x0
+generating -0x8(%rsi)' + -1*-0x7(%rsi) = 0x0
+generating -0x8(%rsi)' + -1*-0x7(%rsi)' = 0x0
+generating -0x8(%rsi)' + -1*-0x9(%rsi) = 0x0
+generating -0x8(%rsi)' + -1*-0x9(%rsi)' = 0x0
+generating 0x1(%rsi) + -1*0x1(%rsi)' = 0x0
+generating 0x9(%rsi) + -1*0x9(%rsi)' = 0x0
+generating -0x7(%rsi) + -1*-0x7(%rsi)' = 0x0
+generating -0x7(%rsi) + -1*-0x9(%rsi) = 0x0
+generating -0x7(%rsi) + -1*-0x9(%rsi)' = 0x0
+generating -0x7(%rsi)' + -1*-0x9(%rsi) = 0x0
+generating -0x7(%rsi)' + -1*-0x9(%rsi)' = 0x0
+generating -0x1(%rsi) + -1*-0x1(%rsi)' = 0x0
+generating 0x7(%rsi) + -1*0x7(%rsi)' = 0x0
+generating -0x9(%rsi) + -1*-0x9(%rsi)' = 0x0
+allocating the matrix of size 14 x 45
+86b1d783f0b36f8 148ade99ab7ad686 14529158a03ea393 a42e0acd2b4655d1 946b091fac9e2562 86b1d783f0b36f8 30dbafc19b1564e d8951f5dac1727c3 2967f942f08b626c d057dfc86f31f520 86b1d783f0b36f8 148ade99ab7ad686 14529158a03ea393 a42e0acd2b4655d1 946b091fac9e2562 86b1d783f0b36f8 30dbafc19b1564e d8951f5dac1727c3 2967f942f08b626c d057dfc86f31f520 914258ad3480000 914258ad3480000 18799476ac7eb094 18799476ac7eb094 0 0 b945a0ccd603da00 b945a0ccd603da00 d1b1b79a52d43e90 d1b1b79a52d43e90 0 0 90b945a0ccd603da 90b945a0ccd603da 3d1b1b79a52d43e 3d1b1b79a52d43e 0 0 45a0ccd603da0000 45a0ccd603da0000 b1b79a52d43e90b9 b1b79a52d43e90b9 0 0 1 
+c99f16eab0b9fe95 de560c92218711a cd2302b33683c3a5 c6519b851e37f439 a66cd9d6cef27366 c99f16eab0b9fe95 cf08b0c5a63f52a7 c0c3600be1d3b1af daab1c83ad79c70a 2053de6a4cc4bfdb c99f16eab0b9fe95 de560c92218711a cd2302b33683c3a5 c6519b851e37f439 a66cd9d6cef27366 c99f16eab0b9fe95 cf08b0c5a63f52a7 c0c3600be1d3b1af daab1c83ad79c70a 2053de6a4cc4bfdb b1036a8fbdf00000 b1036a8fbdf00000 e61f70db91814c23 e61f70db91814c23 0 0 4b62948808117700 4b62948808117700 4e6be1f898946201 4e6be1f898946201 0 0 14b629488081177 14b629488081177 964e6be1f8989462 964e6be1f8989462 0 0 6294880811770000 6294880811770000 6be1f8989462014b 6be1f8989462014b 0 0 1 
+f5098d0c37f3f898 1e8c968a92ec615b 703f4984d4ec0ad3 4cf5e72171e5e6e0 b70df00e0be15700 f5098d0c37f3f898 fa336a1187b86e11 4186b5150307df29 ea5a98fce46d4069 8655f57918fd3076 f5098d0c37f3f898 1e8c968a92ec615b 703f4984d4ec0ad3 4cf5e72171e5e6e0 b70df00e0be15700 f5098d0c37f3f898 fa336a1187b86e11 4186b5150307df29 ea5a98fce46d4069 8655f57918fd3076 bae53d61b07e0000 bae53d61b07e0000 3873b95393acb447 3873b95393acb447 0 0 d8a7085d70071600 d8a7085d70071600 59023eea8e201b59 59023eea8e201b59 0 0 59d8a7085d700716 59d8a7085d700716 7559023eea8e201b 7559023eea8e201b 0 0 0 0 23eea8e201b59d8 23eea8e201b59d8 0 0 1 
+1fb9670f0b551b2c 9b81c899c4f6b5b0 69caf124ee115874 30385b2375c444c5 eb7a2dbb16bbacba 1fb9670f0b551b2c 3d837703b8a095e8 f227f4057d89508d 50bca8ce1f050afa c449d0015c73c4c1 1fb9670f0b551b2c 9b81c899c4f6b5b0 69caf124ee115874 30385b2375c444c5 eb7a2dbb16bbacba 1fb9670f0b551b2c 3d837703b8a095e8 f227f4057d89508d 50bca8ce1f050afa c449d0015c73c4c1 792872c7092b0000 792872c7092b0000 738c3b81b59d0d55 738c3b81b59d0d55 0 0 3390ce847fc3ce00 3390ce847fc3ce00 66cf61a7b45e1c82 66cf61a7b45e1c82 0 0 823390ce847fc3ce 823390ce847fc3ce 1866cf61a7b45e1c 1866cf61a7b45e1c 0 0 90ce847fc3ce0000 90ce847fc3ce0000 cf61a7b45e1c8233 cf61a7b45e1c8233 0 0 1 
+ca397853dd332433 b5ad2ff0d77c9203 823109f3ba46cbf8 29c073c1cf4be18d dd9454aaf4376e3 ca397853dd332433 2da2fc5a3f7120e d5afe5fd1be74d4b da47af5487131d1f ddea919c30eef050 ca397853dd332433 b5ad2ff0d77c9203 823109f3ba46cbf8 29c073c1cf4be18d dd9454aaf4376e3 ca397853dd332433 2da2fc5a3f7120e d5afe5fd1be74d4b da47af5487131d1f ddea919c30eef050 288f616e7a8c0000 288f616e7a8c0000 77117fe34424d929 77117fe34424d929 0 0 eecfe375ff928a00 eecfe375ff928a00 f9be51b0e4e21451 f9be51b0e4e21451 0 0 51eecfe375ff928a 51eecfe375ff928a 9f9be51b0e4e214 9f9be51b0e4e214 0 0 cfe375ff928a0000 cfe375ff928a0000 be51b0e4e21451ee be51b0e4e21451ee 0 0 1 
+3033ffc28ae92a76 604d8b08aed03e75 1aa78889ef4c72e1 692a26dd42e2199e 3e78ad6d4fa1ed87 3033ffc28ae92a76 309cc077b632e1d9 92b8bbbf3d6cd9b 241d65650d1c78ce 4fed17bbd88721d3 3033ffc28ae92a76 604d8b08aed03e75 1aa78889ef4c72e1 692a26dd42e2199e 3e78ad6d4fa1ed87 3033ffc28ae92a76 309cc077b632e1d9 92b8bbbf3d6cd9b 241d65650d1c78ce 4fed17bbd88721d3 7e077969aa80000 7e077969aa80000 943227cc988accd5 943227cc988accd5 0 0 40050bc0bdffd500 40050bc0bdffd500 7ecc4878436655a 7ecc4878436655a 0 0 5a40050bc0bdffd5 5a40050bc0bdffd5 2c07ecc487843665 2c07ecc487843665 0 0 50bc0bdffd50000 50bc0bdffd50000 ecc4878436655a40 ecc4878436655a40 0 0 1 
+86e5314dc67d3ecf 595b8399a9b9128b d9c67d7e059b304a 6806a6683744c452 2b2e2ae29b4afc8f 86e5314dc67d3ecf aebfd206915e6d1c d7793e30e715fa90 e7111bf650a18d9a 7bf74ac4fca11da6 86e5314dc67d3ecf 595b8399a9b9128b d9c67d7e059b304a 6806a6683744c452 2b2e2ae29b4afc8f 86e5314dc67d3ecf aebfd206915e6d1c d7793e30e715fa90 e7111bf650a18d9a 7bf74ac4fca11da6 2a39f5b4d0cc0000 2a39f5b4d0cc0000 93c32805080c554 93c32805080c554 0 0 2f992b4130be3400 2f992b4130be3400 96892653428e6e8c 96892653428e6e8c 0 0 8c2f992b4130be34 8c2f992b4130be34 4596892653428e6e 4596892653428e6e 0 0 992b4130be340000 992b4130be340000 892653428e6e8c2f 892653428e6e8c2f 0 0 1 
+409d6a653af3b911 8949e282d94eeeed 167d374c937e7a54 86f3a73062847a00 1c786c9fda65a51a 409d6a653af3b911 c1b309193a0909cb 320f922536f0b0e1 49380961579a812 8218950035e31532 409d6a653af3b911 8949e282d94eeeed 167d374c937e7a54 86f3a73062847a00 1c786c9fda65a51a 409d6a653af3b911 c1b309193a0909cb 320f922536f0b0e1 49380961579a812 8218950035e31532 e531034cf3180000 e531034cf3180000 61bed0c98bb07799 61bed0c98bb07799 0 0 c1dc825d2f962500 c1dc825d2f962500 8ca7348b478a747f 8ca7348b478a747f 0 0 7fc1dc825d2f9625 7fc1dc825d2f9625 ea8ca7348b478a74 ea8ca7348b478a74 0 0 dc825d2f96250000 dc825d2f96250000 a7348b478a747fc1 a7348b478a747fc1 0 0 1 
+6a54cb1f20754945 b40954978af861ff 5879744db9a0e9e5 2b1461851127b2c6 ee07715e1d2da576 6a54cb1f20754945 471aa0be7cc162be 218ab33b06078b3f 6d190be094b2b2e9 f00083af0e554318 6a54cb1f20754945 b40954978af861ff 5879744db9a0e9e5 2b1461851127b2c6 ee07715e1d2da576 6a54cb1f20754945 471aa0be7cc162be 218ab33b06078b3f 6d190be094b2b2e9 f00083af0e554318 d0fe66a955410000 d0fe66a955410000 49a63484ca44da35 49a63484ca44da35 0 0 3dbfd6afd4d57700 3dbfd6afd4d57700 43627ca2ad42d481 43627ca2ad42d481 0 0 813dbfd6afd4d577 813dbfd6afd4d577 e643627ca2ad42d4 e643627ca2ad42d4 0 0 bfd6afd4d5770000 bfd6afd4d5770000 627ca2ad42d4813d 627ca2ad42d4813d 0 0 1 
+41236427f07c7353 66b5bce935d6ab9d 8c647e9301d42b0a 1541bcbeb407863a 3346555ed005025a 41236427f07c7353 74eff5510a3ec0a5 fb84f14f453a75c1 3e28e1d6c4f1abbb 8f54fb890f60509 41236427f07c7353 66b5bce935d6ab9d 8c647e9301d42b0a 1541bcbeb407863a 3346555ed005025a 41236427f07c7353 74eff5510a3ec0a5 fb84f14f453a75c1 3e28e1d6c4f1abbb 8f54fb890f60509 87575bbdf74c0000 87575bbdf74c0000 2749c3d9869c805f 2749c3d9869c805f 0 0 59771c329f6f7f00 59771c329f6f7f00 4a1f4653d338ed6f 4a1f4653d338ed6f 0 0 6f59771c329f6f7f 6f59771c329f6f7f 14a1f4653d338ed 14a1f4653d338ed 0 0 771c329f6f7f0000 771c329f6f7f0000 1f4653d338ed6f59 1f4653d338ed6f59 0 0 1 
+612048e918a5fa38 4b70ecd9c27e3b97 9210138cf2a92f1f 271478b16f6fae0e 360e97dd97eef945 612048e918a5fa38 119d45469036d1ff b70da3de65ff0599 b93badd45d50e27a 24955ab5bc27d4f 612048e918a5fa38 4b70ecd9c27e3b97 9210138cf2a92f1f 271478b16f6fae0e 360e97dd97eef945 612048e918a5fa38 119d45469036d1ff b70da3de65ff0599 b93badd45d50e27a 24955ab5bc27d4f 728dd25962990000 728dd25962990000 27429a725b457692 27429a725b457692 0 0 b3cb7061b48f0800 b3cb7061b48f0800 fd0bf8b24300e6cf fd0bf8b24300e6cf 0 0 cfb3cb7061b48f08 cfb3cb7061b48f08 40fd0bf8b24300e6 40fd0bf8b24300e6 0 0 cb7061b48f080000 cb7061b48f080000 bf8b24300e6cfb3 bf8b24300e6cfb3 0 0 1 
+b76ed25d3bb170df 991cc1d14a515799 3f124126929e8e44 6b8b883a0b99e288 6ef8652d2f950013 b76ed25d3bb170df 46dc24a48c7ef7d3 ddf0b6e0037b8cdf 6eb7e228a131f63d 8406e7e9db41346f b76ed25d3bb170df 991cc1d14a515799 3f124126929e8e44 6b8b883a0b99e288 6ef8652d2f950013 b76ed25d3bb170df 46dc24a48c7ef7d3 ddf0b6e0037b8cdf 6eb7e228a131f63d 8406e7e9db41346f abb237f236b50000 abb237f236b50000 b9dbcd6139bc4b08 b9dbcd6139bc4b08 0 0 f4fc667d22ea8500 f4fc667d22ea8500 f4ef7467fa4b49e9 f4ef7467fa4b49e9 0 0 e9f4fc667d22ea85 e9f4fc667d22ea85 38f4ef7467fa4b49 38f4ef7467fa4b49 0 0 fc667d22ea850000 fc667d22ea850000 ef7467fa4b49e9f4 ef7467fa4b49e9f4 0 0 1 
+3d804d096e82e3a0 9e0285fe54298d86 98894faf5b7a3f3c 5408aa8f792da51e 3fa88739a3ea895c 3d804d096e82e3a0 3038439d4ebb82c4 4d259fead287c316 20e0bc834803b383 6f5141f594670d43 3d804d096e82e3a0 9e0285fe54298d86 98894faf5b7a3f3c 5408aa8f792da51e 3fa88739a3ea895c 3d804d096e82e3a0 3038439d4ebb82c4 4d259fead287c316 20e0bc834803b383 6f5141f594670d43 0 0 55ad6676553247e6 55ad6676553247e6 0 0 cf52776aef518c00 cf52776aef518c00 2961f6b7e656d148 2961f6b7e656d148 0 0 48cf52776aef518c 48cf52776aef518c 472961f6b7e656d1 472961f6b7e656d1 0 0 52776aef518c0000 52776aef518c0000 61f6b7e656d148cf 61f6b7e656d148cf 0 0 1 
+5a27b0ca5ef21d1b 68ce60a280ce733a ac359de4b74e4f61 ca6dfe1350590913 9f229194b07fc2d8 5a27b0ca5ef21d1b 4f5825acd82492cc ea68287b940297cc 268f8c12cc489898 32ee4a020b25a0b7 5a27b0ca5ef21d1b 68ce60a280ce733a ac359de4b74e4f61 ca6dfe1350590913 9f229194b07fc2d8 5a27b0ca5ef21d1b 4f5825acd82492cc ea68287b940297cc 268f8c12cc489898 32ee4a020b25a0b7 6dc066d671f80000 6dc066d671f80000 28100a6117c1105c 28100a6117c1105c 0 0 4174f1c11b4ad00 4174f1c11b4ad00 e276e314a8f066b4 e276e314a8f066b4 0 0 b404174f1c11b4ad b404174f1c11b4ad b5e276e314a8f066 b5e276e314a8f066 0 0 174f1c11b4ad0000 174f1c11b4ad0000 76e314a8f066b404 76e314a8f066b404 0 0 1 
+-1*%rsi + %rsi' = 0x0
+-1*%rax + %rdi' = 0x0
+-1*%r12 + %r12' = 0x0
+-1*%r13 + %r13' = 0x0
+-1*%r14 + %r14' = 0x0
+-1*%r15 + %r15' = 0x0
+670f5f02c1d00000*%rax + 6b5aa911764c8000*%rbx + 7ec6502183430000*%rsp + 2f7011f8ecb80000*%rbp + 63d43bca2b598000*%rsi + 73a851328bc10000*%r12 + 4ab947b07f890000*%r13 + -ea79f405af70000*%r14 + -6b0e2f16435f8000*%r15 + -0x1(%rax) + -bb64872251d8000*0x7(%rax) + 1af46b441ba8000*0x8(%rsi) + -33287daca3828000*0x1(%rsi) + -4b2f52923dbe8000*0x9(%rsi) + -64f315ca63f20000*0x7(%rsi) = 0x0
+670f5f02c1d00000*%rax + 6b5aa911764c8000*%rbx + 7ec6502183430000*%rsp + 2f7011f8ecb80000*%rbp + 63d43bca2b598000*%rsi + 73a851328bc10000*%r12 + 4ab947b07f890000*%r13 + -ea79f405af70000*%r14 + -6b0e2f16435f8000*%r15 + -0x1(%rax)' + -bb64872251d8000*0x7(%rax) + 1af46b441ba8000*0x8(%rsi) + -33287daca3828000*0x1(%rsi) + -4b2f52923dbe8000*0x9(%rsi) + -64f315ca63f20000*0x7(%rsi) = 0x0
+-1*%rax + %rax' = 0x0
+-1*0x7(%rax) + 0x7(%rax)' = 0x0
+-0x9(%rax) = 0x0
+-0x9(%rax)' = 0x0
+-8000000000000000*%rbx + -8000000000000000*%rsi + -8000000000000000*%r12 + -8000000000000000*%r14 + -8000000000000000*%r15 + -8000000000000000*0x7(%rax) + (%rsi) + 7fffffffffffff00*0x1(%rsi) = 0x0
+-8000000000000000*%rbx + -8000000000000000*%rsi + -8000000000000000*%r12 + -8000000000000000*%r14 + -8000000000000000*%r15 + -8000000000000000*0x7(%rax) + (%rsi)' + 7fffffffffffff00*0x1(%rsi) = 0x0
+-1*%rax + %rdi = 0x0
+-1*0x8(%rsi) + 0x8(%rsi)' = 0x0
+-0x8(%rsi) = 0x0
+-0x8(%rsi)' = 0x0
+-1*%rbx + %rbx' = 0x0
+-1*0x1(%rsi) + 0x1(%rsi)' = 0x0
+-1*%rbp + %rbp' = 0x0
+-1*0x9(%rsi) + 0x9(%rsi)' = 0x0
+-0x7(%rsi) = 0x0
+-0x7(%rsi)' = 0x0
+99b84f1177c0000*%rax + -2da558c18a310000*%rbx + -3111c907a9760000*%rsp + 1f28d00a64ee0000*%rbp + -f8cfbfcb0930000*%rsi + 20e4e843419b0000*%r12 + 8f68c5fc7d00000*%r13 + -7ad20763fb470000*%r14 + -20c0b2a225c30000*%r15 + -78fe2d8cc390000*0x7(%rax) + -7f7b52e236e40000*0x8(%rsi) + 24d929b825460000*0x1(%rsi) + 494b1421f9460000*0x9(%rsi) + -0x1(%rsi) + 7d7a5633f6540000*0x7(%rsi) = 0x0
+99b84f1177c0000*%rax + -2da558c18a310000*%rbx + -3111c907a9760000*%rsp + 1f28d00a64ee0000*%rbp + -f8cfbfcb0930000*%rsi + 20e4e843419b0000*%r12 + 8f68c5fc7d00000*%r13 + -7ad20763fb470000*%r14 + -20c0b2a225c30000*%r15 + -78fe2d8cc390000*0x7(%rax) + -7f7b52e236e40000*0x8(%rsi) + 24d929b825460000*0x1(%rsi) + 494b1421f9460000*0x9(%rsi) + -0x1(%rsi)' + 7d7a5633f6540000*0x7(%rsi) = 0x0
+-1*%rsp + %rsp' = 0x0
+-1*0x7(%rsi) + 0x7(%rsi)' = 0x0
+-0x9(%rsi) = 0x0
+-0x9(%rsi)' = 0x0
+-5b82d704f293838f*%rax + -635edc39da6c49ab*%rbx + 47650946f460f1f4*%rsp + 31f5e873b6dca6e*%rbp + 18e42d869f44e58*%rsi + 3ebed11d238c6d21*%r12 + -19834bca4f167860*%r13 + -6b6891d2a7117b91*%r14 + -1602d889f5b2d497*%r15 + -5c05e0f92432ba53*0x7(%rax) + 4040fde3cba22727*0x8(%rsi) + ac7bf67b635c9e5*0x1(%rsi) + 1926025d9cc6a062*0x9(%rsi) + 42b785cefc059f33*0x7(%rsi) = 0xffffffffffffffff
+-100000000*%rsi + 100000000*%rsi' = 0x0
+-100000000*%rax + 100000000*%rdi' = 0x0
+-100000000*%r12 + 100000000*%r12' = 0x0
+-100000000*%r13 + 100000000*%r13' = 0x0
+-100000000*%r14 + 100000000*%r14' = 0x0
+-100000000*%r15 + 100000000*%r15' = 0x0
+-3e30000000000000*%rax + 764c800000000000*%rbx + -7cbd000000000000*%rsp + -1348000000000000*%rbp + 2b59800000000000*%rsi + -743f000000000000*%r12 + 7f89000000000000*%r13 + -5af7000000000000*%r14 + -435f800000000000*%r15 + 100000000*-0x1(%rax) + -251d800000000000*0x7(%rax) + 41ba800000000000*0x8(%rsi) + 5c7d800000000000*0x1(%rsi) + -3dbe800000000000*0x9(%rsi) + -63f2000000000000*0x7(%rsi) = 0x0
+-3e30000000000000*%rax + 764c800000000000*%rbx + -7cbd000000000000*%rsp + -1348000000000000*%rbp + 2b59800000000000*%rsi + -743f000000000000*%r12 + 7f89000000000000*%r13 + -5af7000000000000*%r14 + -435f800000000000*%r15 + 100000000*-0x1(%rax)' + -251d800000000000*0x7(%rax) + 41ba800000000000*0x8(%rsi) + 5c7d800000000000*0x1(%rsi) + -3dbe800000000000*0x9(%rsi) + -63f2000000000000*0x7(%rsi) = 0x0
+-100000000*%rax + 100000000*%rax' = 0x0
+-100000000*0x7(%rax) + 100000000*0x7(%rax)' = 0x0
+100000000*-0x9(%rax) = 0x0
+100000000*-0x9(%rax)' = 0x0
+100000000*(%rsi) + -10000000000*0x1(%rsi) = 0x0
+100000000*(%rsi)' + -10000000000*0x1(%rsi) = 0x0
+-100000000*%rax + 100000000*%rdi = 0x0
+-100000000*0x8(%rsi) + 100000000*0x8(%rsi)' = 0x0
+100000000*-0x8(%rsi) = 0x0
+100000000*-0x8(%rsi)' = 0x0
+-100000000*%rbx + 100000000*%rbx' = 0x0
+-100000000*0x1(%rsi) + 100000000*0x1(%rsi)' = 0x0
+-100000000*%rbp + 100000000*%rbp' = 0x0
+-100000000*0x9(%rsi) + 100000000*0x9(%rsi)' = 0x0
+100000000*-0x7(%rsi) = 0x0
+100000000*-0x7(%rsi)' = 0x0
+177c000000000000*%rax + 75cf000000000000*%rbx + 568a000000000000*%rsp + 64ee000000000000*%rbp + 4f6d000000000000*%rsi + 419b000000000000*%r12 + -3830000000000000*%r13 + 4b9000000000000*%r14 + -25c3000000000000*%r15 + 33c7000000000000*0x7(%rax) + -36e4000000000000*0x8(%rsi) + 2546000000000000*0x1(%rsi) + -6ba000000000000*0x9(%rsi) + 100000000*-0x1(%rsi) + -9ac000000000000*0x7(%rsi) = 0x0
+177c000000000000*%rax + 75cf000000000000*%rbx + 568a000000000000*%rsp + 64ee000000000000*%rbp + 4f6d000000000000*%rsi + 419b000000000000*%r12 + -3830000000000000*%r13 + 4b9000000000000*%r14 + -25c3000000000000*%r15 + 33c7000000000000*0x7(%rax) + -36e4000000000000*0x8(%rsi) + 2546000000000000*0x1(%rsi) + -6ba000000000000*0x9(%rsi) + 100000000*-0x1(%rsi)' + -9ac000000000000*0x7(%rsi) = 0x0
+-100000000*%rsp + 100000000*%rsp' = 0x0
+-100000000*0x7(%rsi) + 100000000*0x7(%rsi)' = 0x0
+100000000*-0x9(%rsi) = 0x0
+100000000*-0x9(%rsi)' = 0x0
+d6c7c7100000000*%rax + 2593b65500000000*%rbx + -b9f0e0c00000000*%rsp + 3b6dca6e00000000*%rbp + 69f44e5800000000*%rsi + 238c6d2100000000*%r12 + -4f16786000000000*%r13 + 58ee846f00000000*%r14 + a4d2b6900000000*%r15 + -2432ba5300000000*0x7(%rax) + -345dd8d900000000*0x8(%rsi) + -49ca361b00000000*0x1(%rsi) + -63395f9e00000000*0x9(%rsi) + -3fa60cd00000000*0x7(%rsi) = 0xffffffff00000000
+Nullspace dimension:62
+Column count: 45
+Invariant at (4, 6): no signals ^ (t/r agree on memory) ^ %rax != 0 ^ %rbx != 0 ^ %rsp != 0 ^ %rbp != 0 ^ %rsi != 0 ^ %rdi != 0 ^ %r12 != 0 ^ %r13 != 0 ^ %r14 != 0 ^ %r15 != 0 ^ %rax' != 0 ^ %rbx' != 0 ^ %rsp' != 0 ^ %rbp' != 0 ^ %rsi' != 0 ^ %rdi' != 0 ^ %r12' != 0 ^ %r13' != 0 ^ %r14' != 0 ^ %r15' != 0 ^ %rax ≤ %rdi ^ %eax ≤ %edi ^ %rdi ≤ %rax ^ %edi ≤ %eax ^ %rax' ≤ %rdi' ^ %eax' ≤ %edi' ^ %rdi' ≤ %rax' ^ %edi' ≤ %eax' ^ %rax + -1*%rdi = 0x0 ^ %rax + -1*%rax' = 0x0 ^ %rax + -1*%rdi' = 0x0 ^ %rbx + -1*%rbx' = 0x0 ^ %rsp + -1*%rsp' = 0x0 ^ %rbp + -1*%rbp' = 0x0 ^ %rsi + -1*%rsi' = 0x0 ^ %rdi + -1*%rax' = 0x0 ^ %rdi + -1*%rdi' = 0x0 ^ %r12 + -1*%r12' = 0x0 ^ %r13 + -1*%r13' = 0x0 ^ %r14 + -1*%r14' = 0x0 ^ %r15 + -1*%r15' = 0x0 ^ %rax' + -1*%rdi' = 0x0 ^ -0x1(%rax) + -1*-0x1(%rax)' = 0x0 ^ 0x7(%rax) + -1*0x7(%rax)' = 0x0 ^ -0x9(%rax) + -1*-0x9(%rax)' = 0x0 ^ -0x9(%rax) + -1*-0x8(%rsi) = 0x0 ^ -0x9(%rax) + -1*-0x8(%rsi)' = 0x0 ^ -0x9(%rax) + -1*-0x7(%rsi) = 0x0 ^ -0x9(%rax) + -1*-0x7(%rsi)' = 0x0 ^ -0x9(%rax) + -1*-0x9(%rsi) = 0x0 ^ -0x9(%rax) + -1*-0x9(%rsi)' = 0x0 ^ -0x9(%rax)' + -1*-0x8(%rsi) = 0x0 ^ -0x9(%rax)' + -1*-0x8(%rsi)' = 0x0 ^ -0x9(%rax)' + -1*-0x7(%rsi) = 0x0 ^ -0x9(%rax)' + -1*-0x7(%rsi)' = 0x0 ^ -0x9(%rax)' + -1*-0x9(%rsi) = 0x0 ^ -0x9(%rax)' + -1*-0x9(%rsi)' = 0x0 ^ (%rsi) + -1*(%rsi)' = 0x0 ^ 0x8(%rsi) + -1*0x8(%rsi)' = 0x0 ^ -0x8(%rsi) + -1*-0x8(%rsi)' = 0x0 ^ -0x8(%rsi) + -1*-0x7(%rsi) = 0x0 ^ -0x8(%rsi) + -1*-0x7(%rsi)' = 0x0 ^ -0x8(%rsi) + -1*-0x9(%rsi) = 0x0 ^ -0x8(%rsi) + -1*-0x9(%rsi)' = 0x0 ^ -0x8(%rsi)' + -1*-0x7(%rsi) = 0x0 ^ -0x8(%rsi)' + -1*-0x7(%rsi)' = 0x0 ^ -0x8(%rsi)' + -1*-0x9(%rsi) = 0x0 ^ -0x8(%rsi)' + -1*-0x9(%rsi)' = 0x0 ^ 0x1(%rsi) + -1*0x1(%rsi)' = 0x0 ^ 0x9(%rsi) + -1*0x9(%rsi)' = 0x0 ^ -0x7(%rsi) + -1*-0x7(%rsi)' = 0x0 ^ -0x7(%rsi) + -1*-0x9(%rsi) = 0x0 ^ -0x7(%rsi) + -1*-0x9(%rsi)' = 0x0 ^ -0x7(%rsi)' + -1*-0x9(%rsi) = 0x0 ^ -0x7(%rsi)' + -1*-0x9(%rsi)' = 0x0 ^ -0x1(%rsi) + -1*-0x1(%rsi)' = 0x0 ^ 0x7(%rsi) + -1*0x7(%rsi)' = 0x0 ^ -0x9(%rsi) + -1*-0x9(%rsi)' = 0x0 ^ -1*%rsi + %rsi' = 0x0 ^ -1*%rax + %rdi' = 0x0 ^ -1*%r12 + %r12' = 0x0 ^ -1*%r13 + %r13' = 0x0 ^ -1*%r14 + %r14' = 0x0 ^ -1*%r15 + %r15' = 0x0 ^ 670f5f02c1d00000*%rax + 6b5aa911764c8000*%rbx + 7ec6502183430000*%rsp + 2f7011f8ecb80000*%rbp + 63d43bca2b598000*%rsi + 73a851328bc10000*%r12 + 4ab947b07f890000*%r13 + -ea79f405af70000*%r14 + -6b0e2f16435f8000*%r15 + -0x1(%rax) + -bb64872251d8000*0x7(%rax) + 1af46b441ba8000*0x8(%rsi) + -33287daca3828000*0x1(%rsi) + -4b2f52923dbe8000*0x9(%rsi) + -64f315ca63f20000*0x7(%rsi) = 0x0 ^ 670f5f02c1d00000*%rax + 6b5aa911764c8000*%rbx + 7ec6502183430000*%rsp + 2f7011f8ecb80000*%rbp + 63d43bca2b598000*%rsi + 73a851328bc10000*%r12 + 4ab947b07f890000*%r13 + -ea79f405af70000*%r14 + -6b0e2f16435f8000*%r15 + -0x1(%rax)' + -bb64872251d8000*0x7(%rax) + 1af46b441ba8000*0x8(%rsi) + -33287daca3828000*0x1(%rsi) + -4b2f52923dbe8000*0x9(%rsi) + -64f315ca63f20000*0x7(%rsi) = 0x0 ^ -1*%rax + %rax' = 0x0 ^ -1*0x7(%rax) + 0x7(%rax)' = 0x0 ^ -0x9(%rax) = 0x0 ^ -0x9(%rax)' = 0x0 ^ -8000000000000000*%rbx + -8000000000000000*%rsi + -8000000000000000*%r12 + -8000000000000000*%r14 + -8000000000000000*%r15 + -8000000000000000*0x7(%rax) + (%rsi) + 7fffffffffffff00*0x1(%rsi) = 0x0 ^ -8000000000000000*%rbx + -8000000000000000*%rsi + -8000000000000000*%r12 + -8000000000000000*%r14 + -8000000000000000*%r15 + -8000000000000000*0x7(%rax) + (%rsi)' + 7fffffffffffff00*0x1(%rsi) = 0x0 ^ -1*%rax + %rdi = 0x0 ^ -1*0x8(%rsi) + 0x8(%rsi)' = 0x0 ^ -0x8(%rsi) = 0x0 ^ -0x8(%rsi)' = 0x0 ^ -1*%rbx + %rbx' = 0x0 ^ -1*0x1(%rsi) + 0x1(%rsi)' = 0x0 ^ -1*%rbp + %rbp' = 0x0 ^ -1*0x9(%rsi) + 0x9(%rsi)' = 0x0 ^ -0x7(%rsi) = 0x0 ^ -0x7(%rsi)' = 0x0 ^ 99b84f1177c0000*%rax + -2da558c18a310000*%rbx + -3111c907a9760000*%rsp + 1f28d00a64ee0000*%rbp + -f8cfbfcb0930000*%rsi + 20e4e843419b0000*%r12 + 8f68c5fc7d00000*%r13 + -7ad20763fb470000*%r14 + -20c0b2a225c30000*%r15 + -78fe2d8cc390000*0x7(%rax) + -7f7b52e236e40000*0x8(%rsi) + 24d929b825460000*0x1(%rsi) + 494b1421f9460000*0x9(%rsi) + -0x1(%rsi) + 7d7a5633f6540000*0x7(%rsi) = 0x0 ^ 99b84f1177c0000*%rax + -2da558c18a310000*%rbx + -3111c907a9760000*%rsp + 1f28d00a64ee0000*%rbp + -f8cfbfcb0930000*%rsi + 20e4e843419b0000*%r12 + 8f68c5fc7d00000*%r13 + -7ad20763fb470000*%r14 + -20c0b2a225c30000*%r15 + -78fe2d8cc390000*0x7(%rax) + -7f7b52e236e40000*0x8(%rsi) + 24d929b825460000*0x1(%rsi) + 494b1421f9460000*0x9(%rsi) + -0x1(%rsi)' + 7d7a5633f6540000*0x7(%rsi) = 0x0 ^ -1*%rsp + %rsp' = 0x0 ^ -1*0x7(%rsi) + 0x7(%rsi)' = 0x0 ^ -0x9(%rsi) = 0x0 ^ -0x9(%rsi)' = 0x0 ^ -5b82d704f293838f*%rax + -635edc39da6c49ab*%rbx + 47650946f460f1f4*%rsp + 31f5e873b6dca6e*%rbp + 18e42d869f44e58*%rsi + 3ebed11d238c6d21*%r12 + -19834bca4f167860*%r13 + -6b6891d2a7117b91*%r14 + -1602d889f5b2d497*%r15 + -5c05e0f92432ba53*0x7(%rax) + 4040fde3cba22727*0x8(%rsi) + ac7bf67b635c9e5*0x1(%rsi) + 1926025d9cc6a062*0x9(%rsi) + 42b785cefc059f33*0x7(%rsi) = 0xffffffffffffffff ^ -100000000*%rsi + 100000000*%rsi' = 0x0 ^ -100000000*%rax + 100000000*%rdi' = 0x0 ^ -100000000*%r12 + 100000000*%r12' = 0x0 ^ -100000000*%r13 + 100000000*%r13' = 0x0 ^ -100000000*%r14 + 100000000*%r14' = 0x0 ^ -100000000*%r15 + 100000000*%r15' = 0x0 ^ -3e30000000000000*%rax + 764c800000000000*%rbx + -7cbd000000000000*%rsp + -1348000000000000*%rbp + 2b59800000000000*%rsi + -743f000000000000*%r12 + 7f89000000000000*%r13 + -5af7000000000000*%r14 + -435f800000000000*%r15 + 100000000*-0x1(%rax) + -251d800000000000*0x7(%rax) + 41ba800000000000*0x8(%rsi) + 5c7d800000000000*0x1(%rsi) + -3dbe800000000000*0x9(%rsi) + -63f2000000000000*0x7(%rsi) = 0x0 ^ -3e30000000000000*%rax + 764c800000000000*%rbx + -7cbd000000000000*%rsp + -1348000000000000*%rbp + 2b59800000000000*%rsi + -743f000000000000*%r12 + 7f89000000000000*%r13 + -5af7000000000000*%r14 + -435f800000000000*%r15 + 100000000*-0x1(%rax)' + -251d800000000000*0x7(%rax) + 41ba800000000000*0x8(%rsi) + 5c7d800000000000*0x1(%rsi) + -3dbe800000000000*0x9(%rsi) + -63f2000000000000*0x7(%rsi) = 0x0 ^ -100000000*%rax + 100000000*%rax' = 0x0 ^ -100000000*0x7(%rax) + 100000000*0x7(%rax)' = 0x0 ^ 100000000*-0x9(%rax) = 0x0 ^ 100000000*-0x9(%rax)' = 0x0 ^ 100000000*(%rsi) + -10000000000*0x1(%rsi) = 0x0 ^ 100000000*(%rsi)' + -10000000000*0x1(%rsi) = 0x0 ^ -100000000*%rax + 100000000*%rdi = 0x0 ^ -100000000*0x8(%rsi) + 100000000*0x8(%rsi)' = 0x0 ^ 100000000*-0x8(%rsi) = 0x0 ^ 100000000*-0x8(%rsi)' = 0x0 ^ -100000000*%rbx + 100000000*%rbx' = 0x0 ^ -100000000*0x1(%rsi) + 100000000*0x1(%rsi)' = 0x0 ^ -100000000*%rbp + 100000000*%rbp' = 0x0 ^ -100000000*0x9(%rsi) + 100000000*0x9(%rsi)' = 0x0 ^ 100000000*-0x7(%rsi) = 0x0 ^ 100000000*-0x7(%rsi)' = 0x0 ^ 177c000000000000*%rax + 75cf000000000000*%rbx + 568a000000000000*%rsp + 64ee000000000000*%rbp + 4f6d000000000000*%rsi + 419b000000000000*%r12 + -3830000000000000*%r13 + 4b9000000000000*%r14 + -25c3000000000000*%r15 + 33c7000000000000*0x7(%rax) + -36e4000000000000*0x8(%rsi) + 2546000000000000*0x1(%rsi) + -6ba000000000000*0x9(%rsi) + 100000000*-0x1(%rsi) + -9ac000000000000*0x7(%rsi) = 0x0 ^ 177c000000000000*%rax + 75cf000000000000*%rbx + 568a000000000000*%rsp + 64ee000000000000*%rbp + 4f6d000000000000*%rsi + 419b000000000000*%r12 + -3830000000000000*%r13 + 4b9000000000000*%r14 + -25c3000000000000*%r15 + 33c7000000000000*0x7(%rax) + -36e4000000000000*0x8(%rsi) + 2546000000000000*0x1(%rsi) + -6ba000000000000*0x9(%rsi) + 100000000*-0x1(%rsi)' + -9ac000000000000*0x7(%rsi) = 0x0 ^ -100000000*%rsp + 100000000*%rsp' = 0x0 ^ -100000000*0x7(%rsi) + 100000000*0x7(%rsi)' = 0x0 ^ 100000000*-0x9(%rsi) = 0x0 ^ 100000000*-0x9(%rsi)' = 0x0 ^ d6c7c7100000000*%rax + 2593b65500000000*%rbx + -b9f0e0c00000000*%rsp + 3b6dca6e00000000*%rbp + 69f44e5800000000*%rsi + 238c6d2100000000*%r12 + -4f16786000000000*%r13 + 58ee846f00000000*%r14 + a4d2b6900000000*%r15 + -2432ba5300000000*0x7(%rax) + -345dd8d900000000*0x8(%rsi) + -49ca361b00000000*0x1(%rsi) + -63395f9e00000000*0x9(%rsi) + -3fa60cd00000000*0x7(%rsi) = 0xffffffff00000000
+_____________________________
+Edge: (0, 0) -> (1, 1)
+target: 1 
+rewrite: 1 
+Assuming: (t/r agree on { %rbx %rsp %rbp %rsi %rdi %r12 %r13 %r14 %r15 %mxcsr::rc[0] }) ^ (t/r agree on memory) ^ no signals ^ true
+
+  Proving no signals
+    true
+  Proving (t/r agree on memory)
+    true
+  Proving %rax != 0
+    false
+  Proving %rbx != 0
+    false
+  Proving %rsp != 0
+    false
+  Proving %rbp != 0
+    false
+  Proving %rsi != 0
+    false
+  Proving %rdi != 0
+    false
+  Proving %r12 != 0
+    false
+  Proving %r13 != 0
+    false
+  Proving %r14 != 0
+    false
+  Proving %r15 != 0
+    false
+  Proving %rax' != 0
+    false
+  Proving %rbx' != 0
+    false
+  Proving %rsp' != 0
+    false
+  Proving %rbp' != 0
+    false
+  Proving %rsi' != 0
+    false
+  Proving %rdi' != 0
+    false
+  Proving %r12' != 0
+    false
+  Proving %r13' != 0
+    false
+  Proving %r14' != 0
+    false
+  Proving %r15' != 0
+    false
+  Proving %rax ≤ %rdi
+    true
+  Proving %eax ≤ %edi
+    true
+  Proving %rdi ≤ %rax
+    true
+  Proving %edi ≤ %eax
+    true
+  Proving %rax' ≤ %rdi'
+    true
+  Proving %eax' ≤ %edi'
+    true
+  Proving %rdi' ≤ %rax'
+    true
+  Proving %edi' ≤ %eax'
+    true
+  Proving %rax + -1*%rdi = 0x0
+    true
+  Proving %rax + -1*%rax' = 0x0
+    true
+  Proving %rax + -1*%rdi' = 0x0
+    true
+  Proving %rbx + -1*%rbx' = 0x0
+    true
+  Proving %rsp + -1*%rsp' = 0x0
+    true
+  Proving %rbp + -1*%rbp' = 0x0
+    true
+  Proving %rsi + -1*%rsi' = 0x0
+    true
+  Proving %rdi + -1*%rax' = 0x0
+    true
+  Proving %rdi + -1*%rdi' = 0x0
+    true
+  Proving %r12 + -1*%r12' = 0x0
+    true
+  Proving %r13 + -1*%r13' = 0x0
+    true
+  Proving %r14 + -1*%r14' = 0x0
+    true
+  Proving %r15 + -1*%r15' = 0x0
+    true
+  Proving %rax' + -1*%rdi' = 0x0
+    true
+  Proving -0x1(%rax) + -1*-0x1(%rax)' = 0x0
+    true
+  Proving 0x7(%rax) + -1*0x7(%rax)' = 0x0
+    true
+  Proving -0x9(%rax) + -1*-0x9(%rax)' = 0x0
+    true
+  Proving -0x9(%rax) + -1*-0x8(%rsi) = 0x0
+    false
+  Proving -0x9(%rax) + -1*-0x8(%rsi)' = 0x0
+    false
+  Proving -0x9(%rax) + -1*-0x7(%rsi) = 0x0
+    false
+  Proving -0x9(%rax) + -1*-0x7(%rsi)' = 0x0
+    false
+  Proving -0x9(%rax) + -1*-0x9(%rsi) = 0x0
+    false
+  Proving -0x9(%rax) + -1*-0x9(%rsi)' = 0x0
+    false
+  Proving -0x9(%rax)' + -1*-0x8(%rsi) = 0x0
+    false
+  Proving -0x9(%rax)' + -1*-0x8(%rsi)' = 0x0
+    false
+  Proving -0x9(%rax)' + -1*-0x7(%rsi) = 0x0
+    false
+  Proving -0x9(%rax)' + -1*-0x7(%rsi)' = 0x0
+    false
+  Proving -0x9(%rax)' + -1*-0x9(%rsi) = 0x0
+    false
+  Proving -0x9(%rax)' + -1*-0x9(%rsi)' = 0x0
+    false
+  Proving (%rsi) + -1*(%rsi)' = 0x0
+    true
+  Proving 0x8(%rsi) + -1*0x8(%rsi)' = 0x0
+    true
+  Proving -0x8(%rsi) + -1*-0x8(%rsi)' = 0x0
+    true
+  Proving -0x8(%rsi) + -1*-0x7(%rsi) = 0x0
+    false
+  Proving -0x8(%rsi) + -1*-0x7(%rsi)' = 0x0
+    false
+  Proving -0x8(%rsi) + -1*-0x9(%rsi) = 0x0
+    false
+  Proving -0x8(%rsi) + -1*-0x9(%rsi)' = 0x0
+    false
+  Proving -0x8(%rsi)' + -1*-0x7(%rsi) = 0x0
+    false
+  Proving -0x8(%rsi)' + -1*-0x7(%rsi)' = 0x0
+    false
+  Proving -0x8(%rsi)' + -1*-0x9(%rsi) = 0x0
+    false
+  Proving -0x8(%rsi)' + -1*-0x9(%rsi)' = 0x0
+    false
+  Proving 0x1(%rsi) + -1*0x1(%rsi)' = 0x0
+    true
+  Proving 0x9(%rsi) + -1*0x9(%rsi)' = 0x0
+    true
+  Proving -0x7(%rsi) + -1*-0x7(%rsi)' = 0x0
+    true
+  Proving -0x7(%rsi) + -1*-0x9(%rsi) = 0x0
+    false
+  Proving -0x7(%rsi) + -1*-0x9(%rsi)' = 0x0
+    false
+  Proving -0x7(%rsi)' + -1*-0x9(%rsi) = 0x0
+    false
+  Proving -0x7(%rsi)' + -1*-0x9(%rsi)' = 0x0
+    false
+  Proving -0x1(%rsi) + -1*-0x1(%rsi)' = 0x0
+    true
+  Proving 0x7(%rsi) + -1*0x7(%rsi)' = 0x0
+    true
+  Proving -0x9(%rsi) + -1*-0x9(%rsi)' = 0x0
+    true
+  Proving -1*%rsi + %rsi' = 0x0
+    true
+  Proving -1*%rax + %rdi' = 0x0
+    true
+  Proving -1*%r12 + %r12' = 0x0
+    true
+  Proving -1*%r13 + %r13' = 0x0
+    true
+  Proving -1*%r14 + %r14' = 0x0
+    true
+  Proving -1*%r15 + %r15' = 0x0
+    true
+  Proving 670f5f02c1d00000*%rax + 6b5aa911764c8000*%rbx + 7ec6502183430000*%rsp + 2f7011f8ecb80000*%rbp + 63d43bca2b598000*%rsi + 73a851328bc10000*%r12 + 4ab947b07f890000*%r13 + -ea79f405af70000*%r14 + -6b0e2f16435f8000*%r15 + -0x1(%rax) + -bb64872251d8000*0x7(%rax) + 1af46b441ba8000*0x8(%rsi) + -33287daca3828000*0x1(%rsi) + -4b2f52923dbe8000*0x9(%rsi) + -64f315ca63f20000*0x7(%rsi) = 0x0
+    false
+  Proving 670f5f02c1d00000*%rax + 6b5aa911764c8000*%rbx + 7ec6502183430000*%rsp + 2f7011f8ecb80000*%rbp + 63d43bca2b598000*%rsi + 73a851328bc10000*%r12 + 4ab947b07f890000*%r13 + -ea79f405af70000*%r14 + -6b0e2f16435f8000*%r15 + -0x1(%rax)' + -bb64872251d8000*0x7(%rax) + 1af46b441ba8000*0x8(%rsi) + -33287daca3828000*0x1(%rsi) + -4b2f52923dbe8000*0x9(%rsi) + -64f315ca63f20000*0x7(%rsi) = 0x0
+    false
+  Proving -1*%rax + %rax' = 0x0
+    true
+  Proving -1*0x7(%rax) + 0x7(%rax)' = 0x0
+    true
+  Proving -0x9(%rax) = 0x0
+    false
+  Proving -0x9(%rax)' = 0x0
+    false
+  Proving -8000000000000000*%rbx + -8000000000000000*%rsi + -8000000000000000*%r12 + -8000000000000000*%r14 + -8000000000000000*%r15 + -8000000000000000*0x7(%rax) + (%rsi) + 7fffffffffffff00*0x1(%rsi) = 0x0
+    false
+  Proving -8000000000000000*%rbx + -8000000000000000*%rsi + -8000000000000000*%r12 + -8000000000000000*%r14 + -8000000000000000*%r15 + -8000000000000000*0x7(%rax) + (%rsi)' + 7fffffffffffff00*0x1(%rsi) = 0x0
+    false
+  Proving -1*%rax + %rdi = 0x0
+    true
+  Proving -1*0x8(%rsi) + 0x8(%rsi)' = 0x0
+    true
+  Proving -0x8(%rsi) = 0x0
+    false
+  Proving -0x8(%rsi)' = 0x0
+    false
+  Proving -1*%rbx + %rbx' = 0x0
+    true
+  Proving -1*0x1(%rsi) + 0x1(%rsi)' = 0x0
+    true
+  Proving -1*%rbp + %rbp' = 0x0
+    true
+  Proving -1*0x9(%rsi) + 0x9(%rsi)' = 0x0
+    true
+  Proving -0x7(%rsi) = 0x0
+    false
+  Proving -0x7(%rsi)' = 0x0
+    false
+  Proving 99b84f1177c0000*%rax + -2da558c18a310000*%rbx + -3111c907a9760000*%rsp + 1f28d00a64ee0000*%rbp + -f8cfbfcb0930000*%rsi + 20e4e843419b0000*%r12 + 8f68c5fc7d00000*%r13 + -7ad20763fb470000*%r14 + -20c0b2a225c30000*%r15 + -78fe2d8cc390000*0x7(%rax) + -7f7b52e236e40000*0x8(%rsi) + 24d929b825460000*0x1(%rsi) + 494b1421f9460000*0x9(%rsi) + -0x1(%rsi) + 7d7a5633f6540000*0x7(%rsi) = 0x0
+    false
+  Proving 99b84f1177c0000*%rax + -2da558c18a310000*%rbx + -3111c907a9760000*%rsp + 1f28d00a64ee0000*%rbp + -f8cfbfcb0930000*%rsi + 20e4e843419b0000*%r12 + 8f68c5fc7d00000*%r13 + -7ad20763fb470000*%r14 + -20c0b2a225c30000*%r15 + -78fe2d8cc390000*0x7(%rax) + -7f7b52e236e40000*0x8(%rsi) + 24d929b825460000*0x1(%rsi) + 494b1421f9460000*0x9(%rsi) + -0x1(%rsi)' + 7d7a5633f6540000*0x7(%rsi) = 0x0
+    false
+  Proving -1*%rsp + %rsp' = 0x0
+    true
+  Proving -1*0x7(%rsi) + 0x7(%rsi)' = 0x0
+    true
+  Proving -0x9(%rsi) = 0x0
+    false
+  Proving -0x9(%rsi)' = 0x0
+    false
+  Proving -5b82d704f293838f*%rax + -635edc39da6c49ab*%rbx + 47650946f460f1f4*%rsp + 31f5e873b6dca6e*%rbp + 18e42d869f44e58*%rsi + 3ebed11d238c6d21*%r12 + -19834bca4f167860*%r13 + -6b6891d2a7117b91*%r14 + -1602d889f5b2d497*%r15 + -5c05e0f92432ba53*0x7(%rax) + 4040fde3cba22727*0x8(%rsi) + ac7bf67b635c9e5*0x1(%rsi) + 1926025d9cc6a062*0x9(%rsi) + 42b785cefc059f33*0x7(%rsi) = 0xffffffffffffffff
+    false
+  Proving -100000000*%rsi + 100000000*%rsi' = 0x0
+    true
+  Proving -100000000*%rax + 100000000*%rdi' = 0x0
+    true
+  Proving -100000000*%r12 + 100000000*%r12' = 0x0
+    true
+  Proving -100000000*%r13 + 100000000*%r13' = 0x0
+    true
+  Proving -100000000*%r14 + 100000000*%r14' = 0x0
+    true
+  Proving -100000000*%r15 + 100000000*%r15' = 0x0
+    true
+  Proving -3e30000000000000*%rax + 764c800000000000*%rbx + -7cbd000000000000*%rsp + -1348000000000000*%rbp + 2b59800000000000*%rsi + -743f000000000000*%r12 + 7f89000000000000*%r13 + -5af7000000000000*%r14 + -435f800000000000*%r15 + 100000000*-0x1(%rax) + -251d800000000000*0x7(%rax) + 41ba800000000000*0x8(%rsi) + 5c7d800000000000*0x1(%rsi) + -3dbe800000000000*0x9(%rsi) + -63f2000000000000*0x7(%rsi) = 0x0
+    false
+  Proving -3e30000000000000*%rax + 764c800000000000*%rbx + -7cbd000000000000*%rsp + -1348000000000000*%rbp + 2b59800000000000*%rsi + -743f000000000000*%r12 + 7f89000000000000*%r13 + -5af7000000000000*%r14 + -435f800000000000*%r15 + 100000000*-0x1(%rax)' + -251d800000000000*0x7(%rax) + 41ba800000000000*0x8(%rsi) + 5c7d800000000000*0x1(%rsi) + -3dbe800000000000*0x9(%rsi) + -63f2000000000000*0x7(%rsi) = 0x0
+    false
+  Proving -100000000*%rax + 100000000*%rax' = 0x0
+    true
+  Proving -100000000*0x7(%rax) + 100000000*0x7(%rax)' = 0x0
+    true
+  Proving 100000000*-0x9(%rax) = 0x0
+    false
+  Proving 100000000*-0x9(%rax)' = 0x0
+    false
+  Proving 100000000*(%rsi) + -10000000000*0x1(%rsi) = 0x0
+    false
+  Proving 100000000*(%rsi)' + -10000000000*0x1(%rsi) = 0x0
+    false
+  Proving -100000000*%rax + 100000000*%rdi = 0x0
+    true
+  Proving -100000000*0x8(%rsi) + 100000000*0x8(%rsi)' = 0x0
+    true
+  Proving 100000000*-0x8(%rsi) = 0x0
+    false
+  Proving 100000000*-0x8(%rsi)' = 0x0
+    false
+  Proving -100000000*%rbx + 100000000*%rbx' = 0x0
+    true
+  Proving -100000000*0x1(%rsi) + 100000000*0x1(%rsi)' = 0x0
+    true
+  Proving -100000000*%rbp + 100000000*%rbp' = 0x0
+    true
+  Proving -100000000*0x9(%rsi) + 100000000*0x9(%rsi)' = 0x0
+    true
+  Proving 100000000*-0x7(%rsi) = 0x0
+    false
+  Proving 100000000*-0x7(%rsi)' = 0x0
+    false
+  Proving 177c000000000000*%rax + 75cf000000000000*%rbx + 568a000000000000*%rsp + 64ee000000000000*%rbp + 4f6d000000000000*%rsi + 419b000000000000*%r12 + -3830000000000000*%r13 + 4b9000000000000*%r14 + -25c3000000000000*%r15 + 33c7000000000000*0x7(%rax) + -36e4000000000000*0x8(%rsi) + 2546000000000000*0x1(%rsi) + -6ba000000000000*0x9(%rsi) + 100000000*-0x1(%rsi) + -9ac000000000000*0x7(%rsi) = 0x0
+    false
+  Proving 177c000000000000*%rax + 75cf000000000000*%rbx + 568a000000000000*%rsp + 64ee000000000000*%rbp + 4f6d000000000000*%rsi + 419b000000000000*%r12 + -3830000000000000*%r13 + 4b9000000000000*%r14 + -25c3000000000000*%r15 + 33c7000000000000*0x7(%rax) + -36e4000000000000*0x8(%rsi) + 2546000000000000*0x1(%rsi) + -6ba000000000000*0x9(%rsi) + 100000000*-0x1(%rsi)' + -9ac000000000000*0x7(%rsi) = 0x0
+    false
+  Proving -100000000*%rsp + 100000000*%rsp' = 0x0
+    true
+  Proving -100000000*0x7(%rsi) + 100000000*0x7(%rsi)' = 0x0
+    true
+  Proving 100000000*-0x9(%rsi) = 0x0
+    false
+  Proving 100000000*-0x9(%rsi)' = 0x0
+    false
+  Proving d6c7c7100000000*%rax + 2593b65500000000*%rbx + -b9f0e0c00000000*%rsp + 3b6dca6e00000000*%rbp + 69f44e5800000000*%rsi + 238c6d2100000000*%r12 + -4f16786000000000*%r13 + 58ee846f00000000*%r14 + a4d2b6900000000*%r15 + -2432ba5300000000*0x7(%rax) + -345dd8d900000000*0x8(%rsi) + -49ca361b00000000*0x1(%rsi) + -63395f9e00000000*0x9(%rsi) + -3fa60cd00000000*0x7(%rsi) = 0xffffffff00000000
+    false
+_____________________________
+Edge: (1, 1) -> (4, 6)
+target: 4 
+rewrite: 2 6 
+Assuming: no signals ^ (t/r agree on memory) ^ %rax ≤ %rdi ^ %eax ≤ %edi ^ %rdi ≤ %rax ^ %edi ≤ %eax ^ %rax' ≤ %rdi' ^ %eax' ≤ %edi' ^ %rdi' ≤ %rax' ^ %edi' ≤ %eax' ^ %rax + -1*%rdi = 0x0 ^ %rax + -1*%rax' = 0x0 ^ %rax + -1*%rdi' = 0x0 ^ %rbx + -1*%rbx' = 0x0 ^ %rsp + -1*%rsp' = 0x0 ^ %rbp + -1*%rbp' = 0x0 ^ %rsi + -1*%rsi' = 0x0 ^ %rdi + -1*%rax' = 0x0 ^ %rdi + -1*%rdi' = 0x0 ^ %r12 + -1*%r12' = 0x0 ^ %r13 + -1*%r13' = 0x0 ^ %r14 + -1*%r14' = 0x0 ^ %r15 + -1*%r15' = 0x0 ^ %rax' + -1*%rdi' = 0x0 ^ -0x1(%rax) + -1*-0x1(%rax)' = 0x0 ^ 0x7(%rax) + -1*0x7(%rax)' = 0x0 ^ -0x9(%rax) + -1*-0x9(%rax)' = 0x0 ^ (%rsi) + -1*(%rsi)' = 0x0 ^ 0x8(%rsi) + -1*0x8(%rsi)' = 0x0 ^ -0x8(%rsi) + -1*-0x8(%rsi)' = 0x0 ^ 0x1(%rsi) + -1*0x1(%rsi)' = 0x0 ^ 0x9(%rsi) + -1*0x9(%rsi)' = 0x0 ^ -0x7(%rsi) + -1*-0x7(%rsi)' = 0x0 ^ -0x1(%rsi) + -1*-0x1(%rsi)' = 0x0 ^ 0x7(%rsi) + -1*0x7(%rsi)' = 0x0 ^ -0x9(%rsi) + -1*-0x9(%rsi)' = 0x0 ^ -1*%rsi + %rsi' = 0x0 ^ -1*%rax + %rdi' = 0x0 ^ -1*%r12 + %r12' = 0x0 ^ -1*%r13 + %r13' = 0x0 ^ -1*%r14 + %r14' = 0x0 ^ -1*%r15 + %r15' = 0x0 ^ -1*%rax + %rax' = 0x0 ^ -1*0x7(%rax) + 0x7(%rax)' = 0x0 ^ -1*%rax + %rdi = 0x0 ^ -1*0x8(%rsi) + 0x8(%rsi)' = 0x0 ^ -1*%rbx + %rbx' = 0x0 ^ -1*0x1(%rsi) + 0x1(%rsi)' = 0x0 ^ -1*%rbp + %rbp' = 0x0 ^ -1*0x9(%rsi) + 0x9(%rsi)' = 0x0 ^ -1*%rsp + %rsp' = 0x0 ^ -1*0x7(%rsi) + 0x7(%rsi)' = 0x0 ^ -100000000*%rsi + 100000000*%rsi' = 0x0 ^ -100000000*%rax + 100000000*%rdi' = 0x0 ^ -100000000*%r12 + 100000000*%r12' = 0x0 ^ -100000000*%r13 + 100000000*%r13' = 0x0 ^ -100000000*%r14 + 100000000*%r14' = 0x0 ^ -100000000*%r15 + 100000000*%r15' = 0x0 ^ -100000000*%rax + 100000000*%rax' = 0x0 ^ -100000000*0x7(%rax) + 100000000*0x7(%rax)' = 0x0 ^ -100000000*%rax + 100000000*%rdi = 0x0 ^ -100000000*0x8(%rsi) + 100000000*0x8(%rsi)' = 0x0 ^ -100000000*%rbx + 100000000*%rbx' = 0x0 ^ -100000000*0x1(%rsi) + 100000000*0x1(%rsi)' = 0x0 ^ -100000000*%rbp + 100000000*%rbp' = 0x0 ^ -100000000*0x9(%rsi) + 100000000*0x9(%rsi)' = 0x0 ^ -100000000*%rsp + 100000000*%rsp' = 0x0 ^ -100000000*0x7(%rsi) + 100000000*0x7(%rsi)' = 0x0
+
+  Proving no signals
+    true
+  Proving (t/r agree on memory)
+    true
+  Proving %rax != 0
+    false
+  Proving %rbx != 0
+    false
+  Proving %rsp != 0
+    false
+  Proving %rbp != 0
+    false
+  Proving %rsi != 0
+    false
+  Proving %rdi != 0
+    false
+  Proving %r12 != 0
+    false
+  Proving %r13 != 0
+    false
+  Proving %r14 != 0
+    false
+  Proving %r15 != 0
+    false
+  Proving %rax' != 0
+    false
+  Proving %rbx' != 0
+    false
+  Proving %rsp' != 0
+    false
+  Proving %rbp' != 0
+    false
+  Proving %rsi' != 0
+    false
+  Proving %rdi' != 0
+    false
+  Proving %r12' != 0
+    false
+  Proving %r13' != 0
+    false
+  Proving %r14' != 0
+    false
+  Proving %r15' != 0
+    false
+  Proving %rax ≤ %rdi
+    true
+  Proving %eax ≤ %edi
+    true
+  Proving %rdi ≤ %rax
+    true
+  Proving %edi ≤ %eax
+    true
+  Proving %rax' ≤ %rdi'
+    true
+  Proving %eax' ≤ %edi'
+    true
+  Proving %rdi' ≤ %rax'
+    true
+  Proving %edi' ≤ %eax'
+    true
+  Proving %rax + -1*%rdi = 0x0
+    true
+  Proving %rax + -1*%rax' = 0x0
+    true
+  Proving %rax + -1*%rdi' = 0x0
+    true
+  Proving %rbx + -1*%rbx' = 0x0
+    true
+  Proving %rsp + -1*%rsp' = 0x0
+    true
+  Proving %rbp + -1*%rbp' = 0x0
+    true
+  Proving %rsi + -1*%rsi' = 0x0
+    true
+  Proving %rdi + -1*%rax' = 0x0
+    true
+  Proving %rdi + -1*%rdi' = 0x0
+    true
+  Proving %r12 + -1*%r12' = 0x0
+    true
+  Proving %r13 + -1*%r13' = 0x0
+    true
+  Proving %r14 + -1*%r14' = 0x0
+    true
+  Proving %r15 + -1*%r15' = 0x0
+    true
+  Proving %rax' + -1*%rdi' = 0x0
+    true
+  Proving -0x1(%rax) + -1*-0x1(%rax)' = 0x0
+    true
+  Proving 0x7(%rax) + -1*0x7(%rax)' = 0x0
+    true
+  Proving -0x9(%rax) + -1*-0x9(%rax)' = 0x0
+    true
+  Proving -0x9(%rax) + -1*-0x8(%rsi) = 0x0
+    false
+  Proving -0x9(%rax) + -1*-0x8(%rsi)' = 0x0
+    false
+  Proving -0x9(%rax) + -1*-0x7(%rsi) = 0x0
+    false
+  Proving -0x9(%rax) + -1*-0x7(%rsi)' = 0x0
+    false
+  Proving -0x9(%rax) + -1*-0x9(%rsi) = 0x0
+    false
+  Proving -0x9(%rax) + -1*-0x9(%rsi)' = 0x0
+    false
+  Proving -0x9(%rax)' + -1*-0x8(%rsi) = 0x0
+    false
+  Proving -0x9(%rax)' + -1*-0x8(%rsi)' = 0x0
+    false
+  Proving -0x9(%rax)' + -1*-0x7(%rsi) = 0x0
+    false
+  Proving -0x9(%rax)' + -1*-0x7(%rsi)' = 0x0
+    false
+  Proving -0x9(%rax)' + -1*-0x9(%rsi) = 0x0
+    false
+  Proving -0x9(%rax)' + -1*-0x9(%rsi)' = 0x0
+    false
+  Proving (%rsi) + -1*(%rsi)' = 0x0
+    true
+  Proving 0x8(%rsi) + -1*0x8(%rsi)' = 0x0
+    true
+  Proving -0x8(%rsi) + -1*-0x8(%rsi)' = 0x0
+    true
+  Proving -0x8(%rsi) + -1*-0x7(%rsi) = 0x0
+    false
+  Proving -0x8(%rsi) + -1*-0x7(%rsi)' = 0x0
+    false
+  Proving -0x8(%rsi) + -1*-0x9(%rsi) = 0x0
+    false
+  Proving -0x8(%rsi) + -1*-0x9(%rsi)' = 0x0
+    false
+  Proving -0x8(%rsi)' + -1*-0x7(%rsi) = 0x0
+    false
+  Proving -0x8(%rsi)' + -1*-0x7(%rsi)' = 0x0
+    false
+  Proving -0x8(%rsi)' + -1*-0x9(%rsi) = 0x0
+    false
+  Proving -0x8(%rsi)' + -1*-0x9(%rsi)' = 0x0
+    false
+  Proving 0x1(%rsi) + -1*0x1(%rsi)' = 0x0
+    true
+  Proving 0x9(%rsi) + -1*0x9(%rsi)' = 0x0
+    true
+  Proving -0x7(%rsi) + -1*-0x7(%rsi)' = 0x0
+    true
+  Proving -0x7(%rsi) + -1*-0x9(%rsi) = 0x0
+    false
+  Proving -0x7(%rsi) + -1*-0x9(%rsi)' = 0x0
+    false
+  Proving -0x7(%rsi)' + -1*-0x9(%rsi) = 0x0
+    false
+  Proving -0x7(%rsi)' + -1*-0x9(%rsi)' = 0x0
+    false
+  Proving -0x1(%rsi) + -1*-0x1(%rsi)' = 0x0
+    true
+  Proving 0x7(%rsi) + -1*0x7(%rsi)' = 0x0
+    true
+  Proving -0x9(%rsi) + -1*-0x9(%rsi)' = 0x0
+    true
+  Proving -1*%rsi + %rsi' = 0x0
+    true
+  Proving -1*%rax + %rdi' = 0x0
+    true
+  Proving -1*%r12 + %r12' = 0x0
+    true
+  Proving -1*%r13 + %r13' = 0x0
+    true
+  Proving -1*%r14 + %r14' = 0x0
+    true
+  Proving -1*%r15 + %r15' = 0x0
+    true
+  Proving 670f5f02c1d00000*%rax + 6b5aa911764c8000*%rbx + 7ec6502183430000*%rsp + 2f7011f8ecb80000*%rbp + 63d43bca2b598000*%rsi + 73a851328bc10000*%r12 + 4ab947b07f890000*%r13 + -ea79f405af70000*%r14 + -6b0e2f16435f8000*%r15 + -0x1(%rax) + -bb64872251d8000*0x7(%rax) + 1af46b441ba8000*0x8(%rsi) + -33287daca3828000*0x1(%rsi) + -4b2f52923dbe8000*0x9(%rsi) + -64f315ca63f20000*0x7(%rsi) = 0x0
+    false
+  Proving 670f5f02c1d00000*%rax + 6b5aa911764c8000*%rbx + 7ec6502183430000*%rsp + 2f7011f8ecb80000*%rbp + 63d43bca2b598000*%rsi + 73a851328bc10000*%r12 + 4ab947b07f890000*%r13 + -ea79f405af70000*%r14 + -6b0e2f16435f8000*%r15 + -0x1(%rax)' + -bb64872251d8000*0x7(%rax) + 1af46b441ba8000*0x8(%rsi) + -33287daca3828000*0x1(%rsi) + -4b2f52923dbe8000*0x9(%rsi) + -64f315ca63f20000*0x7(%rsi) = 0x0
+    false
+  Proving -1*%rax + %rax' = 0x0
+    true
+  Proving -1*0x7(%rax) + 0x7(%rax)' = 0x0
+    true
+  Proving -0x9(%rax) = 0x0
+    false
+  Proving -0x9(%rax)' = 0x0
+    false
+  Proving -8000000000000000*%rbx + -8000000000000000*%rsi + -8000000000000000*%r12 + -8000000000000000*%r14 + -8000000000000000*%r15 + -8000000000000000*0x7(%rax) + (%rsi) + 7fffffffffffff00*0x1(%rsi) = 0x0
+    false
+  Proving -8000000000000000*%rbx + -8000000000000000*%rsi + -8000000000000000*%r12 + -8000000000000000*%r14 + -8000000000000000*%r15 + -8000000000000000*0x7(%rax) + (%rsi)' + 7fffffffffffff00*0x1(%rsi) = 0x0
+    false
+  Proving -1*%rax + %rdi = 0x0
+    true
+  Proving -1*0x8(%rsi) + 0x8(%rsi)' = 0x0
+    true
+  Proving -0x8(%rsi) = 0x0
+    false
+  Proving -0x8(%rsi)' = 0x0
+    false
+  Proving -1*%rbx + %rbx' = 0x0
+    true
+  Proving -1*0x1(%rsi) + 0x1(%rsi)' = 0x0
+    true
+  Proving -1*%rbp + %rbp' = 0x0
+    true
+  Proving -1*0x9(%rsi) + 0x9(%rsi)' = 0x0
+    true
+  Proving -0x7(%rsi) = 0x0
+    false
+  Proving -0x7(%rsi)' = 0x0
+    false
+  Proving 99b84f1177c0000*%rax + -2da558c18a310000*%rbx + -3111c907a9760000*%rsp + 1f28d00a64ee0000*%rbp + -f8cfbfcb0930000*%rsi + 20e4e843419b0000*%r12 + 8f68c5fc7d00000*%r13 + -7ad20763fb470000*%r14 + -20c0b2a225c30000*%r15 + -78fe2d8cc390000*0x7(%rax) + -7f7b52e236e40000*0x8(%rsi) + 24d929b825460000*0x1(%rsi) + 494b1421f9460000*0x9(%rsi) + -0x1(%rsi) + 7d7a5633f6540000*0x7(%rsi) = 0x0
+    false
+  Proving 99b84f1177c0000*%rax + -2da558c18a310000*%rbx + -3111c907a9760000*%rsp + 1f28d00a64ee0000*%rbp + -f8cfbfcb0930000*%rsi + 20e4e843419b0000*%r12 + 8f68c5fc7d00000*%r13 + -7ad20763fb470000*%r14 + -20c0b2a225c30000*%r15 + -78fe2d8cc390000*0x7(%rax) + -7f7b52e236e40000*0x8(%rsi) + 24d929b825460000*0x1(%rsi) + 494b1421f9460000*0x9(%rsi) + -0x1(%rsi)' + 7d7a5633f6540000*0x7(%rsi) = 0x0
+    false
+  Proving -1*%rsp + %rsp' = 0x0
+    true
+  Proving -1*0x7(%rsi) + 0x7(%rsi)' = 0x0
+    true
+  Proving -0x9(%rsi) = 0x0
+    false
+  Proving -0x9(%rsi)' = 0x0
+    false
+  Proving -5b82d704f293838f*%rax + -635edc39da6c49ab*%rbx + 47650946f460f1f4*%rsp + 31f5e873b6dca6e*%rbp + 18e42d869f44e58*%rsi + 3ebed11d238c6d21*%r12 + -19834bca4f167860*%r13 + -6b6891d2a7117b91*%r14 + -1602d889f5b2d497*%r15 + -5c05e0f92432ba53*0x7(%rax) + 4040fde3cba22727*0x8(%rsi) + ac7bf67b635c9e5*0x1(%rsi) + 1926025d9cc6a062*0x9(%rsi) + 42b785cefc059f33*0x7(%rsi) = 0xffffffffffffffff
+    false
+  Proving -100000000*%rsi + 100000000*%rsi' = 0x0
+    true
+  Proving -100000000*%rax + 100000000*%rdi' = 0x0
+    true
+  Proving -100000000*%r12 + 100000000*%r12' = 0x0
+    true
+  Proving -100000000*%r13 + 100000000*%r13' = 0x0
+    true
+  Proving -100000000*%r14 + 100000000*%r14' = 0x0
+    true
+  Proving -100000000*%r15 + 100000000*%r15' = 0x0
+    true
+  Proving -3e30000000000000*%rax + 764c800000000000*%rbx + -7cbd000000000000*%rsp + -1348000000000000*%rbp + 2b59800000000000*%rsi + -743f000000000000*%r12 + 7f89000000000000*%r13 + -5af7000000000000*%r14 + -435f800000000000*%r15 + 100000000*-0x1(%rax) + -251d800000000000*0x7(%rax) + 41ba800000000000*0x8(%rsi) + 5c7d800000000000*0x1(%rsi) + -3dbe800000000000*0x9(%rsi) + -63f2000000000000*0x7(%rsi) = 0x0
+    false
+  Proving -3e30000000000000*%rax + 764c800000000000*%rbx + -7cbd000000000000*%rsp + -1348000000000000*%rbp + 2b59800000000000*%rsi + -743f000000000000*%r12 + 7f89000000000000*%r13 + -5af7000000000000*%r14 + -435f800000000000*%r15 + 100000000*-0x1(%rax)' + -251d800000000000*0x7(%rax) + 41ba800000000000*0x8(%rsi) + 5c7d800000000000*0x1(%rsi) + -3dbe800000000000*0x9(%rsi) + -63f2000000000000*0x7(%rsi) = 0x0
+    false
+  Proving -100000000*%rax + 100000000*%rax' = 0x0
+    true
+  Proving -100000000*0x7(%rax) + 100000000*0x7(%rax)' = 0x0
+    true
+  Proving 100000000*-0x9(%rax) = 0x0
+    false
+  Proving 100000000*-0x9(%rax)' = 0x0
+    false
+  Proving 100000000*(%rsi) + -10000000000*0x1(%rsi) = 0x0
+    false
+  Proving 100000000*(%rsi)' + -10000000000*0x1(%rsi) = 0x0
+    false
+  Proving -100000000*%rax + 100000000*%rdi = 0x0
+    true
+  Proving -100000000*0x8(%rsi) + 100000000*0x8(%rsi)' = 0x0
+    true
+  Proving 100000000*-0x8(%rsi) = 0x0
+    false
+  Proving 100000000*-0x8(%rsi)' = 0x0
+    false
+  Proving -100000000*%rbx + 100000000*%rbx' = 0x0
+    true
+  Proving -100000000*0x1(%rsi) + 100000000*0x1(%rsi)' = 0x0
+    true
+  Proving -100000000*%rbp + 100000000*%rbp' = 0x0
+    true
+  Proving -100000000*0x9(%rsi) + 100000000*0x9(%rsi)' = 0x0
+    true
+  Proving 100000000*-0x7(%rsi) = 0x0
+    false
+  Proving 100000000*-0x7(%rsi)' = 0x0
+    false
+  Proving 177c000000000000*%rax + 75cf000000000000*%rbx + 568a000000000000*%rsp + 64ee000000000000*%rbp + 4f6d000000000000*%rsi + 419b000000000000*%r12 + -3830000000000000*%r13 + 4b9000000000000*%r14 + -25c3000000000000*%r15 + 33c7000000000000*0x7(%rax) + -36e4000000000000*0x8(%rsi) + 2546000000000000*0x1(%rsi) + -6ba000000000000*0x9(%rsi) + 100000000*-0x1(%rsi) + -9ac000000000000*0x7(%rsi) = 0x0
+    false
+  Proving 177c000000000000*%rax + 75cf000000000000*%rbx + 568a000000000000*%rsp + 64ee000000000000*%rbp + 4f6d000000000000*%rsi + 419b000000000000*%r12 + -3830000000000000*%r13 + 4b9000000000000*%r14 + -25c3000000000000*%r15 + 33c7000000000000*0x7(%rax) + -36e4000000000000*0x8(%rsi) + 2546000000000000*0x1(%rsi) + -6ba000000000000*0x9(%rsi) + 100000000*-0x1(%rsi)' + -9ac000000000000*0x7(%rsi) = 0x0
+    false
+  Proving -100000000*%rsp + 100000000*%rsp' = 0x0
+    true
+  Proving -100000000*0x7(%rsi) + 100000000*0x7(%rsi)' = 0x0
+    true
+  Proving 100000000*-0x9(%rsi) = 0x0
+    false
+  Proving 100000000*-0x9(%rsi)' = 0x0
+    false
+  Proving d6c7c7100000000*%rax + 2593b65500000000*%rbx + -b9f0e0c00000000*%rsp + 3b6dca6e00000000*%rbp + 69f44e5800000000*%rsi + 238c6d2100000000*%r12 + -4f16786000000000*%r13 + 58ee846f00000000*%r14 + a4d2b6900000000*%r15 + -2432ba5300000000*0x7(%rax) + -345dd8d900000000*0x8(%rsi) + -49ca361b00000000*0x1(%rsi) + -63395f9e00000000*0x9(%rsi) + -3fa60cd00000000*0x7(%rsi) = 0xffffffff00000000
+    false
+
+ XXXXXXX PROVEN RELATIONSHIPS at (4, 6) XXXXXXX 
+
+no signals
+(t/r agree on memory)
+%rax ≤ %rdi
+%eax ≤ %edi
+%rdi ≤ %rax
+%edi ≤ %eax
+%rax' ≤ %rdi'
+%eax' ≤ %edi'
+%rdi' ≤ %rax'
+%edi' ≤ %eax'
+%rax + -1*%rdi = 0x0
+%rax + -1*%rax' = 0x0
+%rax + -1*%rdi' = 0x0
+%rbx + -1*%rbx' = 0x0
+%rsp + -1*%rsp' = 0x0
+%rbp + -1*%rbp' = 0x0
+%rsi + -1*%rsi' = 0x0
+%rdi + -1*%rax' = 0x0
+%rdi + -1*%rdi' = 0x0
+%r12 + -1*%r12' = 0x0
+%r13 + -1*%r13' = 0x0
+%r14 + -1*%r14' = 0x0
+%r15 + -1*%r15' = 0x0
+%rax' + -1*%rdi' = 0x0
+-0x1(%rax) + -1*-0x1(%rax)' = 0x0
+0x7(%rax) + -1*0x7(%rax)' = 0x0
+-0x9(%rax) + -1*-0x9(%rax)' = 0x0
+(%rsi) + -1*(%rsi)' = 0x0
+0x8(%rsi) + -1*0x8(%rsi)' = 0x0
+-0x8(%rsi) + -1*-0x8(%rsi)' = 0x0
+0x1(%rsi) + -1*0x1(%rsi)' = 0x0
+0x9(%rsi) + -1*0x9(%rsi)' = 0x0
+-0x7(%rsi) + -1*-0x7(%rsi)' = 0x0
+-0x1(%rsi) + -1*-0x1(%rsi)' = 0x0
+0x7(%rsi) + -1*0x7(%rsi)' = 0x0
+-0x9(%rsi) + -1*-0x9(%rsi)' = 0x0
+-1*%rsi + %rsi' = 0x0
+-1*%rax + %rdi' = 0x0
+-1*%r12 + %r12' = 0x0
+-1*%r13 + %r13' = 0x0
+-1*%r14 + %r14' = 0x0
+-1*%r15 + %r15' = 0x0
+-1*%rax + %rax' = 0x0
+-1*0x7(%rax) + 0x7(%rax)' = 0x0
+-1*%rax + %rdi = 0x0
+-1*0x8(%rsi) + 0x8(%rsi)' = 0x0
+-1*%rbx + %rbx' = 0x0
+-1*0x1(%rsi) + 0x1(%rsi)' = 0x0
+-1*%rbp + %rbp' = 0x0
+-1*0x9(%rsi) + 0x9(%rsi)' = 0x0
+-1*%rsp + %rsp' = 0x0
+-1*0x7(%rsi) + 0x7(%rsi)' = 0x0
+-100000000*%rsi + 100000000*%rsi' = 0x0
+-100000000*%rax + 100000000*%rdi' = 0x0
+-100000000*%r12 + 100000000*%r12' = 0x0
+-100000000*%r13 + 100000000*%r13' = 0x0
+-100000000*%r14 + 100000000*%r14' = 0x0
+-100000000*%r15 + 100000000*%r15' = 0x0
+-100000000*%rax + 100000000*%rax' = 0x0
+-100000000*0x7(%rax) + 100000000*0x7(%rax)' = 0x0
+-100000000*%rax + 100000000*%rdi = 0x0
+-100000000*0x8(%rsi) + 100000000*0x8(%rsi)' = 0x0
+-100000000*%rbx + 100000000*%rbx' = 0x0
+-100000000*0x1(%rsi) + 100000000*0x1(%rsi)' = 0x0
+-100000000*%rbp + 100000000*%rbp' = 0x0
+-100000000*0x9(%rsi) + 100000000*0x9(%rsi)' = 0x0
+-100000000*%rsp + 100000000*%rsp' = 0x0
+-100000000*0x7(%rsi) + 100000000*0x7(%rsi)' = 0x0
+Paths ending here are verified!
+
+ XXXXXXX PROVEN RELATIONSHIPS at (4, 8) XXXXXXX 
+
+false
+Paths ending here are verified!
+
+ XXXXXXX PROVEN RELATIONSHIPS at (4, 9) XXXXXXX 
+
+false
+Paths ending here are verified!
+
+ XXXXXXX PROVEN RELATIONSHIPS at (5, 6) XXXXXXX 
+
+false
+Paths ending here are verified!
+
+ XXXXXXX PROVEN RELATIONSHIPS at (5, 8) XXXXXXX 
+
+false
+Paths ending here are verified!
+
+ XXXXXXX PROVEN RELATIONSHIPS at (5, 9) XXXXXXX 
+
+false
+Paths ending here are verified!
+
+VERIFIED.
+
+Equivalent: yes

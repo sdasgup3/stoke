@@ -30,6 +30,7 @@ public:
 
   typedef uint64_t State;
   typedef std::vector<State> Path;
+  typedef std::vector<std::pair<State, CpuState>> FullTrace;
 
   Abstraction(const Cfg& cfg, const Sandbox& sandbox) : cfg_(cfg), sandbox_(sandbox) { }
 
