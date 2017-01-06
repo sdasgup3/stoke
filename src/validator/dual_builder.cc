@@ -25,7 +25,7 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
     vector<Abstraction::FullTrace> target_traces;
     vector<Abstraction::FullTrace> rewrite_traces;
 
-    for(auto tc : cls) {
+    for (auto tc : cls) {
       target_traces.push_back(target_abstraction->learn_trace(tc));
       rewrite_traces.push_back(rewrite_abstraction->learn_trace(tc));
     }
@@ -36,7 +36,7 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
       A path is a concatenation of segments.
       where, at each vertex, memory states and register invariants
       match up nicely.  We want the segments between vertices to be as
-      small as possible, so we essentially do a breadth-first search 
+      small as possible, so we essentially do a breadth-first search
       for the next vertex.
 
              R. Trace
@@ -58,8 +58,87 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
 
      *****************************************************************/
 
+    size_t target_trace_len = target_traces[0].size();
+    size_t rewrite_trace_len = rewrite_traces[0].size();
 
+    size_t curr_x = 0;
+    size_t curr_y = 0;
 
+    vector<size_t> path_x;
+    vector<size_t> path_y;
+    path_x.push_back(curr_x);
+    path_y.push_back(curr_y);
+
+    // while we haven't completed the path
+    cout << "=== New Equivalence Class ===" << endl;
+    while(curr_x < target_trace_len - 1 || curr_y < rewrite_trace_len) {
+      cout << " Searching from " << curr_x << ", " << curr_y << endl;
+      bool found = false;
+
+      // search for possible next verfices, closest first (by Manhattan metric)
+      for(size_t i = 1; curr_x + i < target_trace_len || curr_x + i < rewrite_trace_len; ++i) {
+        for(size_t j = 0; j <= i; ++j) {
+          size_t now_x = curr_x + j;
+          size_t now_y = curr_y + (i-j);
+
+          if(now_x >= target_trace_len)
+            continue;
+          if(now_y >= rewrite_trace_len)
+            continue;
+          cout << "    Considering " << now_x << ", " << now_y << endl;
+
+          vector<CpuState> target_tcs;
+          vector<CpuState> rewrite_tcs;
+          // gather all the test cases for this point, 
+          for(auto trace : target_traces) {
+            target_tcs.push_back(trace[now_x].second);
+          }
+          for(auto trace : rewrite_traces) {
+            rewrite_tcs.push_back(trace[now_y].second);
+          }
+          
+          // gather all test cases for previous equivalent points that have shown up on the path so far.
+          for(size_t k = 0; k < path_x.size(); ++k) {
+            size_t tmp_x = path_x[k];
+            size_t tmp_y = path_y[k];
+            if(target_traces[0][tmp_x].first == target_traces[0][now_x].first &&
+               rewrite_traces[0][tmp_y].first == rewrite_traces[0][tmp_y].first) {
+              for(auto trace : target_traces) {
+                target_tcs.push_back(trace[tmp_x].second);
+              }
+              for(auto trace : rewrite_traces) {
+                rewrite_tcs.push_back(trace[tmp_y].second);
+              }
+            }
+          }
+
+          // if we find one, add it
+          if(good_invariant_exists(target_tcs, rewrite_tcs)) {
+            path_x.push_back(now_x);
+            path_y.push_back(now_y);
+
+            // add path to dual
+            DualAutomata::State start_state(target_traces[0][curr_x].first, rewrite_traces[0][curr_y].first);
+            vector<Abstraction::State> target_edge;
+            vector<Abstraction::State> rewrite_edge;
+            for(size_t k = curr_x + 1; k <= now_x; ++k)
+              target_edge.push_back(target_traces[0][k].first);
+            for(size_t k = curr_y + 1; k <= now_y; ++k)
+              rewrite_edge.push_back(rewrite_traces[0][k].first);
+            dual.add_edge(DualAutomata::Edge(start_state, target_edge, rewrite_edge));
+
+            curr_x = now_x;
+            curr_y = now_y;
+          }
+        }
+
+        if(found)
+          break;
+      }
+
+      if(!found)
+        break;
+    }
   }
 
   return dual;
@@ -120,21 +199,21 @@ bool DualBuilder::traces_equiv(Abstraction::FullTrace& p1, Abstraction::FullTrac
 
 bool DualBuilder::good_invariant_exists(vector<CpuState>& target_tcs, vector<CpuState>& rewrite_tcs) {
 
-  if(target_tcs.size() != rewrite_tcs.size()) {
+  if (target_tcs.size() != rewrite_tcs.size()) {
     assert(false);
     return false;
   }
 
   // Quick check: is memory equivalent
-  for(size_t i = 0; i < target_tcs.size(); ++i) {
-    if(hash_memory(target_tcs[i]) != hash_memory(rewrite_tcs[i]))
+  for (size_t i = 0; i < target_tcs.size(); ++i) {
+    if (hash_memory(target_tcs[i]) != hash_memory(rewrite_tcs[i]))
       return false;
   }
 
   // Primitive check (TODO): is each rewrite register?
   //  - constant?
   //  - equal to a multiple of a fixed offset of a target register?
-  
+
   // For registers that don't pass the primitive check, do the expensive matrix check
 
   return true;
