@@ -45,38 +45,13 @@ private:
   /** Check if two particular traces are equal (same path through target/rewrite).*/
   bool traces_equiv(Abstraction::FullTrace&, Abstraction::FullTrace&);
 
-  std::pair<size_t,size_t> traverse_table(bool** table, std::pair<size_t,size_t> start, size_t rows, size_t cols) {
-    size_t i = start.first;
-    size_t j = start.second;
+  /** Check if we can generate a good invariant between a set of target test cases and corresponding
+    rewrite test cases. */
+  bool good_invariant_exists(std::vector<CpuState>& target_tcs, std::vector<CpuState>& rewrite_tcs);
 
-    while (i < rows && table[i][j]) {
-      i++;
-    }
-    i--;
-    while (j < cols && table[i][j]) {
-      j++;
-    }
-    j--;
-
-    return std::pair<size_t,size_t>(i,j);
-  }
-
-  std::string hash_memory(CpuState& tc) {
-    std::stringstream ss;
-
-    tc.heap.write_text(ss);
-    ss << "----" << std::endl;
-    tc.stack.write_text(ss);
-    ss << "----" << std::endl;
-    tc.data.write_text(ss);
-    ss << "----" << std::endl;
-
-    for (auto s : tc.segments) {
-      s.write_text(ss);
-      ss << "----" << std::endl;
-    }
-    return ss.str();
-  }
+  /** Writes the memory of a test case out as a string for exact comparison.  Helper for
+    good_invariant_exists. */
+  std::string hash_memory(CpuState& tc);
 
 
 };

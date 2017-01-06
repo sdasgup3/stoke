@@ -20,80 +20,44 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
   cout << "DEBUG TCS: " << debug_tc_count << endl;
 
   for (auto cls : classes) {
-    auto tc = cls[0];
-    auto target_trace = target_abstraction->learn_trace(tc);
-    auto rewrite_trace = rewrite_abstraction->learn_trace(tc);
 
-    bool** match_table = new bool*[target_trace.size()];
-    for (size_t i = 0; i < target_trace.size(); ++i)
-      match_table[i] = new bool[rewrite_trace.size()];
+    // compute traces for each test case of each class
+    vector<Abstraction::FullTrace> target_traces;
+    vector<Abstraction::FullTrace> rewrite_traces;
 
-    // Build table of memory equivalences
-    for (size_t i = 0; i < target_trace.size(); ++i) {
-      auto target_state = target_trace[i].second;
-
-      for (size_t j = 0; j < rewrite_trace.size(); ++j) {
-        auto rewrite_state = rewrite_trace[j].second;
-
-        if (hash_memory(target_state) == hash_memory(rewrite_state)) {
-          match_table[i][j] = 1;
-        } else {
-          match_table[i][j] = 0;
-        }
-      }
+    for(auto tc : cls) {
+      target_traces.push_back(target_abstraction->learn_trace(tc));
+      rewrite_traces.push_back(rewrite_abstraction->learn_trace(tc));
     }
 
-    // Make sure table is of the correct form
-    std::cout << "_________________________________________" << std::endl;
-    for (size_t i = 0; i < target_trace.size(); ++i) {
-      for (size_t j = 0; j < rewrite_trace.size(); ++j) {
-        if (match_table[i][j])
-          std::cout << " X ";
-        else
-          std::cout << " - ";
-      }
-      std::cout << std::endl;
-    }
-    std::cout << "_________________________________________" << std::endl;
+    /*****************************************************************
+      In example below, we're searching for paths from (0,S) to (5,X)
+      Here (S/0 = start, X/5= retq).
+      A path is a concatenation of segments.
+      where, at each vertex, memory states and register invariants
+      match up nicely.  We want the segments between vertices to be as
+      small as possible, so we essentially do a breadth-first search 
+      for the next vertex.
 
-    // Go across first row until we hit a blank space
-    //   then go down until we hit a blank space
-    //   TODO: and check that everything was filled in in the middle.
-    //
-    //   Record the pair of indices that we were at and repeat
-    std::pair<size_t,size_t> current(0,0);
+             R. Trace
+      Target   S  A  B  C  B  C  D  X
+      Trace  0
+             1
+             2    0  1  2  3  ...
+             3    1  2  3  ...
+             3    2  3  ...
+             4    3  ...
+             5    ...
 
-    std::vector<Abstraction::State> target_first_edge;
-    std::vector<Abstraction::State> rewrite_first_edge;
-    target_first_edge.push_back(target_trace[0].first);
-    rewrite_first_edge.push_back(rewrite_trace[0].first);
-    dual.add_edge(DualAutomata::Edge(dual.start_state(), target_first_edge, rewrite_first_edge));
+       // given pairs of test cases for the target and rewrite, see if
+       // we could reasonably find a good coorespondence
+       bool good_invariant_exists(
+          target tcs,
+          rewrite tcs,
+       );
 
-    while (current.first < target_trace.size() - 1 && current.second < rewrite_trace.size() - 1) {
-      auto prev = current;
-      current = traverse_table(match_table, current, target_trace.size(), rewrite_trace.size());
-      current.first++;
-      current.second++;
-      std::cout << "Adding correspondence (" << prev.first << ", " << prev.second << ") ->" <<
-                "(" << current.first << ", " << current.second << ")" << std::endl;
-      auto sigma1 = DualAutomata::State(target_trace[prev.first].first, rewrite_trace[prev.second].first);
-      std::cout << "Starting at state " << sigma1 << std::endl;
+     *****************************************************************/
 
-
-      std::vector<Abstraction::State> te;
-      std::vector<Abstraction::State> re;
-      for (size_t i = prev.first+1; i <= current.first && i < target_trace.size(); ++i) {
-        std::cout << "  target path: " << target_trace[i].first << std::endl;
-        te.push_back(target_trace[i].first);
-      }
-      for (size_t i = prev.second+1; i <= current.second && i < rewrite_trace.size(); ++i) {
-        std::cout << "  rewrite path: " << rewrite_trace[i].first << std::endl;
-        re.push_back(rewrite_trace[i].first);
-      }
-      dual.add_edge(DualAutomata::Edge(sigma1,te,re));
-
-      //auto sigma2 = Dual::State(target_trace[current.first].first, rewrite_trace[current.second].first);
-    }
 
 
   }
@@ -153,4 +117,43 @@ bool DualBuilder::traces_equiv(Abstraction::FullTrace& p1, Abstraction::FullTrac
   return true;
 }
 
+
+bool DualBuilder::good_invariant_exists(vector<CpuState>& target_tcs, vector<CpuState>& rewrite_tcs) {
+
+  if(target_tcs.size() != rewrite_tcs.size()) {
+    assert(false);
+    return false;
+  }
+
+  // Quick check: is memory equivalent
+  for(size_t i = 0; i < target_tcs.size(); ++i) {
+    if(hash_memory(target_tcs[i]) != hash_memory(rewrite_tcs[i]))
+      return false;
+  }
+
+  // Primitive check (TODO): is each rewrite register?
+  //  - constant?
+  //  - equal to a multiple of a fixed offset of a target register?
+  
+  // For registers that don't pass the primitive check, do the expensive matrix check
+
+  return true;
+}
+
+string DualBuilder::hash_memory(CpuState& tc) {
+  stringstream ss;
+
+  tc.heap.write_text(ss);
+  ss << "----" << endl;
+  tc.stack.write_text(ss);
+  ss << "----" << endl;
+  tc.data.write_text(ss);
+  ss << "----" << endl;
+
+  for (auto s : tc.segments) {
+    s.write_text(ss);
+    ss << "----" << endl;
+  }
+  return ss.str();
+}
 
