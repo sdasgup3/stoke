@@ -47,7 +47,8 @@ private:
 
   /** Check if we can generate a good invariant between a set of target test cases and corresponding
     rewrite test cases. */
-  bool good_invariant_exists(std::vector<CpuState>& target_tcs, std::vector<CpuState>& rewrite_tcs);
+  bool good_invariant_exists(std::vector<CpuState>& target_tcs, std::vector<CpuState>& rewrite_tcs,
+                             x64asm::RegSet rewrite_live_outs);
 
   /** Writes the memory of a test case out as a string for exact comparison.  Helper for
     good_invariant_exists. */

@@ -374,6 +374,7 @@ ConjunctionInvariant* InvariantLearner::learn(x64asm::RegSet target_regs,
   for (size_t i = 0; i < columns.size(); ++i) {
     for (size_t j = i+1; j < columns.size(); ++j) {
       // check if column i matches column j
+      cout << " - Checking if column " << columns[i] << " matches " << columns[j] << endl;
       bool match = true;
       for (size_t k = 0; k < tc_count; ++k) {
         if (columns[i].from_state(target_states[k], rewrite_states[k]) !=

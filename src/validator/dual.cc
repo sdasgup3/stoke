@@ -83,8 +83,8 @@ void DualAutomata::learn_invariants(Sandbox& sb, InvariantLearner& learner) {
 
   // Step 1: get data at each state.
   for (size_t i = 0; i < sb.size(); ++i) {
-    auto target_trace = target_->learn_trace(*sb.get_input(i));
-    auto rewrite_trace = rewrite_->learn_trace(*sb.get_input(i));
+    auto target_trace = target_->learn_trace(*sb.get_input(i), false);
+    auto rewrite_trace = rewrite_->learn_trace(*sb.get_input(i), false);
 
     cout << "target trace: ";
     for (size_t i = 0; i < target_trace.size(); ++i) {
@@ -131,6 +131,7 @@ void DualAutomata::learn_invariants(Sandbox& sb, InvariantLearner& learner) {
           // check if edge's rewrite path is prefix of tr_state's rewrite path
           if (!is_prefix(edge.re, tr_state.rewrite_trace)) {
             cout << "  rewrite prefix fail" << endl;
+            cout << "  edge.re: " << edge.re << endl;
             continue;
           }
 
@@ -171,7 +172,23 @@ void DualAutomata::learn_invariants(Sandbox& sb, InvariantLearner& learner) {
 
 }
 
+void DualAutomata::print_all() const {
 
+  for (auto p : next_edges_) {
+    cout << "STATE (" << p.first.ts << ", " << p.first.rs << ")" << endl;
+    for (auto e : p.second) {
+      cout << "    to (" << e.to.ts << ", " << e.to.rs << ") via target: ";
+      for (auto n : e.te) {
+        cout << n << "  "; 
+      } 
+      cout << "rewrite: ";
+      for (auto n : e.re) {
+        cout << n << "  "; 
+      } 
+      cout << endl;
+    }
+  }
+}
 
 
 namespace std {

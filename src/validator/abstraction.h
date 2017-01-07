@@ -52,9 +52,13 @@ public:
 
   /** Get the defined registers at a given state. */
   virtual x64asm::RegSet defined_regs(State) = 0;
+  /** Get live out registers at a point in the abstraction automata. */
+  virtual x64asm::RegSet live_out_regs(State) = 0;
 
-  /** Extract a sequence of states from a test case. */
-  virtual std::vector<std::pair<State, CpuState>> learn_trace(const CpuState&) = 0;
+  /** Extract a sequence of states from a test case.  If
+   include_start is set to true, we also output the initial
+   starting state in the trace. */
+  virtual std::vector<std::pair<State, CpuState>> learn_trace(const CpuState&, bool include_start = true) = 0;
 
   virtual ~Abstraction() { }
 

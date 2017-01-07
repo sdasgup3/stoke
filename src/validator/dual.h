@@ -145,16 +145,8 @@ public:
     return reachable_states_;
   }
 
-  void print_all() {
-
-    for (auto p : next_edges_) {
-      std::cout << "STATE (" << p.first.ts << ", " << p.first.rs << ")" << std::endl;
-      for (auto e : p.second) {
-        std::cout << "    to (" << e.to.ts << ", " << e.to.rs << ")" << std::endl;
-      }
-    }
-
-  }
+  /** Print the automata to standard output. */
+  void print_all() const;  
 
 
 private:

@@ -23,10 +23,18 @@ uint64_t Variable::from_state(const CpuState& target, const CpuState& rewrite) c
   assert(size <= 8);
   assert(offset >= 0);
 
-  auto& prog = is_rewrite ? rewrite : target;
+  auto& cs = is_rewrite ? rewrite : target;
 
   if (!is_ghost) {
-    auto vector = prog[operand];
+
+    if(operand.is_typical_memory()) {
+      auto mem = static_cast<const x64asm::Mem&>(operand);
+      if(!cs.is_valid(mem)) {
+        return 0; // it would really be a segfault
+      }
+    }
+
+    auto vector = cs[operand];
 
     uint64_t value = 0;
     for (int i = offset + (int)size - 1; (int)i >= offset; --i) {
@@ -36,7 +44,7 @@ uint64_t Variable::from_state(const CpuState& target, const CpuState& rewrite) c
 
     return value;
   } else {
-    return prog.shadow.at(name);
+    return cs.shadow.at(name);
   }
 }
 

@@ -67,6 +67,17 @@ public:
     return cfg_.def_outs(s);
   }
 
+  virtual x64asm::RegSet live_out_regs(State s) {
+    if (s == start_state()) {
+      auto loc = Cfg::loc_type(s, 0);
+      return cfg_.live_ins(loc);
+    } else {
+      auto loc = Cfg::loc_type(s, cfg_.num_instrs(s)-1);
+      return cfg_.live_outs(loc);
+    }
+  }
+
+
   struct TraceCallbackInfo {
     State state;
     std::vector<std::pair<State, CpuState>>* trace;
@@ -83,7 +94,7 @@ public:
   }
 
   /** Extract a sequence of states from a test case. */
-  virtual std::vector<std::pair<State, CpuState>> learn_trace(const CpuState& tc) {
+  virtual std::vector<std::pair<State, CpuState>> learn_trace(const CpuState& tc, bool include_start) {
     auto code = cfg_.get_code();
     auto label = cfg_.get_function().get_leading_label();
     sandbox_.clear_callbacks();
@@ -95,6 +106,8 @@ public:
     std::vector<std::pair<State, CpuState>> trace;
     std::vector<TraceCallbackInfo*> to_delete;
 
+    if(include_start)
+      trace.push_back(std::pair<State,CpuState>(start_state(), tc));
 
     for (size_t i = cfg_.get_entry(), ie = cfg_.get_exit(); i < ie; ++i) {
       size_t instrs_in_block = cfg_.num_instrs(i);
