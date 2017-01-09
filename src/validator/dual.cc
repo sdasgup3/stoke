@@ -179,12 +179,12 @@ void DualAutomata::print_all() const {
     for (auto e : p.second) {
       cout << "    to (" << e.to.ts << ", " << e.to.rs << ") via target: ";
       for (auto n : e.te) {
-        cout << n << "  "; 
-      } 
+        cout << n << "  ";
+      }
       cout << "rewrite: ";
       for (auto n : e.re) {
-        cout << n << "  "; 
-      } 
+        cout << n << "  ";
+      }
       cout << endl;
     }
   }

@@ -161,6 +161,7 @@ SRC_OBJ=\
 	\
 	src/tunit/tunit.o \
 	\
+	src/validator/alignment_path.o \
 	src/validator/bounded.o \
 	src/validator/cutpoints.o \
 	src/validator/ddec.o \

@@ -27,9 +27,9 @@ uint64_t Variable::from_state(const CpuState& target, const CpuState& rewrite) c
 
   if (!is_ghost) {
 
-    if(operand.is_typical_memory()) {
+    if (operand.is_typical_memory()) {
       auto mem = static_cast<const x64asm::Mem&>(operand);
-      if(!cs.is_valid(mem)) {
+      if (!cs.is_valid(mem)) {
         return 0; // it would really be a segfault
       }
     }

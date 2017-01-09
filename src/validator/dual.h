@@ -146,7 +146,7 @@ public:
   }
 
   /** Print the automata to standard output. */
-  void print_all() const;  
+  void print_all() const;
 
 
 private:

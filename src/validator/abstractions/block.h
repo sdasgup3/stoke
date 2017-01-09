@@ -106,7 +106,7 @@ public:
     std::vector<std::pair<State, CpuState>> trace;
     std::vector<TraceCallbackInfo*> to_delete;
 
-    if(include_start)
+    if (include_start)
       trace.push_back(std::pair<State,CpuState>(start_state(), tc));
 
     for (size_t i = cfg_.get_entry(), ie = cfg_.get_exit(); i < ie; ++i) {

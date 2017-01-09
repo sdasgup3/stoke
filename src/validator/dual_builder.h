@@ -18,6 +18,7 @@
 #include "src/validator/dual.h"
 #include "src/validator/abstraction.h"
 #include "src/validator/abstractions/block.h"
+#include "src/validator/alignment_path.h"
 
 #include <string>
 
@@ -42,18 +43,16 @@ private:
   std::vector<std::vector<CpuState>> equivalence_classes(Abstraction* target, Abstraction* rewrite,
                                   std::vector<CpuState> testcases);
 
-  /** Check if two particular traces are equal (same path through target/rewrite).*/
-  bool traces_equiv(Abstraction::FullTrace&, Abstraction::FullTrace&);
 
-  /** Check if we can generate a good invariant between a set of target test cases and corresponding
-    rewrite test cases. */
-  bool good_invariant_exists(std::vector<CpuState>& target_tcs, std::vector<CpuState>& rewrite_tcs,
-                             x64asm::RegSet rewrite_live_outs);
+  /** Check if two traces are equivalent. */
+  bool traces_equiv(Abstraction::FullTrace& p1, Abstraction::FullTrace& p2) const;
 
-  /** Writes the memory of a test case out as a string for exact comparison.  Helper for
-    good_invariant_exists. */
-  std::string hash_memory(CpuState& tc);
-
+  /** Adds an edge to a dual automaton corresponding to two points in an alignment path. */
+  void add_edge_between_alignment_points(DualAutomata& dual,
+                                         const Abstraction::FullTrace& target_trace,
+                                         const Abstraction::FullTrace& rewrite_trace,
+                                         const AlignmentPath::Point& p,
+                                         const AlignmentPath::Point& q) const;
 
 };
 
