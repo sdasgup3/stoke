@@ -47,6 +47,12 @@ private:
   /** Check if two traces are equivalent. */
   bool traces_equiv(Abstraction::FullTrace& p1, Abstraction::FullTrace& p2) const;
 
+  /** Adds an edge to a dual automaton corresponding to an alignment path. */
+  void add_edge_on_path(DualAutomata& dual,
+                        const Abstraction::FullTrace& target_trace,
+                        const Abstraction::FullTrace& rewrite_trace,
+                        const AlignmentPath& path) const;
+
   /** Adds an edge to a dual automaton corresponding to two points in an alignment path. */
   void add_edge_between_alignment_points(DualAutomata& dual,
                                          const Abstraction::FullTrace& target_trace,

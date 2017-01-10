@@ -17,7 +17,6 @@
 
 #include "src/validator/abstraction.h"
 #include "src/validator/dual.h"
-#include "src/validator/dual_builder.h"
 
 namespace stoke {
 
@@ -43,6 +42,14 @@ public:
     max_rewrite_entries_ = rewrite_traces_[0].size();
 
     path_.push_back(Point(0,0));
+  }
+
+  Point operator[](size_t index) const {
+    return path_[index];
+  }
+
+  size_t size() const {
+    return path_.size();
   }
 
   void extend(Point p) {

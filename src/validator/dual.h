@@ -111,8 +111,8 @@ public:
     return prev_edges_[s];
   }
 
-  /** Learn invariants. */
-  void learn_invariants(Sandbox&, InvariantLearner&);
+  /** Learn invariants.  Returns 'true' if no error. */
+  bool learn_invariants(Sandbox&, InvariantLearner&);
 
   /** Get invariant at state. */
   ConjunctionInvariant* get_invariant(State& state) {

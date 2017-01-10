@@ -68,7 +68,7 @@ CpuState remove_prefix(const vector<Abstraction::State>& tr1, vector<pair<Abstra
   return last;
 }
 
-void DualAutomata::learn_invariants(Sandbox& sb, InvariantLearner& learner) {
+bool DualAutomata::learn_invariants(Sandbox& sb, InvariantLearner& learner) {
 
   struct TraceState {
     State state;
@@ -113,13 +113,32 @@ void DualAutomata::learn_invariants(Sandbox& sb, InvariantLearner& learner) {
 
     target_state_data_[initial.state].push_back(*sb.get_input(i));
     rewrite_state_data_[initial.state].push_back(*sb.get_input(i));
+    
+    auto exits = exit_states();
 
     while (next.size()) {
       current = next;
       next.clear();
 
       for (auto tr_state : current) {
+
+        if(exits.count(tr_state.state)) {
+
+          if(tr_state.rewrite_trace.size() > 0) {
+            cout << "problem: at exit state, but there's still unconsumed rewrite trace" << endl;
+            return false;
+          }
+          if(tr_state.target_trace.size() > 0) {
+            cout << "problem: at exit state, but there's still unconsumed target trace" << endl;
+            return false;
+          }
+
+          continue;
+        }
+
         cout << "processing trace state @ " << tr_state.state << endl;
+        bool found_matching_edge = false;
+
         for (auto edge : next_edges_[tr_state.state]) {
           cout << "  Considering edge: " << edge.from << " -> " << edge.to << endl;
           // check if edge's target path is prefix of tr_state's target path
@@ -134,6 +153,8 @@ void DualAutomata::learn_invariants(Sandbox& sb, InvariantLearner& learner) {
             cout << "  edge.re: " << edge.re << endl;
             continue;
           }
+
+          found_matching_edge = true;
 
 
           // if so, we:
@@ -151,7 +172,12 @@ void DualAutomata::learn_invariants(Sandbox& sb, InvariantLearner& learner) {
 
           next.push_back(follow);
           reachable_states_.insert(follow.state);
-          std::cout << "REACHABLE: " << follow.state << std::endl;
+          std::cout << "  - REACHABLE: " << follow.state << std::endl;
+        }
+
+        if(!found_matching_edge) {
+          std::cout << "  - Could not find matching edge" << std::endl;
+          return false;
         }
       }
     }
@@ -168,7 +194,11 @@ void DualAutomata::learn_invariants(Sandbox& sb, InvariantLearner& learner) {
                              target_state_data_[state], rewrite_state_data_[state]);
     invariants_[state] = inv;
     cout << "Invariant at " << state << ": " << *inv << endl;
+    // TODO check that the invariants look good enough
   }
+
+
+  return true;
 
 }
 

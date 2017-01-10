@@ -150,11 +150,9 @@ void EDdecValidator::transform_testcase(CpuState& tc) const {
 
 }
 
-
-
-bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
-
-  init_mm();
+/** Returns a list of all the test cases from the Sandbox transformed by
+  'transform_testcase'.  Replaces all the sandbox test cases with these new ones. */
+vector<CpuState> EDdecValidator::transform_inputs() {
 
   vector<CpuState> transformed_inputs;
   for (size_t i = 0; i < sandbox_->size(); ++i) {
@@ -166,20 +164,27 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
   for (auto tc : transformed_inputs)
     sandbox_->insert_input(tc);
 
+  return transformed_inputs;
+}
+
+
+bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
+
+  init_mm();
+
+  auto transformed_inputs = transform_inputs();
+
   Abstraction* target_automata = new BlockAbstraction(init_target, *sandbox_);
   Abstraction* rewrite_automata = new BlockAbstraction(init_rewrite, *sandbox_);
 
   DualBuilder db;
   auto dual = db.build_dual(target_automata, rewrite_automata, transformed_inputs);
-  std::cout << "BUILT IT" << std::endl;
+  std::cout << "BUILT DUAL AUTOMATA" << std::endl;
   auto start_state = dual.start_state();
   dual.print_all();
 
-  //DualAutomata dual(target_automata, rewrite_automata);
-
-  // Manually program in some correspondences
   /*
-
+     // Here's a way to manually specify correspondences
   ifstream ifs;
   ifs.open("correspondences");
   string line;
@@ -229,66 +234,6 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
   }
   */
 
-  /*
-  // 1 -> 3
-  DualAutomata::Edge edge_1_3(start_state, {1,4}, {1,2,3});
-  dual.add_edge(edge_1_3);
-
-  // 1 -> 8
-  DualAutomata::Edge edge_1_8(start_state, {1,4,3,4,3,4,3,4,3,4,3,4,3,4,3,4}, {1,5,6,7,8});
-  dual.add_edge(edge_1_8);
-
-  // 1 -> 16
-  DualAutomata::Edge edge_1_16_0(start_state, {1,4}, {1,5,6,16});
-  DualAutomata::Edge edge_1_16_1(start_state, {1,4}, {1,5,6,7,16});
-  dual.add_edge(edge_1_16_0);
-  dual.add_edge(edge_1_16_1);
-
-  // 1 -> 19
-  DualAutomata::Edge edge_1_19_0(start_state, {1,4,5}, {1,5,6,16,19});
-  DualAutomata::Edge edge_1_19_1(start_state, {1,4,5}, {1,5,6,7,16,19});
-  dual.add_edge(edge_1_19_0);
-  dual.add_edge(edge_1_19_1);
-
-  // 3 -> 3
-  auto stop3 = edge_1_3.to;
-  DualAutomata::Edge edge_3_3(stop3, {3,4}, {4,3});
-  dual.add_edge(edge_3_3);
-
-  // 3 -> 8
-  DualAutomata::Edge edge_3_8(stop3, {3,4,3,4,3,4,3,4,3,4,3,4,3,4,3,4}, {4,5,6,7,8});
-  dual.add_edge(edge_3_8);
-
-  // 3 -> 16
-  DualAutomata::Edge edge_3_16_0(stop3, {3,4}, {4,5,6,16});
-  DualAutomata::Edge edge_3_16_1(stop3, {3,4}, {4,5,6,7,16});
-  dual.add_edge(edge_3_16_0);
-  dual.add_edge(edge_3_16_1);
-
-  // 3 -> 19
-  DualAutomata::Edge edge_3_19(stop3, {5}, {19});
-  dual.add_edge(edge_3_19);
-
-  // 16 -> 19
-  auto stop16 = edge_3_16_0.to;
-  DualAutomata::Edge edge_16_19_0(stop16, {5}, {19});
-  DualAutomata::Edge edge_16_19_1(stop16, {3,4,5}, {17,19});
-  DualAutomata::Edge edge_16_19_2(stop16, {3,4,3,4,5}, {17,18,16,19});
-  DualAutomata::Edge edge_16_19_3(stop16, {3,4,3,4,3,4,5}, {17,18,16,17,19});
-  DualAutomata::Edge edge_16_19_4(stop16, {3,4,3,4,3,4,3,4,5}, {17,18,16,17,18,16,19});
-  DualAutomata::Edge edge_16_19_5(stop16, {3,4,3,4,3,4,3,4,3,4,5}, {17,18,16,17,18,16,17,19});
-  DualAutomata::Edge edge_16_19_6(stop16, {3,4,3,4,3,4,3,4,3,4,3,4,5}, {17,18,16,17,18,16,17,18,16,19});
-  DualAutomata::Edge edge_16_19_7(stop16, {3,4,3,4,3,4,3,4,3,4,3,4,3,4,5}, {17,18,16,17,18,16,17,18,16,17,19});
-  dual.add_edge(edge_16_19_0);
-  dual.add_edge(edge_16_19_1);
-  dual.add_edge(edge_16_19_2);
-  dual.add_edge(edge_16_19_3);
-  dual.add_edge(edge_16_19_4);
-  dual.add_edge(edge_16_19_5);
-  dual.add_edge(edge_16_19_6);
-  dual.add_edge(edge_16_19_7);
-  */
-
   // Learn invariants at each of the reachable states.
   std::cout << "LEARNING INVARIANTS " << std::endl;
   InvariantLearner learner(init_target, init_rewrite);
@@ -298,34 +243,12 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
     learner.add_ghost(a);
     learner.add_ghost(b);
   }
-  dual.learn_invariants(*sandbox_, learner);
-
-  // DEBUGING rax=-8(%rsp) for stpcpy
-  /*
-  cout << "DEBUGGING STPCPY MEMREG" << endl;
-  Variable my_rax(rax, true);
-  Variable my_ptr(x64asm::M64(rsi, -0x1), false);
-  my_ptr.coefficient = -1;
-  auto my_equ = new EqualityInvariant({my_rax, my_ptr}, 0);
-  cout << " * checking " << *my_equ << endl;
-  auto r_states_at_16 = dual.get_rewrite_data(stop16);
-  auto t_states_at_16 = dual.get_target_data(stop16);
-  cout << " * tests: " << r_states_at_16.size() << endl;
-  for(size_t i = 0; i < r_states_at_16.size(); ++i) {
-    auto ts = t_states_at_16[i];
-    auto rs = r_states_at_16[i];
-    if(!my_equ->check(ts, rs)) {
-      cout << "Bad tc:" << endl;
-      cout << "TARGET" << endl;
-      cout << ts << endl;
-      cout << "REWRITE" << endl;
-      cout << rs << endl;
-      cout << endl;
-    } else {
-      cout << "Pass" << endl;
-    }
+  bool learn_success = dual.learn_invariants(*sandbox_, learner);
+  if(!learn_success) {
+    cout << "Fatal error: the dual automata doesn't look correct" << endl;
+    reset_mm();
+    return false;
   }
-  */
 
   // At the initial state, we say what invariant goes.
   auto initial_invariant = get_initial_invariant(init_target);

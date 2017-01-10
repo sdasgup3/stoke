@@ -72,6 +72,9 @@ private:
 
   /** The transform to add shadow values into testcases. */
   void transform_testcase(CpuState& tc) const;
+  /** Transform all the test cases in the sandbox and return them. */
+  std::vector<CpuState> transform_inputs();
+
   /** The initial invariant. */
   ConjunctionInvariant* get_initial_invariant(const Cfg& cfg) const;
   /** An invariant that needs to be conjoined at each state. */

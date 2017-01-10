@@ -6,6 +6,18 @@ using namespace std;
 using namespace stoke;
 using namespace x64asm;
 
+void build_silly_path(AlignmentPath& p, size_t max_target, size_t max_rewrite) {
+  
+  // we're presuming the path alreading contains (0,0)
+  for(size_t i = 1; i < max_target; ++i)
+    p.extend(AlignmentPath::Point(i, 0));
+  for(size_t i = 1; i < max_rewrite; ++i)
+    p.extend(AlignmentPath::Point(max_target-1, i));
+
+}
+
+
+
 DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
                                      Abstraction* rewrite_abstraction,
                                      std::vector<CpuState> testcases) {
@@ -13,6 +25,8 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
   DualAutomata dual(target_abstraction, rewrite_abstraction);
 
   auto classes = equivalence_classes(target_abstraction, rewrite_abstraction, testcases);
+
+  /*
   cout << "NUM TCS: " << testcases.size() << endl;
   int debug_tc_count = 0;
   for (auto cls : classes) {
@@ -20,6 +34,7 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
     debug_tc_count += cls.size();
   }
   cout << "DEBUG TCS: " << debug_tc_count << endl;
+  */
 
   for (auto cls : classes) {
 
@@ -32,96 +47,40 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
       rewrite_traces.push_back(rewrite_abstraction->learn_trace(tc));
     }
 
-    /*****************************************************************
-      In example below, we're searching for paths from (0,S) to (5,X)
-      Here (S/0 = start, X/5= retq).
-      A path is a concatenation of segments.
-      where, at each vertex, memory states and register invariants
-      match up nicely.  We want the segments between vertices to be as
-      small as possible, so we essentially do a breadth-first search
-      for the next vertex.
-
-             R. Trace
-      Target   S  A  B  C  B  C  D  X
-      Trace  0
-             1
-             2    0  1  2  3  ...
-             3    1  2  3  ...
-             3    2  3  ...
-             4    3  ...
-             5    ...
-
-       // given pairs of test cases for the target and rewrite, see if
-       // we could reasonably find a good coorespondence
-       bool good_invariant_exists(
-          target tcs,
-          rewrite tcs,
-       );
-
-     *****************************************************************/
-
     AlignmentPath path(target_abstraction, rewrite_abstraction, target_traces, rewrite_traces);
     size_t target_trace_len = target_traces[0].size();
     size_t rewrite_trace_len = rewrite_traces[0].size();
+    build_silly_path(path, target_trace_len, rewrite_trace_len);
 
-    AlignmentPath::Point current(0,0);
-
-    // while we haven't completed the path
+    // Debugging
     cout << "=== New Equivalence Class ===" << endl;
-    while (current.target_entry < target_trace_len - 1 || current.rewrite_entry < rewrite_trace_len) {
-      cout << " Searching from " << current;
-      cout << "    Corresponding abstraction points: " << path.point_to_abstraction(current) << endl;
-
-      bool found = false;
-
-      // search for possible next verfices, closest first (by Manhattan metric)
-      for (size_t i = 1; current.target_entry + i < target_trace_len ||
-           current.rewrite_entry + i < rewrite_trace_len; ++i) {
-
-        for (size_t j_loop = 0; j_loop <= i; ++j_loop) {
-
-          size_t j = j_loop;
-
-          if (current.target_entry < current.rewrite_entry)
-            j = i - j_loop;
-
-          AlignmentPath::Point now(current.target_entry + j,
-                                   current.rewrite_entry + (i-j));
-
-          if (now.target_entry >= target_trace_len)
-            continue;
-          if (now.rewrite_entry >= rewrite_trace_len)
-            continue;
-
-          cout << "    Considering " << now;
-          cout << "      Corresponding abstraction points: " << path.point_to_abstraction(now) << endl;
-
-          AlignmentPath copy = path;
-          copy.extend(now);
-
-          if (copy.valid()) {
-            found = true;
-            path = copy;
-            path.extend(now);
-
-            add_edge_between_alignment_points(dual, target_traces[0], rewrite_traces[0], current, now);
-
-            current = now;
-            break;
-          }
-        }
-
-        if (found)
-          break;
-      }
-
-      if (!found)
-        break;
+    cout << "  Score: " << path.score() << endl;
+    if(path.valid()) {
+      cout << "  Path is valid" << endl;
+      add_edge_on_path(dual, target_traces[0], rewrite_traces[0], path);
+    } else {
+      cout << "  Path invalid" << endl;
     }
   }
 
   return dual;
 }
+
+
+/** Add edge to dual automata between two points on an Alignment Path */
+void DualBuilder::add_edge_on_path(DualAutomata& dual,
+    const Abstraction::FullTrace& target_trace,
+    const Abstraction::FullTrace& rewrite_trace,
+    const AlignmentPath& path) const {
+
+  auto last = path[0];
+  for(size_t i = 1; i < path.size(); ++i) {
+    add_edge_between_alignment_points(dual, target_trace, rewrite_trace, last, path[i]);
+    last = path[i];
+  }
+
+}
+
 
 /** Add edge to dual automata between two points on an Alignment Path */
 void DualBuilder::add_edge_between_alignment_points(DualAutomata& dual,
