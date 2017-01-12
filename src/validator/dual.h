@@ -151,6 +151,29 @@ public:
 
 private:
 
+  /** This is a data structure used in learn_state_data and its helpers
+    to track the possible states that the automata can be in starting from
+    a single test case. */
+  struct TraceState {
+    State state;
+    CpuState target_current;
+    CpuState rewrite_current;
+    Abstraction::FullTrace target_trace;
+    Abstraction::FullTrace rewrite_trace;
+  };
+
+  /** Runs a test case/trace through all possible paths in automata to
+    populate state information.  Returns false on error. */
+  bool learn_state_data(const Abstraction::FullTrace& target, 
+                        const Abstraction::FullTrace& rewrite);
+
+
+  /** Is an edge (a series of states) a prefix of a trace (a series of state/cpu state pairs)? */
+  bool is_prefix(const std::vector<Abstraction::State>& tr1, const Abstraction::FullTrace& tr2);
+
+  /** Remove an edge prefix from a trace. */
+  void remove_prefix(const std::vector<Abstraction::State>& tr1, Abstraction::FullTrace& tr2);
+
   Abstraction* target_;
   Abstraction* rewrite_;
 
