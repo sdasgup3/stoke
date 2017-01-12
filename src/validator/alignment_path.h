@@ -81,26 +81,24 @@ public:
     std::map<DualAutomata::State, std::vector<CpuState>> automata_to_rewrite_state;
     std::set<DualAutomata::State> states;
 
+    // Consider every point along the path
     for (auto point : path_) {
+
+      // Figure out what dual automata state this corresponds to
       auto da_state = point_to_abstraction(point);
       states.insert(da_state);
 
+      // Find this point on all the target/rewrite traces and record the CpuState into
+      // the map.
       for (auto trace : target_traces_) {
-        for (auto entry : trace) {
-          if (entry.first == da_state.ts) {
-            automata_to_target_state[da_state].push_back(entry.second);
-          }
-        }
+        automata_to_target_state[da_state].push_back(trace[point.target_entry].second);
       }
       for (auto trace : rewrite_traces_) {
-        for (auto entry : trace) {
-          if (entry.first == da_state.rs) {
-            automata_to_rewrite_state[da_state].push_back(entry.second);
-          }
-        }
+        automata_to_rewrite_state[da_state].push_back(trace[point.rewrite_entry].second);
       }
     }
 
+    // Go through the dual autamata states and see if we can find invariants
     for (auto state : states) {
       auto target_tcs = automata_to_target_state[state];
       auto rewrite_tcs = automata_to_rewrite_state[state];
@@ -159,6 +157,7 @@ private:
 
 namespace std {
 std::ostream& operator<<(std::ostream& os, const stoke::AlignmentPath::Point&);
+std::ostream& operator<<(std::ostream& os, const stoke::AlignmentPath&);
 }
 
 

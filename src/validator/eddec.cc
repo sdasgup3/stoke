@@ -244,7 +244,7 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
     learner.add_ghost(b);
   }
   bool learn_success = dual.learn_invariants(*sandbox_, learner);
-  if(!learn_success) {
+  if (!learn_success) {
     cout << "Fatal error: the dual automata doesn't look correct" << endl;
     reset_mm();
     return false;

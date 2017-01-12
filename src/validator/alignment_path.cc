@@ -28,7 +28,7 @@ bool AlignmentPath::good_invariant_exists(vector<CpuState>& target_tcs, vector<C
   //  - constant?
   //  - equal to a multiple of a fixed offset of a target register?
   for (auto reg = rewrite_liveout.gp_begin(); reg != rewrite_liveout.gp_end(); ++reg) {
-    cout << "     ~~  Verifying we have a good invariant for " << *reg << endl;
+    //cout << "     ~~  Verifying we have a good invariant for " << *reg << endl;
 
     auto init_value = rewrite_tcs[0][*reg];
 
@@ -36,13 +36,13 @@ bool AlignmentPath::good_invariant_exists(vector<CpuState>& target_tcs, vector<C
     for (auto tc : rewrite_tcs) {
       if (tc[*reg] != init_value) {
         is_constant = false;
-        cout << "     ~~~~ not constant; saw " << init_value << " and " << tc[*reg] << endl;
+        //cout << "     ~~~~ not constant; saw " << init_value << " and " << tc[*reg] << endl;
         break;
       }
     }
 
     if (is_constant) {
-      cout << "     ~~~~ it's constant: " << init_value << endl;
+      //cout << "     ~~~~ it's constant: " << init_value << endl;
       continue;
     }
 
@@ -59,7 +59,7 @@ bool AlignmentPath::good_invariant_exists(vector<CpuState>& target_tcs, vector<C
         }
       }
       if (this_reg_matches) {
-        cout << "      ~~~~ matches target register " << t_reg << " with diff " << init_diff << endl;
+        //cout << "      ~~~~ matches target register " << t_reg << " with diff " << init_diff << endl;
         is_same = true;
         break;
       }
@@ -70,7 +70,7 @@ bool AlignmentPath::good_invariant_exists(vector<CpuState>& target_tcs, vector<C
 
     // TODO: add expensive check
 
-    cout << "     ~~~~ not matching target register" << endl;
+    //cout << "     ~~~~ not matching target register" << endl;
     return false; // cannot find an invariant for reg
   }
 
@@ -100,6 +100,15 @@ namespace std {
 
 ostream& operator<<(ostream& os, const AlignmentPath::Point& s) {
   os << "(" << s.target_entry << ", " << s.rewrite_entry << ")";
+  return os;
+}
+
+ostream& operator<<(ostream& os, const AlignmentPath& p) {
+
+  for (size_t i = 0; i < p.size(); ++i) {
+    os << p[i] << "  ";
+  }
+
   return os;
 }
 
