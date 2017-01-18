@@ -22,6 +22,8 @@
 #include "src/validator/invariants/memory_equality.h"
 #include "src/validator/invariants/state_equality.h"
 #include "src/validator/invariants/true.h"
+#include "src/validator/memory_model.h"
+#include "src/validator/memory_model/flat.h"
 
 
 #define OBLIG_DEBUG(X) { }
