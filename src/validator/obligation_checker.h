@@ -251,6 +251,10 @@ private:
     line numbers with the original ones. */
   Cfg rewrite_cfg_with_path(const Cfg&, const CfgPath& p, LineMap& to_populate);
 
+  /////////////////////////  Misc Helpers ////////////////////////////
+
+  /** Get all the ghost invariables contained in two invariants. */
+  std::set<std::string> union_ghost_variables(const Invariant& assume, const Invariant& prove) const;
 
   /////////////// Bookkeeping //////////////////
 

@@ -64,8 +64,8 @@ public:
 #undef LAST_POINT
 
     // Check that the indices are within bounds
-    assert(p.target_entry < max_target_entries);
-    assert(p.rewrite_entry < max_rewrite_entries);
+    assert(p.target_entry < max_target_entries_);
+    assert(p.rewrite_entry < max_rewrite_entries_);
 
     // Add point to the path
     path_.push_back(p);

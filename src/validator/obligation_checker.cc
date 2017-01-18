@@ -1075,6 +1075,19 @@ void ObligationChecker::delete_memories(std::vector<std::pair<CellMemory*, CellM
   }
 }
 
+/** Find all the ghost variables in two invariants */
+set<string> ObligationChecker::union_ghost_variables(const Invariant& assume, const Invariant& prove) const {
+  set<string> ghost_names;
+  auto assume_variables = assume.get_variables();
+  auto all_variables = prove.get_variables();
+  all_variables.insert(all_variables.begin(), assume_variables.begin(), assume_variables.end());
+  for (auto var : all_variables) {
+    if (var.is_ghost) {
+      ghost_names.insert(var.name);
+    }
+  }
+  return ghost_names;
+}
 
 bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite, const CfgPath& P, const CfgPath& Q, const Invariant& assume, const Invariant& prove) {
 
@@ -1136,15 +1149,7 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite, const CfgPa
 
     /** Here we need to figure out if there are any ghost variables we need to add to the
       symbolic representations. */
-    set<string> ghost_names;
-    auto assume_variables = assume.get_variables();
-    auto all_variables = prove.get_variables();
-    all_variables.insert(all_variables.begin(), assume_variables.begin(), assume_variables.end());
-    for (auto var : all_variables) {
-      if (var.is_ghost) {
-        ghost_names.insert(var.name);
-      }
-    }
+    auto ghost_names = union_ghost_variables(assume, prove);
     vector<string> ghost_vector;
     ghost_vector.insert(ghost_vector.begin(), ghost_names.begin(), ghost_names.end());
     for (auto name : ghost_names) {
