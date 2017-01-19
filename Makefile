@@ -190,6 +190,8 @@ SRC_OBJ=\
 	src/validator/handlers/strata_handler.o \
 	src/validator/handlers/pseudo_handler.o \
 	\
+	src/validator/memory_model/string.o \
+	\
 	src/verifier/hold_out.o
 
 

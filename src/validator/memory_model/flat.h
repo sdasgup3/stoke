@@ -69,27 +69,27 @@ public:
   }
 
   /** Fill in all the memory data for a test case.*/
-  bool ceg_memory_target_init(SMTSolver& solver, CpuState& tc, 
-                                  SymState& target_state, SymState& rewrite_state) {
+  bool ceg_memory_target_init(SMTSolver& solver, CpuState& tc,
+                              SymState& target_state, SymState& rewrite_state) {
     auto locs = get_memory_locations(target_state, rewrite_state);
     return build_testcase_flat_memory(solver, tc, target_memory_, locs);
   }
 
   bool ceg_memory_rewrite_init(SMTSolver& solver, CpuState& tc,
-                                  SymState& target_state, SymState& rewrite_state) {
+                               SymState& target_state, SymState& rewrite_state) {
     auto locs = get_memory_locations(target_state, rewrite_state);
     return build_testcase_flat_memory(solver, tc, rewrite_memory_, locs);
   }
 
   bool ceg_memory_target_final(SMTSolver& solver, CpuState& tc,
-                                  SymState& target_state, SymState& rewrite_state) {
+                               SymState& target_state, SymState& rewrite_state) {
     auto locs = get_memory_locations(target_state, rewrite_state);
     auto mem = *static_cast<FlatMemory*>(target_state.memory);
     return build_testcase_flat_memory(solver, tc, mem, locs);
   }
 
   bool ceg_memory_rewrite_final(SMTSolver& solver, CpuState& tc,
-                                  SymState& target_state, SymState& rewrite_state) {
+                                SymState& target_state, SymState& rewrite_state) {
     auto locs = get_memory_locations(target_state, rewrite_state);
     auto mem = *static_cast<FlatMemory*>(rewrite_state.memory);
     return build_testcase_flat_memory(solver, tc, mem, locs);
@@ -114,10 +114,10 @@ private:
   }
 
   /** Get all the different memory locations that need to show up in a counterexample. */
-  std::map<const SymBitVectorAbstract*, uint64_t> 
-    get_memory_locations(SymState& target, SymState& rewrite) {
-    
-      std::vector<std::map<const SymBitVectorAbstract*, uint64_t>> map_builder;
+  std::map<const SymBitVectorAbstract*, uint64_t>
+  get_memory_locations(SymState& target, SymState& rewrite) {
+
+    std::vector<std::map<const SymBitVectorAbstract*, uint64_t>> map_builder;
     map_builder.push_back(target_memory_.get_access_list());
     map_builder.push_back(rewrite_memory_.get_access_list());
     map_builder.push_back(static_cast<FlatMemory*>(target.memory)->get_access_list());
@@ -129,14 +129,14 @@ private:
     there can be memory locations in the model which have a 'default' value.  To find these,
     we need an array of all memory locations, with both their symbolic address and the number
     of bytes in each location.  That's what's passed in via the 'locations' array. */
-  // TODO: divide into three functions: 
+  // TODO: divide into three functions:
   //      one for the initial map construction
   //      one for the default value construction
   //      one for keeping it all together
   bool build_testcase_flat_memory(
-      SMTSolver& solver,
-      CpuState& ceg, FlatMemory& memory,
-      const std::map<const SymBitVectorAbstract*, uint64_t>& locations) const {
+    SMTSolver& solver,
+    CpuState& ceg, FlatMemory& memory,
+    const std::map<const SymBitVectorAbstract*, uint64_t>& locations) const {
 
     auto var = memory.get_variable();
     auto symvar = static_cast<const SymArrayVar* const>(var.ptr);

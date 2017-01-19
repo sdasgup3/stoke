@@ -53,7 +53,7 @@ public:
     states of the target and the rewrite. */
   virtual std::vector<SymBool> generate_constraints(SymState& target_state, SymState& rewrite_state) = 0;
 
-  /** Fill in all the memory data for a test case.  Return 'true' if successful. 
+  /** Fill in all the memory data for a test case.  Return 'true' if successful.
    These should be only called after generating a model.  They should be passed the
    final symbolic states for the target/rewrite (even to get the ceg for the initial state,
    as the memory locations in the initial state might depend on what execution path the
