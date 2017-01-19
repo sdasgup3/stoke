@@ -164,7 +164,7 @@ private:
 
   /** Runs a test case/trace through all possible paths in automata to
     populate state information.  Returns false on error. */
-  bool learn_state_data(const Abstraction::FullTrace& target,
+  bool learn_state_data(const Abstraction::FullTrace& target, 
                         const Abstraction::FullTrace& rewrite);
 
 

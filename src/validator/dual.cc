@@ -66,7 +66,7 @@ void DualAutomata::remove_prefix(const vector<Abstraction::State>& tr1, Abstract
 
 /** Here we trace one test case through the Automata along every possible path.
   Returns false on error. */
-bool DualAutomata::learn_state_data(const Abstraction::FullTrace& target_trace,
+bool DualAutomata::learn_state_data(const Abstraction::FullTrace& target_trace, 
                                     const Abstraction::FullTrace& rewrite_trace) {
   /** Setup initial state */
   TraceState initial;
@@ -143,9 +143,9 @@ bool DualAutomata::learn_state_data(const Abstraction::FullTrace& target_trace,
         follow.state = edge.to;
 
         // (2) update the CpuStates
-        if (edge.te.size())
+        if(edge.te.size())
           follow.target_current = follow.target_trace[edge.te.size()-1].second;
-        if (edge.re.size())
+        if(edge.re.size())
           follow.rewrite_current = follow.rewrite_trace[edge.re.size()-1].second;
 
         // (3) remove the prefixes from both traces
@@ -175,7 +175,7 @@ bool DualAutomata::learn_state_data(const Abstraction::FullTrace& target_trace,
 
 bool DualAutomata::learn_invariants(Sandbox& sb, InvariantLearner& learner) {
 
-
+ 
   reachable_states_.clear();
   invariants_.clear();
   target_state_data_.clear();
@@ -200,7 +200,7 @@ bool DualAutomata::learn_invariants(Sandbox& sb, InvariantLearner& learner) {
 
 
     bool ok = learn_state_data(target_trace, rewrite_trace);
-    if (!ok)
+    if(!ok)
       return false;
   }
 
