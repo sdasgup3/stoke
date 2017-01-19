@@ -25,7 +25,7 @@ class MemoryModel {
 
 public:
 
-  MemoryModel(const Cfg& target, const Cfg& rewrite, 
+  MemoryModel(const Cfg& target, const Cfg& rewrite,
               const CfgPath& P, const CfgPath& Q,
               const Invariant& assume, const Invariant& prove) :
     target_(target),
@@ -37,25 +37,31 @@ public:
 
   /** Some memory models will require discharing multiple cases to do the
     whole proof (e.g. aliasing arrangements. */
-  size_t get_case_count() const;
+  virtual size_t get_case_count() const = 0;
 
   /** Start working on a given case.  Updates any internal fields needed.
    You must call this after the constructor but before initial_state_setup.*/
-  void begin_case(size_t);
+  virtual void begin_case(size_t) = 0;
 
   /** Allocate the data structures necessary for memory bookkeeping in the
     circuits and the state.memory pointer.  In a given case, should be called
     before generating any constraints. */
-  void initial_state_setup(SymState& target_state, SymState& rewrite_state);
+  virtual void initial_state_setup(SymState& target_state, SymState& rewrite_state) = 0;
 
   /** Generate any additional constraints necessary.  This should be done
     after building all the circuits.  It should be passed the final symbolic
     states of the target and the rewrite. */
-  std::vector<SymBool> generate_constraints(SymState& target_state, SymState& rewrite_state);
+  virtual std::vector<SymBool> generate_constraints(SymState& target_state, SymState& rewrite_state) = 0;
 
-  /** Fill in all the memory data for a test case.  Return 'true' if successful. */
-  bool finish_ceg_memmory(Solver& solver, CpuState& tc, 
-                          SymState& target_state, SymState& rewrite_state);
+  /** Fill in all the memory data for a test case.  Return 'true' if successful. 
+   These should be only called after generating a model.  They should be passed the
+   final symbolic states for the target/rewrite (even to get the ceg for the initial state,
+   as the memory locations in the initial state might depend on what execution path the
+   particular counterexample took) */
+  virtual bool ceg_memory_target_init(SMTSolver& solver, CpuState& tc, SymState& ts, SymState& rs) = 0;
+  virtual bool ceg_memory_target_final(SMTSolver& solver, CpuState& tc, SymState& ts, SymState& rs) = 0;
+  virtual bool ceg_memory_rewrite_init(SMTSolver& solver, CpuState& tc, SymState& ts, SymState& rs) = 0;
+  virtual bool ceg_memory_rewrite_final(SMTSolver& solver, CpuState& tc, SymState& ts, SymState& rs) = 0;
 
 protected:
 

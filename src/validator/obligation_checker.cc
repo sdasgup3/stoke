@@ -71,52 +71,7 @@ map<K,V> append_maps(vector<map<K,V>> maps) {
   return output;
 }
 
-bool ObligationChecker::build_testcase_flat_memory(CpuState& ceg, FlatMemory& memory,
-    const map<const SymBitVectorAbstract*, uint64_t>& others) const {
 
-  auto var = memory.get_variable();
-  auto symvar = static_cast<const SymArrayVar* const>(var.ptr);
-  auto str = symvar->name_;
-
-  auto map_and_default = solver_.get_model_array(str, 64, 8);
-  auto orig_map = map_and_default.first;
-  auto default_value = map_and_default.second;
-  unordered_map<uint64_t, BitVector> mem_map;
-  for (auto pair : orig_map) {
-    mem_map[pair.first] = pair.second;
-  }
-
-  BitVector default_value_bv(8);
-  default_value_bv.get_fixed_byte(0) = default_value;
-
-  for (auto p : others) {
-    auto abs_var = p.first;
-    uint64_t size = p.second;
-
-    auto var = static_cast<const SymBitVectorVar*>(abs_var);
-    auto var_name = var->get_name();
-    auto var_size = var->get_size();
-    assert(var_size == 64);
-    auto address_bv = solver_.get_model_bv(var_name, var_size);
-    auto addr = address_bv.get_fixed_quad(0);
-
-    for (uint64_t i = addr; i < addr + size; ++i) {
-      if (!mem_map.count(i)) {
-        mem_map[i] = default_value_bv;
-      }
-    }
-  }
-
-  BUILD_TC_DEBUG(
-    cout << "[build tc] map:" << endl;
-  for (auto it : mem_map) {
-  cout << "  " << it.first << " -> " << (uint64_t)it.second.get_fixed_byte(0) << endl;
-  }
-  );
-
-  return ceg.memory_from_map(mem_map);
-
-}
 
 bool ObligationChecker::build_testcase_cell_memory(CpuState& ceg, const CellMemory* target_memory, const CellMemory* rewrite_memory, const Cfg& target, const Cfg& rewrite, bool begin) const {
 
@@ -1091,7 +1046,9 @@ set<string> ObligationChecker::union_ghost_variables(const Invariant& assume, co
   return ghost_names;
 }
 
-bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite, const CfgPath& P, const CfgPath& Q, const Invariant& assume, const Invariant& prove) {
+bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite, 
+                              const CfgPath& P, const CfgPath& Q, 
+                              const Invariant& assume, const Invariant& prove) {
 
 #ifdef DEBUG_CHECKER_PERFORMANCE
   number_queries_++;
@@ -1107,9 +1064,13 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite, const CfgPa
   init_mm();
   have_ceg_ = false;
 
-  // Get a list of all aliasing cases.
+  // Initialize the memory model
+  MemoryModel* memory_model = NULL;
   auto memory_list =  enumerate_aliasing(target, rewrite, P, Q, assume, prove);
   bool flat_model = alias_strategy_ == AliasStrategy::FLAT;
+
+  if(flat_model)
+    memory_model = new FlatModel(target, rewrite, P, Q, assume, prove);
 
   OBLIG_DEBUG(cout << memory_list.size() << " Aliasing cases.  Yay." << endl;);
 
@@ -1169,10 +1130,7 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite, const CfgPa
       state_r.memory = memories.second;
       state_r.memory->set_parent(&state_r);
     } else if (flat_model) {
-      state_t.memory = new FlatMemory();
-      initial_target_flat_memory = *static_cast<FlatMemory*>(state_t.memory);
-      state_r.memory = new FlatMemory();
-      initial_rewrite_flat_memory = *static_cast<FlatMemory*>(state_r.memory);
+      memory_model->initial_state_setup(state_t, state_r);
     }
 
     // Add given assumptions
@@ -1200,18 +1158,8 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite, const CfgPa
     if (memories.first)
       constraints.push_back(memories.first->aliasing_formula(*memories.second));
     else {
-      auto target_flat = dynamic_cast<FlatMemory*>(state_t.memory);
-      auto rewrite_flat = dynamic_cast<FlatMemory*>(state_r.memory);
-      if (target_flat && rewrite_flat) {
-        auto target_con = target_flat->get_constraints();
-        constraints.insert(constraints.begin(),
-                           target_con.begin(),
-                           target_con.end());
-        auto rewrite_con = rewrite_flat->get_constraints();
-        constraints.insert(constraints.begin(),
-                           rewrite_con.begin(),
-                           rewrite_con.end());
-      }
+      auto mem_cons = memory_model->generate_constraints(state_t, state_r);
+      constraints.insert(constraints.begin(), mem_cons.begin(), mem_cons.end());
     }
 
     constraints.insert(constraints.begin(), state_t.constraints.begin(), state_t.constraints.end());
@@ -1270,17 +1218,10 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite, const CfgPa
 
       bool ok = true;
       if (flat_model) {
-        vector<map<const SymBitVectorAbstract*, uint64_t>> other_maps;
-        other_maps.push_back(initial_target_flat_memory.get_access_list());
-        other_maps.push_back(initial_rewrite_flat_memory.get_access_list());
-        other_maps.push_back(static_cast<FlatMemory*>(state_t.memory)->get_access_list());
-        other_maps.push_back(static_cast<FlatMemory*>(state_r.memory)->get_access_list());
-        auto other_map = append_maps(other_maps);
-
-        ok &= build_testcase_flat_memory(ceg_t_, initial_target_flat_memory, other_map);
-        ok &= build_testcase_flat_memory(ceg_r_, initial_rewrite_flat_memory, other_map);
-        ok &= build_testcase_flat_memory(ceg_tf_, *static_cast<FlatMemory*>(state_t.memory), other_map);
-        ok &= build_testcase_flat_memory(ceg_rf_, *static_cast<FlatMemory*>(state_r.memory), other_map);
+        ok &= memory_model->ceg_memory_target_init(solver_, ceg_t_, state_t, state_r);
+        ok &= memory_model->ceg_memory_rewrite_init(solver_, ceg_r_, state_t, state_r);
+        ok &= memory_model->ceg_memory_target_final(solver_, ceg_tf_, state_t, state_r);
+        ok &= memory_model->ceg_memory_rewrite_final(solver_, ceg_tf_, state_t, state_r);
       } else {
         auto tcell = dynamic_cast<CellMemory*>(state_t.memory);
         auto rcell = dynamic_cast<CellMemory*>(state_r.memory);
