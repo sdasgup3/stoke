@@ -28,6 +28,7 @@
 #include "src/symstate/memory/cell.h"
 #include "src/symstate/memory/flat.h"
 #include "src/validator/invariant.h"
+#include "src/validator/memory_model.h"
 #include "src/validator/symbolic_executor.h"
 #include "src/validator/validator.h"
 #include "src/validator/filters/default.h"
@@ -107,9 +108,13 @@ public:
   /** Is there a jump in the path following this basic block? */
   static JumpType is_jump(const Cfg&, const CfgPath& P, size_t i);
 
-  /** Check. */
+  /** Check.  Ensures that if 'assume' holds before executing paths p and q, then
+    'prove' holds afterward. */
   bool check(const Cfg& target, const Cfg& rewrite, const CfgPath& p, const CfgPath& q,
              const Invariant& assume, const Invariant& prove);
+
+  /** Ensure that paths from a given starting point are exhaustive. */
+  bool check_exhaustive(const Cfg& target, const Cfg& rewrite, const std::vector<CfgPath>& ps, const std::vector<CfgPath>& qs, const Invariant& assume);
 
   bool checker_has_ceg() {
     return have_ceg_;
@@ -136,6 +141,19 @@ public:
 
 private:
 
+  /** Extract the counterexample from the model.  Returns 'true' if successful.
+    Takes as input the memory model and any ghost variables. */
+  bool get_counterexample(MemoryModel* memory_model, 
+                          std::vector<std::string> ghost_vector,
+                          SymState& state_t, SymState& state_r,
+                          bool final_states = true);
+
+
+  /** Allocate the memory model based on settings. */
+  MemoryModel* initialize_memory_model(const Cfg& target, const Cfg& rewrite, 
+                                       const CfgPath& P, const CfgPath& Q, 
+                                       const Invariant& assume, const Invariant& prove);
+
   // This is to print out Cfg paths easily (for debugging purposes).
   static std::string print(const CfgPath& p) {
     std::stringstream os;
@@ -156,7 +174,16 @@ private:
   CpuState run_sandbox_on_path(const Cfg& cfg, const CfgPath& P, const CpuState& state);
 
   /** Get all the ghost invariables contained in two invariants. */
-  std::set<std::string> union_ghost_variables(const Invariant& assume, const Invariant& prove) const;
+  std::vector<std::string> union_ghost_variables(const Invariant& assume, const Invariant& prove) const;
+
+  /** Set all ghost variables to a fresh symbolic value. */
+  void reset_ghost_variables(SymState& ss, std::vector<std::string> ghosts);
+
+  /** Create new final states for the target and rewrite and generate equality constraints.  Place
+  new constraints in passed parameter. */
+  void create_final_states(SymState& state_t, SymState& state_r, 
+                           const std::vector<std::string>& ghosts, 
+                           std::vector<SymBool>& constraints);
 
 
   SymbolicExecutor executor_;

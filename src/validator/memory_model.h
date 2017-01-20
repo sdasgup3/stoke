@@ -16,6 +16,7 @@
 #define STOKE_SRC_VALIDATOR_MEMORY_MODEL_H
 
 #include "src/cfg/cfg.h"
+#include "src/validator/filter.h"
 #include "src/validator/invariant.h"
 #include "src/solver/solver.h"
 

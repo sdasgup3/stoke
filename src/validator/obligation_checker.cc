@@ -101,7 +101,9 @@ bool ObligationChecker::check_counterexample(const Cfg& target, const Cfg& rewri
 
 
 /** Find all the ghost variables in two invariants */
-set<string> ObligationChecker::union_ghost_variables(const Invariant& assume, const Invariant& prove) const {
+vector<string> ObligationChecker::union_ghost_variables(const Invariant& assume, const Invariant& prove) const {
+
+  /** Get all the ghost variables and remove duplicates. */
   set<string> ghost_names;
   auto assume_variables = assume.get_variables();
   auto all_variables = prove.get_variables();
@@ -111,8 +113,87 @@ set<string> ObligationChecker::union_ghost_variables(const Invariant& assume, co
       ghost_names.insert(var.name);
     }
   }
-  return ghost_names;
+
+  /** Turn into a vector. */
+  vector<string> ghost_vector;
+  ghost_vector.insert(ghost_vector.begin(), ghost_names.begin(), ghost_names.end());
+  return ghost_vector;
 }
+
+
+bool ObligationChecker::get_counterexample(MemoryModel* memory_model, 
+                                           std::vector<std::string> ghost_vector,
+                                           SymState& state_t, SymState& state_r,
+                                           bool final_states) {
+
+  bool ok = true;
+
+  ceg_t_ = Validator::state_from_model(solver_, "_1_INIT", ghost_vector);
+  ceg_r_ = Validator::state_from_model(solver_, "_2_INIT", ghost_vector);
+
+  ok &= memory_model->ceg_memory_target_init(solver_, ceg_t_, state_t, state_r);
+  ok &= memory_model->ceg_memory_rewrite_init(solver_, ceg_r_, state_t, state_r);
+
+  if(final_states) {
+    ceg_tf_ = Validator::state_from_model(solver_, "_1_FINAL", ghost_vector);
+    ceg_rf_ = Validator::state_from_model(solver_, "_2_FINAL", ghost_vector);
+
+    ok &= memory_model->ceg_memory_target_final(solver_, ceg_tf_, state_t, state_r);
+    ok &= memory_model->ceg_memory_rewrite_final(solver_, ceg_tf_, state_t, state_r);
+  }
+
+  if (!ok) {
+    // We don't have memory accurate in our counterexample.  Just leave.
+    have_ceg_ = false;
+    CEG_DEBUG(cout << "(  Counterexample does not have accurate memory)" << endl;)
+  }
+
+  CEG_DEBUG(cout << "  (Got counterexample)" << endl;)
+  CEG_DEBUG(cout << "TARGET START STATE" << endl;)
+  CEG_DEBUG(cout << ceg_t_ << endl;)
+  CEG_DEBUG(cout << "REWRITE START STATE" << endl;)
+  CEG_DEBUG(cout << ceg_r_ << endl;)
+  CEG_DEBUG(cout << "TARGET (expected) END STATE" << endl;)
+  CEG_DEBUG(cout << ceg_tf_ << endl;)
+  CEG_DEBUG(cout << "REWRITE (expected) END STATE" << endl;)
+  CEG_DEBUG(cout << ceg_rf_ << endl;)
+  return ok;
+}
+
+MemoryModel* ObligationChecker::initialize_memory_model(const Cfg& target, const Cfg& rewrite, 
+                                                        const CfgPath& P, const CfgPath& Q, 
+                                                        const Invariant& assume, 
+                                                        const Invariant& prove) {
+  MemoryModel* memory_model = NULL;
+  if (alias_strategy_ == AliasStrategy::FLAT)
+    memory_model = new FlatModel(solver_, filter_, target, rewrite, P, Q, assume, prove);
+  else
+    memory_model = new StringModel(solver_, filter_, target, rewrite, P, Q, assume, prove);
+  return memory_model;
+}
+
+/** Set all ghost variables to a fresh symbolic value. */
+void ObligationChecker::reset_ghost_variables(SymState& ss, std::vector<string> ghosts) {
+  for(auto name : ghosts) {
+    ss.shadow[name] = SymBitVector::tmp_var(64);
+  }
+}
+
+/** Create new final states for the target and rewrite and generate equality constraints.  Place
+  new constraints in passed parameter. */
+void ObligationChecker::create_final_states(SymState& state_t, SymState& state_r, const vector<string>& ghosts, vector<SymBool>& constraints) {
+  SymState state_t_final("1_FINAL");
+  SymState state_r_final("2_FINAL");
+  reset_ghost_variables(state_t_final, ghosts);
+  reset_ghost_variables(state_r_final, ghosts);
+
+  for (auto it : state_t.equality_constraints(state_t_final, RegSet::universe(), ghosts))
+    constraints.push_back(it);
+  for (auto it : state_r.equality_constraints(state_r_final, RegSet::universe(), ghosts))
+    constraints.push_back(it);
+}
+
+
 
 bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite,
                               const CfgPath& P, const CfgPath& Q,
@@ -128,12 +209,7 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite,
   have_ceg_ = false;
 
   // Initialize the memory model
-  MemoryModel* memory_model = NULL;
-  if (alias_strategy_ == AliasStrategy::FLAT)
-    memory_model = new FlatModel(solver_, filter_, target, rewrite, P, Q, assume, prove);
-  else
-    memory_model = new StringModel(solver_, filter_, target, rewrite, P, Q, assume, prove);
-
+  auto memory_model = initialize_memory_model(target, rewrite, P, Q, assume, prove);
 
   size_t num_cases = memory_model->get_case_count();
   for (size_t cur_case = 0; cur_case < num_cases; ++cur_case) {
@@ -147,13 +223,9 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite,
 
     /** Here we need to figure out if there are any ghost variables we need to add to the
       symbolic representations. */
-    auto ghost_names = union_ghost_variables(assume, prove);
-    vector<string> ghost_vector;
-    ghost_vector.insert(ghost_vector.begin(), ghost_names.begin(), ghost_names.end());
-    for (auto name : ghost_names) {
-      state_t.shadow[name] = SymBitVector::tmp_var(64);
-      state_r.shadow[name] = SymBitVector::tmp_var(64);
-    }
+    auto ghost_vector = union_ghost_variables(assume, prove);
+    reset_ghost_variables(state_t, ghost_vector);
+    reset_ghost_variables(state_r, ghost_vector);
 
     /** Now we setup memory. */
     memory_model->initial_state_setup(state_t, state_r);
@@ -193,54 +265,17 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite,
     constraints.push_back(prove_constraint);
 
     // Extract the final states of target/rewrite
-    SymState state_t_final("1_FINAL");
-    SymState state_r_final("2_FINAL");
-    for (auto name : ghost_names) {
-      state_t_final.shadow[name] = SymBitVector::tmp_var(64);
-      state_r_final.shadow[name] = SymBitVector::tmp_var(64);
-    }
+    create_final_states(state_t, state_r, ghost_vector, constraints);
 
-
-
-    for (auto it : state_t.equality_constraints(state_t_final, RegSet::universe(), ghost_vector))
-      constraints.push_back(it);
-    for (auto it : state_r.equality_constraints(state_r_final, RegSet::universe(), ghost_vector))
-      constraints.push_back(it);
-
-    // Step 4: Invoke the solver
+    // Invoke the solver
     bool is_sat = solver_.is_sat(constraints);
     if (solver_.has_error()) {
       throw VALIDATOR_ERROR("solver: " + solver_.get_error());
     }
 
     if (is_sat) {
-      ceg_t_ = Validator::state_from_model(solver_, "_1_INIT", ghost_vector);
-      ceg_r_ = Validator::state_from_model(solver_, "_2_INIT", ghost_vector);
-      ceg_tf_ = Validator::state_from_model(solver_, "_1_FINAL", ghost_vector);
-      ceg_rf_ = Validator::state_from_model(solver_, "_2_FINAL", ghost_vector);
 
-      bool ok = true;
-      ok &= memory_model->ceg_memory_target_init(solver_, ceg_t_, state_t, state_r);
-      ok &= memory_model->ceg_memory_rewrite_init(solver_, ceg_r_, state_t, state_r);
-      ok &= memory_model->ceg_memory_target_final(solver_, ceg_tf_, state_t, state_r);
-      ok &= memory_model->ceg_memory_rewrite_final(solver_, ceg_tf_, state_t, state_r);
-
-      if (!ok) {
-        // We don't have memory accurate in our counterexample.  Just leave.
-        have_ceg_ = false;
-        CEG_DEBUG(cout << "(  Counterexample does not have accurate memory)" << endl;)
-      }
-
-      CEG_DEBUG(cout << "  (Got counterexample)" << endl;)
-      CEG_DEBUG(cout << "TARGET START STATE" << endl;)
-      CEG_DEBUG(cout << ceg_t_ << endl;)
-      CEG_DEBUG(cout << "REWRITE START STATE" << endl;)
-      CEG_DEBUG(cout << ceg_r_ << endl;)
-      CEG_DEBUG(cout << "TARGET (expected) END STATE" << endl;)
-      CEG_DEBUG(cout << ceg_tf_ << endl;)
-      CEG_DEBUG(cout << "REWRITE (expected) END STATE" << endl;)
-      CEG_DEBUG(cout << ceg_rf_ << endl;)
-
+      get_counterexample(memory_model, ghost_vector, state_t, state_r);
 
       if (check_counterexample(target, rewrite, P, Q, assume, prove, ceg_t_, ceg_r_)) {
         have_ceg_ = true;
@@ -267,5 +302,12 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite,
   stop_mm();
   return true;
 
+}
+
+bool ObligationChecker::check_exhaustive(const Cfg& target, const Cfg& rewrite,
+                                         const vector<CfgPath>& ps, const vector<CfgPath>& qs,
+                                         const Invariant& assume) {
+
+  return false;
 }
 
