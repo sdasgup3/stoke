@@ -27,6 +27,7 @@
 #include "src/validator/invariants/sign.h"
 #include "src/validator/invariants/state_equality.h"
 #include "src/validator/invariants/true.h"
+#include "src/validator/symbolic_executor.h"
 
 #include <algorithm>
 #include <set>
@@ -72,9 +73,9 @@ Instruction get_last_instr(const Cfg& cfg, Cfg::id_type block) {
 
 /** Returns an invariant representing the fact that the first state transition in the path is taken. */
 Invariant* get_jump_inv(const Cfg& cfg, const CfgPath& p, bool is_rewrite) {
-  auto jump_type = ObligationChecker::is_jump(cfg, p, 0);
+  auto jump_type = SymbolicExecutor::is_jump(cfg, p, 0);
 
-  if (jump_type == ObligationChecker::JumpType::NONE) {
+  if (jump_type == SymbolicExecutor::JumpType::NONE) {
     return new TrueInvariant();
   }
 
@@ -87,7 +88,7 @@ Invariant* get_jump_inv(const Cfg& cfg, const CfgPath& p, bool is_rewrite) {
     return new TrueInvariant();
   }
 
-  bool is_fallthrough = jump_type == ObligationChecker::JumpType::FALL_THROUGH;
+  bool is_fallthrough = jump_type == SymbolicExecutor::JumpType::FALL_THROUGH;
   auto jump_inv = new FlagInvariant(jump_instr, is_rewrite, is_fallthrough);
   return jump_inv;
 }

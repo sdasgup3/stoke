@@ -74,24 +74,17 @@ public:
   static CpuState state_from_model(SMTSolver& smt, const std::string& name_suffix,
                                    const std::vector<std::string>& ghosts = {});
 
-protected:
 
-  /** Check that def-ins, live-outs match, and that non-control flow
-   * instructions are supported.  Throws exception on error.*/
-  void sanity_checks(const Cfg&, const Cfg&) const;
-
-  /** Inline all the function calls using the sources in the sandbox. */
-  Cfg inline_functions(const Cfg&) const;
-
+  // TODO: move memory management to a separate class for simplicity/readability
   /** Push a new memory manager onto the stack. */
-  void init_mm() {
+  static void init_mm() {
     auto manager = new SymMemoryManager();
     SymBitVector::set_memory_manager(manager);
     SymBool::set_memory_manager(manager);
     memory_manager_.push(manager);
   }
   /** Pop a memory manager off the stack */
-  void stop_mm() {
+  static void stop_mm() {
     assert(memory_manager_.size());
     auto manager = memory_manager_.top();
     manager->collect();
@@ -110,12 +103,21 @@ protected:
 
   }
   /** Discard and reset all memory managers. */
-  void reset_mm() {
+  static void reset_mm() {
     while (memory_manager_.size())
       stop_mm();
   }
   /** The memory manager */
-  std::stack<SymMemoryManager*> memory_manager_;
+  static std::stack<SymMemoryManager*> memory_manager_;
+
+protected:
+
+  /** Check that def-ins, live-outs match, and that non-control flow
+   * instructions are supported.  Throws exception on error.*/
+  void sanity_checks(const Cfg&, const Cfg&) const;
+
+  /** Inline all the function calls using the sources in the sandbox. */
+  Cfg inline_functions(const Cfg&) const;
 
   /** SMT Solver to use */
   SMTSolver& solver_;
