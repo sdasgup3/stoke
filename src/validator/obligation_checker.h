@@ -28,14 +28,9 @@
 #include "src/symstate/memory/cell.h"
 #include "src/symstate/memory/flat.h"
 #include "src/validator/invariant.h"
+#include "src/validator/symbolic_executor.h"
 #include "src/validator/validator.h"
 #include "src/validator/filters/default.h"
-
-//#define DEBUG_CHECKER_PERFORMANCE
-
-#ifdef DEBUG_CHECKER_PERFORMANCE
-#include "src/solver/z3solver.h"
-#endif
 
 namespace stoke {
 
@@ -66,6 +61,7 @@ public:
     set_alias_strategy(AliasStrategy::STRING);
     set_nacl(false);
     filter_ = new DefaultFilter(handler_);
+    executor_.set_filter(filter_);
   }
 
   ~ObligationChecker() {
@@ -86,6 +82,7 @@ public:
     if (filter_)
       delete filter_;
     filter_ = filter;
+    executor_.set_filter(filter_);
     return *this;
   }
 
@@ -139,22 +136,6 @@ public:
 
 private:
 
-  /////////////// These methods handle paths and circuit building ////////////////
-
-  /** This structure and the correspondong map stores RIP offsets and original
-   * line numbers for each line of a rewritten program */
-  struct LineInfo {
-    size_t line_number;
-    x64asm::Label label;
-    uint64_t rip_offset;
-  };
-
-
-  typedef std::map<size_t,LineInfo> LineMap;
-
-  /** Build the circuit for a single basic block */
-  void build_circuit(const Cfg&, Cfg::id_type, JumpType, SymState&, size_t& line_no, const LineMap& line_map);
-
   // This is to print out Cfg paths easily (for debugging purposes).
   static std::string print(const CfgPath& p) {
     std::stringstream os;
@@ -174,15 +155,11 @@ private:
   /** Run the sandbox on a state, cfg along a path.  Used for checking counterexamples. */
   CpuState run_sandbox_on_path(const Cfg& cfg, const CfgPath& P, const CpuState& state);
 
-  /** Rewrite a CFG so that it always executes a particular path, replacing
-    jumps with NOPs.  Fill a map that contains information relating the new
-    line numbers with the original ones. */
-  Cfg rewrite_cfg_with_path(const Cfg&, const CfgPath& p, LineMap& to_populate);
-
-  /////////////////////////  Misc Helpers ////////////////////////////
-
   /** Get all the ghost invariables contained in two invariants. */
   std::set<std::string> union_ghost_variables(const Invariant& assume, const Invariant& prove) const;
+
+
+  SymbolicExecutor executor_;
 
   /////////////// Bookkeeping //////////////////
 
@@ -198,35 +175,10 @@ private:
   /** Do we have a counterexample? */
   bool have_ceg_;
 
-
-
   /** How to handle aliasing */
   AliasStrategy alias_strategy_;
   /** Add NaCl constraint for memory? */
   bool nacl_;
-
-
-#ifdef DEBUG_CHECKER_PERFORMANCE
-  static uint64_t number_queries_;
-  static uint64_t number_cases_;
-
-  static uint64_t constraint_gen_time_;
-  static uint64_t solver_time_;
-  static uint64_t aliasing_time_;
-  static uint64_t ceg_time_;
-
-  void print_performance() {
-    std::cout << "====== Obligation Checker Performance Report ======" << std::endl;
-    std::cout << "Number queries: "<< number_queries_ << std::endl;
-    std::cout << "Number aliasing cases: "<< number_cases_ << std::endl;
-    std::cout << "Alias case enumeration time (ms): " << (aliasing_time_ / 1000) << std::endl;
-    std::cout << "Constraint generation time (ms): " << (constraint_gen_time_ / 1000) << std::endl;
-    std::cout << "Solver time (ms): " << (solver_time_ / 1000) << std::endl;
-    std::cout << "Counterexample extraction time (ms): " << (ceg_time_ / 1000) << std::endl;
-    std::cout << "Total time accounted for (ms): " << ((ceg_time_ + solver_time_ + constraint_gen_time_ + aliasing_time_)/1000) << std::endl;
-    Z3Solver::print_performance();
-  }
-#endif
 
 };
 

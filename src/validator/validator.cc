@@ -189,7 +189,7 @@ Cfg Validator::inline_functions(const Cfg& cfg) const {
 
 }
 
-
+stack<SymMemoryManager*> Validator::memory_manager_;
 
 
 

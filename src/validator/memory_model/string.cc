@@ -23,7 +23,7 @@
 #include "src/validator/invariants/state_equality.h"
 #include "src/validator/invariants/true.h"
 #include "src/validator/memory_model.h"
-#include "src/validator/memory_model/flat.h"
+#include "src/validator/memory_model/string.h"
 
 
 #define OBLIG_DEBUG(X) { }
@@ -49,7 +49,7 @@ using namespace x64asm;
 using namespace std::chrono;
 
 
-bool StringModel::build_testcase_cell_memory(CpuState& ceg, const CellMemory* target_memory, const CellMemory* rewrite_memory, const Cfg& target, const Cfg& rewrite, bool begin) const {
+bool StringModel::build_testcase_cell_memory(CpuState& ceg, const CellMemory* target_memory, const CellMemory* rewrite_memory, bool begin) const {
 
   if (!target_memory || !rewrite_memory) {
     BUILD_TC_DEBUG(cout << "[build tc] no memory found" << endl;)
@@ -183,12 +183,9 @@ vector<size_t> StringModel::enumerate_accesses(const Cfg& cfg) {
 }
 
 vector<vector<CellMemory::SymbolicAccess>> StringModel::enumerate_aliasing_helper(
-    const Cfg& target, const Cfg& rewrite,
-    const Cfg& target_unroll, const Cfg& rewrite_unroll,
     const vector<CellMemory::SymbolicAccess>& todo,
     const vector<CellMemory::SymbolicAccess>& done,
-    size_t accesses_done,
-const Invariant& assume) {
+size_t accesses_done) {
 
   ALIAS_DEBUG(cout << "===================== RECURSIVE STEP ==============================" << endl;)
 
@@ -289,8 +286,7 @@ const Invariant& assume) {
     }
     recursive_accesses.push_back(sa);
 
-    auto new_results = enumerate_aliasing_helper(target, rewrite, target_unroll, rewrite_unroll,
-                       todo, recursive_accesses, accesses_done+1, assume);
+    auto new_results = enumerate_aliasing_helper(todo, recursive_accesses, accesses_done+1);
     result.insert(result.begin(), new_results.begin(), new_results.end());
   }
 
@@ -382,17 +378,14 @@ vector<vector<int>> StringModel::compute_offset_vectors(size_t* cell_sizes, size
 
 vector<pair<CellMemory*, CellMemory*>> StringModel::enumerate_aliasing_string() {
 
-  map<size_t, LineInfo> target_line_map;
-  map<size_t, LineInfo> rewrite_line_map;
-
-  auto target_unroll = rewrite_cfg_with_path(target_, P_, target_line_map);
-  auto rewrite_unroll = rewrite_cfg_with_path(rewrite_, Q_, rewrite_line_map);
+  auto target_unroll = SymbolicExecutor::rewrite_cfg_with_path(target_, P_);
+  auto rewrite_unroll = SymbolicExecutor::rewrite_cfg_with_path(rewrite_, Q_);
 
   auto target_concrete_accesses = enumerate_accesses(target_unroll);
   auto rewrite_concrete_accesses = enumerate_accesses(rewrite_unroll);
 
-  // Symbolically execute target/rewrite to get memory accesses
-  init_mm();
+  // Setup memory management
+  Validator::init_mm();
 
   TrivialMemory target_mem;
   TrivialMemory rewrite_mem;
@@ -404,25 +397,24 @@ vector<pair<CellMemory*, CellMemory*>> StringModel::enumerate_aliasing_string() 
 
   vector<SymBool> constraints;
 
-  size_t target_fake_lineno = 0;
-  size_t rewrite_fake_lineno = 0;
-  constraints.push_back(assume(target_state, rewrite_state, target_fake_lineno, rewrite_fake_lineno));
+  // Symbolic execution
+  executor_.execute(target_, P_, target_state, constraints);
+  executor_.execute(rewrite_, Q_, rewrite_state, constraints);
 
-  size_t line_no = 0;
-  for (size_t i = 0; i < P_.size(); ++i)
-    build_circuit(target, P_[i], JumpType::NONE, target_state, line_no, target_line_map);
-  line_no = 0;
-  for (size_t i = 0; i < Q_.size(); ++i)
-    build_circuit(rewrite, Q_[i], JumpType::NONE, rewrite_state, line_no, rewrite_line_map);
-
+  // Add miscelaneous constraints
   for (auto& it : target_state.constraints)
     constraints.push_back(it);
   for (auto& it : rewrite_state.constraints)
     constraints.push_back(it);
 
+  // Add assumption constraint
+  size_t target_fake_lineno = 0;
+  size_t rewrite_fake_lineno = 0;
+  constraints.push_back(assume_(target_state, rewrite_state, target_fake_lineno, rewrite_fake_lineno));
+
   // update the symbolic memory state with these further reads
   // however, we do not generate constraints based on them
-  prove(target_state, rewrite_state, target_fake_lineno, rewrite_fake_lineno);
+  prove_(target_state, rewrite_state, target_fake_lineno, rewrite_fake_lineno);
 
   if (target_concrete_accesses.size() == 0 &&
       rewrite_concrete_accesses.size() == 0 &&
@@ -578,7 +570,7 @@ for (size_t i = 0; i < total_accesses; ++i) {
 
 
 
-  stop_mm();
+  Validator::stop_mm();
 
   int cell[total_accesses];
   size_t offset[total_accesses];
@@ -641,14 +633,11 @@ for (size_t i = 0; i < total_accesses; ++i) {
 
   vector<pair<CellMemory*, CellMemory*>> result;
 
-  if (max_cell > 1 && alias_strategy_ == AliasStrategy::STRING) {
+  if (max_cell > 1) {
     ALIAS_STRING_DEBUG(cout << "Alias Strategy STRING" << std::endl;)
 
-    LineMap target_line_map;
-    LineMap rewrite_line_map;
-
-    auto target_unroll = rewrite_cfg_with_path(target, P_, target_line_map);
-    auto rewrite_unroll = rewrite_cfg_with_path(rewrite, Q_, rewrite_line_map);
+    auto target_unroll = SymbolicExecutor::rewrite_cfg_with_path(target_, P_);
+    auto rewrite_unroll = SymbolicExecutor::rewrite_cfg_with_path(rewrite_, Q_);
 
     // We'll use the helper to compute all overlaps of the mega-cells we found.
     // Typically, you give it a list of SymbolicAccesses, one per memory
@@ -671,7 +660,7 @@ for (size_t i = 0; i < total_accesses; ++i) {
     sa.unconstrained = false;
     done.push_back(sa);
 
-    auto options = enumerate_aliasing_helper(target, rewrite, target_unroll, rewrite_unroll, cell_list, done, 1, assume);
+    auto options = enumerate_aliasing_helper(cell_list, done, 1);
 
     for (auto option : options) {
       map<size_t, CellMemory::SymbolicAccess> target_map;

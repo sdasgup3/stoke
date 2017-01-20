@@ -24,10 +24,11 @@ class FlatModel : public MemoryModel {
 
 public:
 
-  FlatModel(const Cfg& target, const Cfg& rewrite,
+  FlatModel(SMTSolver& solver, Filter* filter,
+            const Cfg& target, const Cfg& rewrite,
             const CfgPath& P, const CfgPath& Q,
             const Invariant& assume, const Invariant& prove) :
-    MemoryModel(target, rewrite, P, Q, assume, prove) {}
+    MemoryModel(solver, filter, target, rewrite, P, Q, assume, prove) {}
   /** Some memory models will require discharing multiple cases to do the
     whole proof (e.g. aliasing arrangements. */
   size_t get_case_count() const {

@@ -25,9 +25,12 @@ class MemoryModel {
 
 public:
 
-  MemoryModel(const Cfg& target, const Cfg& rewrite,
+  MemoryModel(SMTSolver& solver, Filter* filter,
+              const Cfg& target, const Cfg& rewrite,
               const CfgPath& P, const CfgPath& Q,
               const Invariant& assume, const Invariant& prove) :
+    solver_(solver),
+    filter_(filter),
     target_(target),
     rewrite_(rewrite),
     P_(P),
@@ -45,7 +48,7 @@ public:
 
   /** Allocate the data structures necessary for memory bookkeeping in the
     circuits and the state.memory pointer.  In a given case, should be called
-    before generating any constraints. */
+    before symbolic execution. */
   virtual void initial_state_setup(SymState& target_state, SymState& rewrite_state) = 0;
 
   /** Generate any additional constraints necessary.  This should be done
@@ -63,14 +66,22 @@ public:
   virtual bool ceg_memory_rewrite_init(SMTSolver& solver, CpuState& tc, SymState& ts, SymState& rs) = 0;
   virtual bool ceg_memory_rewrite_final(SMTSolver& solver, CpuState& tc, SymState& ts, SymState& rs) = 0;
 
+  /** All done.  Free any memory. */
+  virtual void cleanup() {
+
+  }
+
 protected:
 
+  SMTSolver& solver_;
+  Filter* filter_;
   const Cfg& target_;
   const Cfg& rewrite_;
   const CfgPath& P_;
   const CfgPath& Q_;
   const Invariant& assume_;
   const Invariant& prove_;
+
 
 };
 

@@ -24,15 +24,18 @@ class StringModel : public MemoryModel {
 
 public:
 
-  StringModel(const Cfg& target, const Cfg& rewrite,
+  StringModel(SMTSolver& solver, Filter* filter,
+              const Cfg& target, const Cfg& rewrite,
               const CfgPath& P, const CfgPath& Q,
               const Invariant& assume, const Invariant& prove) :
-    MemoryModel(target, rewrite, P, Q, assume, prove) {
+    MemoryModel(solver, filter, target, rewrite, P, Q, assume, prove) {
+
+    executor_.set_filter(filter);
 
     auto cases = enumerate_aliasing_string();
     for (auto pair : cases) {
-      target_cases_.push_back(pair.first());
-      rewrite_cases_.push_back(pair.second());
+      target_cases_.push_back(pair.first);
+      rewrite_cases_.push_back(pair.second);
     }
   }
 
@@ -45,7 +48,6 @@ public:
   /** Start working on a given case.  Updates any internal fields needed.
    You must call this after the constructor but before initial_state_setup.*/
   void begin_case(size_t n) {
-    assert(n >= 0);
     assert(n < target_cases_.size());
 
     current_case_target_cells_ = target_cases_[n];
@@ -68,7 +70,7 @@ public:
     states of the target and the rewrite. */
   std::vector<SymBool> generate_constraints(SymState& target_state, SymState& rewrite_state) {
     std::vector<SymBool> cons;
-    auto con = current_case_target_cells_->aliasing_formula(*rewrite_case_target_cells_);
+    auto con = current_case_target_cells_->aliasing_formula(*current_case_rewrite_cells_);
     cons.push_back(con);
     return cons;
   }
@@ -76,34 +78,36 @@ public:
   /** Fill in all the memory data for a test case.*/
   bool ceg_memory_target_init(SMTSolver& solver, CpuState& tc,
                               SymState& target_state, SymState& rewrite_state) {
-    auto target_mem = static_cast<CellMemory*>(target_state.memory)
-                      auto rewrite_mem = static_cast<CellMemory*>(rewrite_state.memory)
-                                         build_testcase_cell_memory(solver, tc, target_mem, rewrite_mem, true);
+    auto target_mem = static_cast<CellMemory*>(target_state.memory);
+    auto rewrite_mem = static_cast<CellMemory*>(rewrite_state.memory);
+    return build_testcase_cell_memory(tc, target_mem, rewrite_mem, true);
   }
 
   bool ceg_memory_rewrite_init(SMTSolver& solver, CpuState& tc,
                                SymState& target_state, SymState& rewrite_state) {
-    auto target_mem = static_cast<CellMemory*>(target_state.memory)
-                      auto rewrite_mem = static_cast<CellMemory*>(rewrite_state.memory)
-                                         build_testcase_cell_memory(solver, tc, target_mem, rewrite_mem, true);
+    auto target_mem = static_cast<CellMemory*>(target_state.memory);
+    auto rewrite_mem = static_cast<CellMemory*>(rewrite_state.memory);
+    return build_testcase_cell_memory(tc, target_mem, rewrite_mem, true);
   }
 
   bool ceg_memory_target_final(SMTSolver& solver, CpuState& tc,
                                SymState& target_state, SymState& rewrite_state) {
-    auto target_mem = static_cast<CellMemory*>(target_state.memory)
-                      auto rewrite_mem = static_cast<CellMemory*>(rewrite_state.memory)
-                                         build_testcase_cell_memory(solver, tc, target_mem, rewrite_mem, false);
+    auto target_mem = static_cast<CellMemory*>(target_state.memory);
+    auto rewrite_mem = static_cast<CellMemory*>(rewrite_state.memory);
+    return build_testcase_cell_memory(tc, target_mem, rewrite_mem, false);
   }
 
   bool ceg_memory_rewrite_final(SMTSolver& solver, CpuState& tc,
                                 SymState& target_state, SymState& rewrite_state) {
-    auto target_mem = static_cast<CellMemory*>(target_state.memory)
-                      auto rewrite_mem = static_cast<CellMemory*>(rewrite_state.memory)
-                                         build_testcase_cell_memory(solver, tc, target_mem, rewrite_mem, false);
+    auto target_mem = static_cast<CellMemory*>(target_state.memory);
+    auto rewrite_mem = static_cast<CellMemory*>(rewrite_state.memory);
+    return build_testcase_cell_memory(tc, target_mem, rewrite_mem, false);
   }
 
 
 private:
+
+  SymbolicExecutor executor_;
 
   /** This is the CellMemory for the current aliasing case. */
   CellMemory* current_case_target_cells_;
@@ -116,20 +120,14 @@ private:
   /** Given target, rewrite, and two paths, returns CellMemory* pairs for every way that aliasing can occur. */
   std::vector<std::pair<CellMemory*, CellMemory*>> enumerate_aliasing_string();
 
-  /** Recursive helper function for enumerate_aliasing.  target_con_access and
-   * rewrite_con_access list the lines of code where target_unroll and
-   * rewrite_unroll have memory accesses.  symbolic_access_list tells you how
-   * each memory access corresponds to a cell of the memory; this list is
-   * incomplete.  Each call to enumerate_aliasing_helper used
+  /** Recursive helper function for enumerate_aliasing.   Each call to enumerate_aliasing_helper used
    * find_arrangements() to come up with all the ways the next symbolic memory
    * access can be added to this list.  Once the list is full, we can generate
    * a CellMemory object. */
-  std::vector<std::vector<CellMemory::SymbolicAccess>> enumerate_aliasing_helper(const Cfg& target, const Cfg& rewrite,
-      const Cfg& target_unroll, const Cfg& rewrite_unroll,
-      const std::vector<CellMemory::SymbolicAccess>& todo,
-      const std::vector<CellMemory::SymbolicAccess>& done,
-      size_t sym_accesses_done,
-      const Invariant& assume);
+  std::vector<std::vector<CellMemory::SymbolicAccess>> enumerate_aliasing_helper(
+        const std::vector<CellMemory::SymbolicAccess>& todo,
+        const std::vector<CellMemory::SymbolicAccess>& done,
+        size_t sym_accesses_done);
 
 
   /** Used for CellArrangement (see below) */
@@ -160,8 +158,7 @@ private:
     std::vector<OverlapDescriptor>& available_cells, size_t max_size);
 
   /** Populate a testcase with memory. */
-  bool build_testcase_cell_memory(SMTSolver& solver,
-                                  CpuState& ceg, const CellMemory* target_memory,
+  bool build_testcase_cell_memory(CpuState& ceg, const CellMemory* target_memory,
                                   const CellMemory* rewrite_memory, bool begin) const;
 
   /** Create a vector of line numbers with memory dereferences */
@@ -173,6 +170,8 @@ private:
   /** (see description in .cc file) */
   std::vector<std::vector<int>> compute_offset_vectors(size_t*, size_t, size_t);
 
+
+};
 
 }
 
