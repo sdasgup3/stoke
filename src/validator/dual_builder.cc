@@ -10,9 +10,9 @@ void build_silly_path(AlignmentPath& p, size_t max_target, size_t max_rewrite) {
 
   // we're presuming the path alreading contains (0,0)
   for (size_t i = 1; i < max_target; ++i)
-    p.extend(AlignmentPath::Point(i, 0));
+    p.extend(AlignmentGrid::Point(i, 0));
   for (size_t i = 1; i < max_rewrite; ++i)
-    p.extend(AlignmentPath::Point(max_target-1, i));
+    p.extend(AlignmentGrid::Point(max_target-1, i));
 
 }
 
@@ -150,7 +150,7 @@ AlignmentPath* path_dfs(const AlignmentPath& so_far, const map<size_t,size_t>& p
       if(rewrite_pos >= max_rewrite)
         continue;
 
-      AlignmentPath::Point next(target_pos, rewrite_pos);
+      AlignmentGrid::Point next(target_pos, rewrite_pos);
       auto new_path = so_far;
       new_path.extend(next);
 
@@ -252,11 +252,8 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
     size_t target_trace_len = target_traces[0].size();
     size_t rewrite_trace_len = rewrite_traces[0].size();
 
-    AlignmentPath empty(target_abstraction, rewrite_abstraction, target_traces, rewrite_traces);
-    /*
-    build_silly_path(path, target_trace_len, rewrite_trace_len);
-    */
-
+    AlignmentGrid grid(target_abstraction, rewrite_abstraction, target_traces, rewrite_traces);
+    AlignmentPath empty(grid);
 
     // Debugging
     cout << "=== New Equivalence Class ===" << endl;
@@ -270,9 +267,10 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
       cout << "  " << it.first;
     cout << endl;
 
+
     AlignmentPath* path = path_dfs_wrapper(empty, target_trace_len, rewrite_trace_len);
     if(path != NULL) {
-      cout << "  Score: " << path->score() << endl;
+      cout << "  Score: " << path->sum_of_squares_length() << endl;
       add_edge_on_path(dual, target_traces[0], rewrite_traces[0], *path);
     } else {
       cout << "  Path not found!" << endl;
@@ -302,8 +300,8 @@ void DualBuilder::add_edge_on_path(DualAutomata& dual,
 void DualBuilder::add_edge_between_alignment_points(DualAutomata& dual,
     const Abstraction::FullTrace& target_trace,
     const Abstraction::FullTrace& rewrite_trace,
-    const AlignmentPath::Point& p,
-    const AlignmentPath::Point& q) const {
+    const AlignmentGrid::Point& p,
+    const AlignmentGrid::Point& q) const {
 
   DualAutomata::State start_state(target_trace[p.target_entry].first,
                                   rewrite_trace[p.rewrite_entry].first);

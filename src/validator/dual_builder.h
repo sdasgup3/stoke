@@ -57,8 +57,8 @@ private:
   void add_edge_between_alignment_points(DualAutomata& dual,
                                          const Abstraction::FullTrace& target_trace,
                                          const Abstraction::FullTrace& rewrite_trace,
-                                         const AlignmentPath::Point& p,
-                                         const AlignmentPath::Point& q) const;
+                                         const AlignmentGrid::Point& p,
+                                         const AlignmentGrid::Point& q) const;
 
 };
 

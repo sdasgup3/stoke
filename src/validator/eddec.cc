@@ -183,57 +183,6 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
   auto start_state = dual.start_state();
   dual.print_all();
 
-  /*
-     // Here's a way to manually specify correspondences
-  ifstream ifs;
-  ifs.open("correspondences");
-  string line;
-  while (getline(ifs, line)) {
-    std::istringstream ss(line);
-
-    CfgPath target;
-    CfgPath rewrite;
-    CfgPath* current_path = &target;
-
-    string token;
-
-    ss >> token;
-    if (!ss.good() || token[0] == '#')
-      continue;
-
-    uint64_t a = stoi(token);
-    ss >> token;
-    if (token != ",") {
-      cout << "Got invalid line; should have format:  <target start>, <rewrite start> | <target path> | <rewrite path>" << endl;
-      exit(0);
-    }
-
-    ss >> token;
-    uint64_t b = stoi(token);
-    DualAutomata::State start_state(a, b);
-
-    ss >> token;
-    if (token != "|") {
-      cout << "Got invalid line; should have format:  <target start>, <rewrite start> | <target path> | <rewrite path>" << endl;
-      exit(0);
-    }
-
-
-    while (ss.good()) {
-      ss >> token;
-      if (token == "|") {
-        current_path = &rewrite;
-      } else {
-        current_path->push_back(std::stoi(token));
-      }
-    }
-
-    cout << "Adding correspondence " << start_state << " -> " << target << " | " << rewrite << endl;
-    DualAutomata::Edge edge(start_state, target, rewrite);
-    dual.add_edge(edge);
-  }
-  */
-
   // Learn invariants at each of the reachable states.
   std::cout << "LEARNING INVARIANTS " << std::endl;
   InvariantLearner learner(init_target, init_rewrite);
