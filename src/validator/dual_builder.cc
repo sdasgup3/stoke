@@ -224,15 +224,8 @@ AlignmentPath* path_strategy_dfs(AlignmentGrid& grid) {
   return path_dfs_wrapper(empty, grid.target_trace_length(), grid.rewrite_trace_length());
 }
 
-DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
-                                     Abstraction* rewrite_abstraction,
-                                     std::vector<CpuState> testcases) {
+void debug_equiv_classes(vector<CpuState>& testcases, vector<vector<CpuState>>& classes) {
 
-  DualAutomata dual(target_abstraction, rewrite_abstraction);
-
-  auto classes = equivalence_classes(target_abstraction, rewrite_abstraction, testcases);
-
-  /*
   cout << "NUM TCS: " << testcases.size() << endl;
   int debug_tc_count = 0;
   for (auto cls : classes) {
@@ -240,7 +233,32 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
     debug_tc_count += cls.size();
   }
   cout << "DEBUG TCS: " << debug_tc_count << endl;
-  */
+
+}
+
+void debug_class(AlignmentGrid& grid) {
+  // Debugging
+  cout << "=== New Equivalence Class ===" << endl;
+
+  cout << "Target trace: ";
+  for (auto it : grid.target_trace())
+    cout << "  " << it.first;
+  cout << endl;
+  cout << "Rewrite trace: ";
+  for (auto it : grid.rewrite_trace())
+    cout << "  " << it.first;
+  cout << endl;
+}
+
+DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
+                                     Abstraction* rewrite_abstraction,
+                                     std::vector<CpuState> testcases) {
+
+  DualAutomata dual(target_abstraction, rewrite_abstraction);
+
+  // split test cases into equivalence classes
+  auto classes = equivalence_classes(target_abstraction, rewrite_abstraction, testcases);
+  // debug_equiv_classes(testcases, classes);
 
   for (auto cls : classes) {
 
@@ -253,21 +271,14 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
       rewrite_traces.push_back(rewrite_abstraction->learn_trace(tc));
     }
 
+    // build grid
     AlignmentGrid grid(target_abstraction, rewrite_abstraction, target_traces, rewrite_traces);
+    debug_class(grid);
 
-    // Debugging
-    cout << "=== New Equivalence Class ===" << endl;
-
-    cout << "Target trace: ";
-    for (auto it : target_traces[0])
-      cout << "  " << it.first;
-    cout << endl;
-    cout << "Rewrite trace: ";
-    for (auto it : rewrite_traces[0])
-      cout << "  " << it.first;
-    cout << endl;
-
+    // find a path using strategy of choice
     AlignmentPath* path = path_strategy_dfs(grid);
+
+    // report and update DFA
     if (path != NULL) {
       cout << "  Performance Score: " << path->sum_of_squares_length() << endl;
       add_edge_on_path(dual, target_traces[0], rewrite_traces[0], *path);

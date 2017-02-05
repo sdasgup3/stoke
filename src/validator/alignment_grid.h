@@ -46,6 +46,26 @@ public:
     return max_rewrite_entries_;
   }
 
+  /** Get a representative target trace. */
+  Abstraction::FullTrace target_trace() {
+    return target_trace(0);
+  }
+
+  /** Get a representative target trace. */
+  Abstraction::FullTrace target_trace(int trace) {
+    return target_traces_[trace];
+  }
+
+  /** Get a representative target trace. */
+  Abstraction::FullTrace rewrite_trace() {
+    return rewrite_trace(0);
+  }
+
+  /** Get a representative target trace. */
+  Abstraction::FullTrace rewrite_trace(int trace) {
+    return rewrite_traces_[trace];
+  }
+
   /** Get the CpuStates at a given point. */
   std::vector<CpuState> target_states(Point p) {
     return get_states_at_point(target_traces_, p.target_entry);
