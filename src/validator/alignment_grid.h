@@ -36,6 +36,16 @@ public:
   AlignmentGrid(Abstraction* target_abstraction, Abstraction* rewrite_abstraction,
                 std::vector<Abstraction::FullTrace> target_traces, std::vector<Abstraction::FullTrace> rewrite_traces);
 
+  /** How many target entries are in the grid? */
+  size_t target_trace_length() {
+    return max_target_entries_;
+  }
+
+  /** How many rewrite entries are in the grid? */
+  size_t rewrite_trace_length() {
+    return max_rewrite_entries_;
+  }
+
   /** Get the CpuStates at a given point. */
   std::vector<CpuState> target_states(Point p) {
     return get_states_at_point(target_traces_, p.target_entry);

@@ -219,6 +219,11 @@ AlignmentPath* path_dfs_wrapper(AlignmentPath empty, size_t max_target, size_t m
 
 }
 
+AlignmentPath* path_strategy_dfs(AlignmentGrid& grid) {
+  AlignmentPath empty(grid);
+  return path_dfs_wrapper(empty, grid.target_trace_length(), grid.rewrite_trace_length());
+}
+
 DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
                                      Abstraction* rewrite_abstraction,
                                      std::vector<CpuState> testcases) {
@@ -248,12 +253,7 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
       rewrite_traces.push_back(rewrite_abstraction->learn_trace(tc));
     }
 
-
-    size_t target_trace_len = target_traces[0].size();
-    size_t rewrite_trace_len = rewrite_traces[0].size();
-
     AlignmentGrid grid(target_abstraction, rewrite_abstraction, target_traces, rewrite_traces);
-    AlignmentPath empty(grid);
 
     // Debugging
     cout << "=== New Equivalence Class ===" << endl;
@@ -267,10 +267,9 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
       cout << "  " << it.first;
     cout << endl;
 
-
-    AlignmentPath* path = path_dfs_wrapper(empty, target_trace_len, rewrite_trace_len);
+    AlignmentPath* path = path_strategy_dfs(grid);
     if (path != NULL) {
-      cout << "  Score: " << path->sum_of_squares_length() << endl;
+      cout << "  Performance Score: " << path->sum_of_squares_length() << endl;
       add_edge_on_path(dual, target_traces[0], rewrite_traces[0], *path);
     } else {
       cout << "  Path not found!" << endl;
