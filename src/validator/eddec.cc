@@ -322,7 +322,7 @@ bool EDdecValidator::verify(const Cfg& target, const Cfg& rewrite) {
   dual.print_all();
 
   // guess invariants from test data for each state of dual automata
-  if(!guess_dual_invariants(dual, target, rewrite)) {
+  if (!guess_dual_invariants(dual, target, rewrite)) {
     reset_mm();
     return false;
   }

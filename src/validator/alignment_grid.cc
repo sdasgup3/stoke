@@ -24,9 +24,52 @@ DualAutomata::State AlignmentGrid::point_to_abstraction(Point p) {
   return DualAutomata::State(target_state, rewrite_state);
 }
 
+/** Do memmory states match at a particular point on the grid? */
+bool AlignmentGrid::memory_states_match(Point p) {
+  auto target_data = target_states(p);
+  auto rewrite_data = rewrite_states(p);
 
+  assert(target_data.size() == rewrite_data.size());
 
+  for (size_t i = 0; i < target_data.size(); ++i) {
+    if (hash_memory(target_data[i]) != hash_memory(rewrite_data[i]))
+      return false;
+  }
 
+  return true;
+}
+
+/** Do memmory states match at a particular point on the grid? */
+size_t AlignmentGrid::num_registers_disagree(Point p) {
+  auto target_data = target_states(p);
+  auto rewrite_data = rewrite_states(p);
+
+  assert(target_data.size() == rewrite_data.size());
+
+  map<R64, bool> registers_disagree;
+
+  // mark the registers that disagree
+  for (size_t i = 0; i < target_data.size(); ++i) {
+    auto ts = target_data[i];
+    auto rs = rewrite_data[i];
+
+    for (auto r : r64s) {
+      if (ts[r] != rs[r]) {
+        registers_disagree[r] = true;
+      }
+    }
+  }
+
+  // count the number of registers that disagree in the end
+  size_t count = 0;
+  for (auto r : r64s)
+    if (registers_disagree[r])
+      count++;
+
+  return count;
+}
+
+/** Hash the memory into a text format. */
 string AlignmentGrid::hash_memory(CpuState& tc) const {
   stringstream ss;
 

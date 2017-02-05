@@ -81,7 +81,7 @@ private:
   ConjunctionInvariant* get_fixed_invariant() const;
 
 
-  /** Guess invariants for each state of dual and store them in the dual's data structure. 
+  /** Guess invariants for each state of dual and store them in the dual's data structure.
       Returns false on failure. */
   bool guess_dual_invariants(DualAutomata& dual, const Cfg& init_target, const Cfg& init_rewrite);
 

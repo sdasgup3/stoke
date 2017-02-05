@@ -76,10 +76,11 @@ public:
     return get_states_at_point(rewrite_traces_, p.rewrite_entry);
   }
 
-  /** How good is a particular point on the grid?  i.e. do the states align nicely? */
-  uint64_t cost(Point p) {
-    return 0;
-  }
+  /** Do memmory states match at a particular point on the grid? */
+  bool memory_states_match(Point p);
+
+  /** How many registers DISAGREE at a particular point on the grid? */
+  size_t num_registers_disagree(Point p);
 
   /** Retrieve the state in the dual automata corresponding to a point in this grid. */
   DualAutomata::State point_to_abstraction(Point p);
