@@ -20,7 +20,7 @@ vector<size_t> reverse(vector<size_t> m) {
 
   vector<size_t> output;
   size_t n = m.size();
-  for(size_t i = 0; i < n; ++i)
+  for (size_t i = 0; i < n; ++i)
     output.push_back(m[n - i - 1]);
   return output;
 }
@@ -31,17 +31,17 @@ std::vector<size_t> scramble_order(size_t max, bool bias_low) {
 
   vector<size_t> outputs;
 
-  if(max == 1) {
+  if (max == 1) {
     outputs.push_back(0);
     return outputs;
   }
 
-  //              OUTPUT       
+  //              OUTPUT
   // max=1        0
-  // max=2 bf=f   1 0         
-  // max=2 bf=t   0 1         
-  // max=3 bf=f   1 2 0       
-  // max=3 bf=t   1 0 2         
+  // max=2 bf=f   1 0
+  // max=2 bf=t   0 1
+  // max=3 bf=f   1 2 0
+  // max=3 bf=t   1 0 2
   // max=4 bf=f   2 1 3 0
   // max=4 bf=t   1 2 0 3
   // max=5 bf=f   2 3 1 4 0
@@ -53,8 +53,8 @@ std::vector<size_t> scramble_order(size_t max, bool bias_low) {
   size_t next_above = max-1;
   bool do_low = !bias_low;
 
-  while(next_below <= next_above) {
-    if(do_low) {
+  while (next_below <= next_above) {
+    if (do_low) {
       outputs.push_back(next_below);
       next_below++;
     }
@@ -72,35 +72,35 @@ std::vector<size_t> scramble_order(size_t max, bool bias_low) {
 /** Find sets of path lengths whose score will be at this fixed amount.  Calls the
   callback when it finds something, and exits when the callback returns false.  The
   recturn value propogates the return value of the callback. */
-bool path_length_partition(map<size_t, size_t>& starting_map, size_t budget, 
+bool path_length_partition(map<size_t, size_t>& starting_map, size_t budget,
                            size_t max_len, size_t min_sum,
                            function<bool (const map<size_t,size_t>&)> callback) {
 
   set<map<size_t, size_t>> vs;
 
-  if(budget == 0 && min_sum == 0) {
+  if (budget == 0 && min_sum == 0) {
     return callback(starting_map);
   }
 
   // The following 3 lines will make it so that we don't consider partitions with
   // 1 appearing more than twice
   size_t start = 1;
-  if(starting_map.count(1) && starting_map.at(1) > 2)
+  if (starting_map.count(1) && starting_map.at(1) > 2)
     start = 2;
 
-  for(size_t i = start; i <= max_len; ++i) {
-    if(i*i > budget)
+  for (size_t i = start; i <= max_len; ++i) {
+    if (i*i > budget)
       break;
 
     auto map_copy = starting_map;
-    map_copy[i]++; 
+    map_copy[i]++;
 
     bool rec;
-    if(min_sum > i)
+    if (min_sum > i)
       rec = path_length_partition(map_copy, budget - i*i, max_len, min_sum - i, callback);
     else
       rec = path_length_partition(map_copy, budget - i*i, max_len, 0, callback);
-    if(!rec)
+    if (!rec)
       return false;
 
   }
@@ -116,14 +116,14 @@ AlignmentPath* path_dfs(const AlignmentPath& so_far, const map<size_t,size_t>& p
   cout << "Recursing: so_far = " << so_far;
 
   size_t paths_left = 0;
-  for(auto length_pair : path_lengths)
+  for (auto length_pair : path_lengths)
     paths_left += length_pair.second;
 
   //cout << " paths_left=" << paths_left << endl;
 
 
-  for(auto length_pair : path_lengths) {
-    if(length_pair.second == 0)
+  for (auto length_pair : path_lengths) {
+    if (length_pair.second == 0)
       continue;
 
 
@@ -137,17 +137,17 @@ AlignmentPath* path_dfs(const AlignmentPath& so_far, const map<size_t,size_t>& p
     // Add to path
     auto index_list = scramble_order(length + 1, last.target_entry > last.rewrite_entry);
     cout << "SCRAMBLING " << (length+1) << " bias_low=" << (last.target_entry > last.rewrite_entry) << endl;
-    for(size_t i : index_list)
+    for (size_t i : index_list)
       cout << "  " << i;
     cout << endl;
 
-    for(size_t i : index_list) {
+    for (size_t i : index_list) {
       size_t target_pos = last.target_entry + i;
       size_t rewrite_pos = last.rewrite_entry + length - i;
 
-      if(target_pos >= max_target)
+      if (target_pos >= max_target)
         continue;
-      if(rewrite_pos >= max_rewrite)
+      if (rewrite_pos >= max_rewrite)
         continue;
 
       AlignmentGrid::Point next(target_pos, rewrite_pos);
@@ -156,8 +156,8 @@ AlignmentPath* path_dfs(const AlignmentPath& so_far, const map<size_t,size_t>& p
 
       if (paths_left == 1) {
         // Check if done
-        if(target_pos == max_target - 1 && rewrite_pos == max_rewrite - 1) {
-          if(new_path.valid()) { 
+        if (target_pos == max_target - 1 && rewrite_pos == max_rewrite - 1) {
+          if (new_path.valid()) {
             cout << "      It works!  " << new_path << endl;
             return new AlignmentPath(new_path);
           } else {
@@ -167,7 +167,7 @@ AlignmentPath* path_dfs(const AlignmentPath& so_far, const map<size_t,size_t>& p
       } else {
         // Recurse
         auto res = path_dfs(new_path, new_path_lengths, max_target, max_rewrite);
-        if(res != NULL)
+        if (res != NULL)
           return res;
       }
     }
@@ -182,24 +182,24 @@ AlignmentPath* path_dfs_wrapper(AlignmentPath empty, size_t max_target, size_t m
   size_t max_len = max_target + max_rewrite - 2;
   AlignmentPath* found_path = NULL;
 
-  for(size_t i = max_len; i < max_len*max_len; ++i) {
+  for (size_t i = max_len; i < max_len*max_len; ++i) {
 
 
     auto found_partition_callback = [i,&empty,max_target,max_rewrite,&found_path] (const map<size_t,size_t>& partition) -> bool {
 
       /** Only consider partitions with 2 or fewer single entries. */
-      if(partition.count(1) && partition.at(1) > 2)
+      if (partition.count(1) && partition.at(1) > 2)
         return true;
 
       /** Debugging */
       cout << "HERE IS A PARTITION FOR BUDGET " << i << endl;
-      for(auto pair : partition) {
+      for (auto pair : partition) {
         cout << "  " << pair.first << " -> " << pair.second << endl;
       }
 
       cout << "  Exploring paths with this partition" << endl;
       auto path = path_dfs(empty, partition, max_target, max_rewrite);
-      if(path != NULL) {
+      if (path != NULL) {
         cout << "  Found a path!" << endl;
         found_path = path;
         return false;
@@ -212,7 +212,7 @@ AlignmentPath* path_dfs_wrapper(AlignmentPath empty, size_t max_target, size_t m
 
     map<size_t, size_t> empty_map;
     bool not_found = path_length_partition(empty_map, i, max_len, max_len, found_partition_callback);
-    if(!not_found)
+    if (!not_found)
       break;
   }
   return found_path;
@@ -259,17 +259,17 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
     cout << "=== New Equivalence Class ===" << endl;
 
     cout << "Target trace: ";
-    for(auto it : target_traces[0])
+    for (auto it : target_traces[0])
       cout << "  " << it.first;
     cout << endl;
     cout << "Rewrite trace: ";
-    for(auto it : rewrite_traces[0])
+    for (auto it : rewrite_traces[0])
       cout << "  " << it.first;
     cout << endl;
 
 
     AlignmentPath* path = path_dfs_wrapper(empty, target_trace_len, rewrite_trace_len);
-    if(path != NULL) {
+    if (path != NULL) {
       cout << "  Score: " << path->sum_of_squares_length() << endl;
       add_edge_on_path(dual, target_traces[0], rewrite_traces[0], *path);
     } else {

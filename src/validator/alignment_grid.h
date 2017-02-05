@@ -59,7 +59,7 @@ private:
   /** Extract states at a point from family of traces. */
   std::vector<CpuState> get_states_at_point (std::vector<Abstraction::FullTrace>& traces, size_t point) {
     std::vector<CpuState> states;
-    for(auto it : traces)
+    for (auto it : traces)
       states.push_back(it[point].second);
 
     return states;

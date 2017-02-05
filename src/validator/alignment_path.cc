@@ -175,9 +175,9 @@ ostream& operator<<(ostream& os, const AlignmentGrid::Point& s) {
 
 ostream& operator<<(ostream& os, const AlignmentPath& p) {
 
-  for(size_t i = 0; i < p.size(); ++i) {
+  for (size_t i = 0; i < p.size(); ++i) {
     os << p[i] << "  ";
-  } 
+  }
 
   return os;
 }

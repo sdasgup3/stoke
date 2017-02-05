@@ -25,7 +25,7 @@ class AlignmentPath {
 
 public:
 
-  AlignmentPath(AlignmentGrid& grid) : grid_(grid) { 
+  AlignmentPath(AlignmentGrid& grid) : grid_(grid) {
     path_.push_back(AlignmentGrid::Point(0,0));
   }
 
@@ -48,7 +48,7 @@ public:
   /** Can we get a good invariant at every point? */
   bool valid();
 
-  /** Returns the sum of the squares of the "lengths" of each path 
+  /** Returns the sum of the squares of the "lengths" of each path
       segment, when visualized in 2D. */
   uint64_t sum_of_squares_length();
 

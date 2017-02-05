@@ -121,10 +121,10 @@ vector<string> ObligationChecker::union_ghost_variables(const Invariant& assume,
 }
 
 
-bool ObligationChecker::get_counterexample(MemoryModel* memory_model, 
-                                           std::vector<std::string> ghost_vector,
-                                           SymState& state_t, SymState& state_r,
-                                           bool final_states) {
+bool ObligationChecker::get_counterexample(MemoryModel* memory_model,
+    std::vector<std::string> ghost_vector,
+    SymState& state_t, SymState& state_r,
+    bool final_states) {
 
   bool ok = true;
 
@@ -134,7 +134,7 @@ bool ObligationChecker::get_counterexample(MemoryModel* memory_model,
   ok &= memory_model->ceg_memory_target_init(solver_, ceg_t_, state_t, state_r);
   ok &= memory_model->ceg_memory_rewrite_init(solver_, ceg_r_, state_t, state_r);
 
-  if(final_states) {
+  if (final_states) {
     ceg_tf_ = Validator::state_from_model(solver_, "_1_FINAL", ghost_vector);
     ceg_rf_ = Validator::state_from_model(solver_, "_2_FINAL", ghost_vector);
 
@@ -160,10 +160,10 @@ bool ObligationChecker::get_counterexample(MemoryModel* memory_model,
   return ok;
 }
 
-MemoryModel* ObligationChecker::initialize_memory_model(const Cfg& target, const Cfg& rewrite, 
-                                                        const CfgPath& P, const CfgPath& Q, 
-                                                        const Invariant& assume, 
-                                                        const Invariant& prove) {
+MemoryModel* ObligationChecker::initialize_memory_model(const Cfg& target, const Cfg& rewrite,
+    const CfgPath& P, const CfgPath& Q,
+    const Invariant& assume,
+    const Invariant& prove) {
   MemoryModel* memory_model = NULL;
   if (alias_strategy_ == AliasStrategy::FLAT)
     memory_model = new FlatModel(solver_, filter_, target, rewrite, P, Q, assume, prove);
@@ -174,7 +174,7 @@ MemoryModel* ObligationChecker::initialize_memory_model(const Cfg& target, const
 
 /** Set all ghost variables to a fresh symbolic value. */
 void ObligationChecker::reset_ghost_variables(SymState& ss, std::vector<string> ghosts) {
-  for(auto name : ghosts) {
+  for (auto name : ghosts) {
     ss.shadow[name] = SymBitVector::tmp_var(64);
   }
 }
@@ -305,8 +305,8 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite,
 }
 
 bool ObligationChecker::check_exhaustive(const Cfg& target, const Cfg& rewrite,
-                                         const vector<CfgPath>& ps, const vector<CfgPath>& qs,
-                                         const Invariant& assume) {
+    const vector<CfgPath>& ps, const vector<CfgPath>& qs,
+    const Invariant& assume) {
 
   return false;
 }

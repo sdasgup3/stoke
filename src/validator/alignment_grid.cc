@@ -6,7 +6,7 @@ using namespace stoke;
 using namespace x64asm;
 
 AlignmentGrid::AlignmentGrid(Abstraction* target_abstraction, Abstraction* rewrite_abstraction,
-              vector<Abstraction::FullTrace> target_traces, vector<Abstraction::FullTrace> rewrite_traces) {
+                             vector<Abstraction::FullTrace> target_traces, vector<Abstraction::FullTrace> rewrite_traces) {
   target_abstraction_ = target_abstraction;
   rewrite_abstraction_ = rewrite_abstraction;
   target_traces_ = target_traces;

@@ -143,15 +143,15 @@ private:
 
   /** Extract the counterexample from the model.  Returns 'true' if successful.
     Takes as input the memory model and any ghost variables. */
-  bool get_counterexample(MemoryModel* memory_model, 
+  bool get_counterexample(MemoryModel* memory_model,
                           std::vector<std::string> ghost_vector,
                           SymState& state_t, SymState& state_r,
                           bool final_states = true);
 
 
   /** Allocate the memory model based on settings. */
-  MemoryModel* initialize_memory_model(const Cfg& target, const Cfg& rewrite, 
-                                       const CfgPath& P, const CfgPath& Q, 
+  MemoryModel* initialize_memory_model(const Cfg& target, const Cfg& rewrite,
+                                       const CfgPath& P, const CfgPath& Q,
                                        const Invariant& assume, const Invariant& prove);
 
   // This is to print out Cfg paths easily (for debugging purposes).
@@ -181,8 +181,8 @@ private:
 
   /** Create new final states for the target and rewrite and generate equality constraints.  Place
   new constraints in passed parameter. */
-  void create_final_states(SymState& state_t, SymState& state_r, 
-                           const std::vector<std::string>& ghosts, 
+  void create_final_states(SymState& state_t, SymState& state_r,
+                           const std::vector<std::string>& ghosts,
                            std::vector<SymBool>& constraints);
 
 
