@@ -30,6 +30,15 @@ public:
     size_t rewrite_entry;
 
     Point (size_t x, size_t y) : target_entry(x), rewrite_entry(y) {}
+
+    bool operator==(const Point& other) {
+      return target_entry == other.target_entry &&
+             rewrite_entry == other.rewrite_entry;
+    }
+
+    bool operator!=(const Point& other) {
+      return !(*this == other);
+    }
   };
 
 
@@ -44,6 +53,17 @@ public:
   /** How many rewrite entries are in the grid? */
   size_t rewrite_trace_length() {
     return max_rewrite_entries_;
+  }
+
+  /** Get the bottom right point on the grid */
+  Point bottom_right() {
+    return Point(max_target_entries_ - 1, max_rewrite_entries_ - 1);
+  }
+
+  /** Is the point in range? */
+  bool in_range(Point p) {
+    return p.target_entry < max_target_entries_ &&
+           p.rewrite_entry < max_rewrite_entries_;
   }
 
   /** Get a representative target trace. */

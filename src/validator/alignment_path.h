@@ -41,8 +41,13 @@ public:
   void extend(AlignmentGrid::Point p);
 
   /** Get the last point on the path. */
+  AlignmentGrid::Point end() {
+    return path_[path_.size() - 1];
+  }
+
+  /** Get the abstraction correspondong to the last point on the path. */
   DualAutomata::State end_state() {
-    return grid_.point_to_abstraction(path_[path_.size() - 1]);
+    return grid_.point_to_abstraction(end());
   }
 
   /** Can we get a good invariant at every point? */

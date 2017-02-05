@@ -219,9 +219,52 @@ AlignmentPath* path_dfs_wrapper(AlignmentPath empty, size_t max_target, size_t m
 
 }
 
-AlignmentPath* path_strategy_dfs(AlignmentGrid& grid) {
+AlignmentPath* strategy_dfs(AlignmentGrid& grid) {
   AlignmentPath empty(grid);
   return path_dfs_wrapper(empty, grid.target_trace_length(), grid.rewrite_trace_length());
+}
+
+void strategy_perfect_searcher(AlignmentGrid& grid, AlignmentPath* path) {
+
+  auto start = path->end();
+
+  bool something_in_range = true;
+
+  for (size_t i = 1; something_in_range; ++i) {
+
+    something_in_range = false;
+    for (size_t j = 0; j <= i; ++j) {
+      auto test = start;
+      test.target_entry += i-j;
+      test.rewrite_entry += j;
+
+      if (grid.in_range(test)) {
+        something_in_range = true;
+
+        if (grid.memory_states_match(test) &&
+            grid.num_registers_disagree(test) == 0) {
+
+          path->extend(test);
+          strategy_perfect_searcher(grid, path);
+          return;
+        }
+      }
+    }
+  }
+
+}
+
+// Come up with a path that hits all the cells with identical registers and memory.
+AlignmentPath* strategy_perfect(AlignmentGrid& grid) {
+
+  AlignmentPath* path = new AlignmentPath(grid);
+  strategy_perfect_searcher(grid, path);
+
+  // ensure the exit is contained in the path
+  if (path->end() != grid.bottom_right())
+    path->extend(grid.bottom_right());
+
+  return path;
 }
 
 void debug_equiv_classes(vector<CpuState>& testcases, vector<vector<CpuState>>& classes) {
@@ -276,12 +319,14 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
     debug_class(grid);
 
     // find a path using strategy of choice
-    AlignmentPath* path = path_strategy_dfs(grid);
+    //AlignmentPath* path = strategy_dfs(grid);
+    AlignmentPath* path = strategy_perfect(grid);
 
     // report and update DFA
     if (path != NULL) {
       cout << "  Performance Score: " << path->sum_of_squares_length() << endl;
       add_edge_on_path(dual, target_traces[0], rewrite_traces[0], *path);
+      delete path;
     } else {
       cout << "  Path not found!" << endl;
     }
