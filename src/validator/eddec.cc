@@ -167,54 +167,9 @@ vector<CpuState> EDdecValidator::transform_inputs() {
   return transformed_inputs;
 }
 
-
-bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
-
-  init_mm();
-
-  auto transformed_inputs = transform_inputs();
-
-  Abstraction* target_automata = new BlockAbstraction(init_target, *sandbox_);
-  Abstraction* rewrite_automata = new BlockAbstraction(init_rewrite, *sandbox_);
-
-  DualBuilder db;
-  auto dual = db.build_dual(target_automata, rewrite_automata, transformed_inputs);
-  std::cout << "BUILT DUAL AUTOMATA" << std::endl;
-  auto start_state = dual.start_state();
-  dual.print_all();
-
-  // Learn invariants at each of the reachable states.
-  std::cout << "LEARNING INVARIANTS " << std::endl;
-  InvariantLearner learner(init_target, init_rewrite);
-  for (auto p : string_params_) {
-    Variable a(string_ghost_start(p), false, 8);
-    Variable b(string_ghost_end(p), false, 8);
-    learner.add_ghost(a);
-    learner.add_ghost(b);
-  }
-  bool learn_success = dual.learn_invariants(*sandbox_, learner);
-  if (!learn_success) {
-    cout << "Fatal error: the dual automata doesn't look correct" << endl;
-    reset_mm();
-    return false;
-  }
-
-  // At the initial state, we say what invariant goes.
-  auto initial_invariant = get_initial_invariant(init_target);
-  dual.set_invariant(start_state, initial_invariant);
-
-  // At other states, we conjoin invariants we know we need to handle different data types
-  for (auto state : dual.get_reachable_states()) {
-    if (state == start_state)
-      continue;
-
-    auto learned_invariant = dual.get_invariant(state);
-    auto fixed_invariant = get_fixed_invariant();
-    for (size_t i = 0; i < fixed_invariant->size(); ++i) {
-      learned_invariant->add_invariant((*fixed_invariant)[i]);
-    }
-    dual.set_invariant(state, learned_invariant);
-  }
+/** Take the dual and prove the invariants that have been previously
+  guessed (and stored in the dual's data structure). */
+void EDdecValidator::prove_invariants(DualAutomata& dual, const Cfg& init_target, const Cfg& init_rewrite) {
 
   // Now we run a fixedpoint algorithm to get the provable invariants
   auto all_states = dual.get_reachable_states();
@@ -280,12 +235,9 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
       worklist.erase(current);
     }
   }
+}
 
-  // Print the learned invariant at all the exit states; check they imply our final invariant
-  auto final_invariant = new ConjunctionInvariant();
-  final_invariant->add_invariant(new MemoryEqualityInvariant());
-  final_invariant->add_invariant(new StateEqualityInvariant(init_target.live_outs()));
-
+bool EDdecValidator::verify_final_invariants(DualAutomata& dual, Invariant* final_invariant, const Cfg& init_target, const Cfg& init_rewrite) {
   bool all_correct = true;
 
   auto exit_states = dual.exit_states();
@@ -314,20 +266,90 @@ bool EDdecValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
     }
   }
 
-  reset_mm();
+  return all_correct;
+}
 
-  if (all_correct) {
-    cout << endl;
-    cout << "VERIFIED." << endl;
-    cout << endl;
-    return true;
-  } else {
-    cout << endl;
-    cout << "" << endl;
-    cout << endl;
+bool EDdecValidator::guess_dual_invariants(DualAutomata& dual, const Cfg& init_target, const Cfg& init_rewrite) {
+
+  // Learn invariants at each of the reachable states.
+  std::cout << "LEARNING INVARIANTS " << std::endl;
+  InvariantLearner learner(init_target, init_rewrite);
+  for (auto p : string_params_) {
+    Variable a(string_ghost_start(p), false, 8);
+    Variable b(string_ghost_end(p), false, 8);
+    learner.add_ghost(a);
+    learner.add_ghost(b);
+  }
+  bool learn_success = dual.learn_invariants(*sandbox_, learner);
+  if (!learn_success) {
+    cout << "Fatal error: the dual automata doesn't look correct" << endl;
+    return false;
   }
 
-  return false;
+  // At the initial state, we say what invariant goes.
+  auto start_state = dual.start_state();
+  auto initial_invariant = get_initial_invariant(init_target);
+  dual.set_invariant(start_state, initial_invariant);
+
+  // At other states, we conjoin invariants we know we need to handle different data types
+  for (auto state : dual.get_reachable_states()) {
+    if (state == start_state)
+      continue;
+
+    auto learned_invariant = dual.get_invariant(state);
+    auto fixed_invariant = get_fixed_invariant();
+    for (size_t i = 0; i < fixed_invariant->size(); ++i) {
+      learned_invariant->add_invariant((*fixed_invariant)[i]);
+    }
+    dual.set_invariant(state, learned_invariant);
+  }
+
+  return true;
+}
+
+bool EDdecValidator::verify(const Cfg& target, const Cfg& rewrite) {
+
+  init_mm();
+
+  auto transformed_inputs = transform_inputs();
+
+  Abstraction* target_automata = new BlockAbstraction(target, *sandbox_);
+  Abstraction* rewrite_automata = new BlockAbstraction(rewrite, *sandbox_);
+
+  DualBuilder db;
+  auto dual = db.build_dual(target_automata, rewrite_automata, transformed_inputs);
+  std::cout << "BUILT DUAL AUTOMATA" << std::endl;
+  dual.print_all();
+
+  // guess invariants from test data for each state of dual automata
+  if(!guess_dual_invariants(dual, target, rewrite)) {
+    reset_mm();
+    return false;
+  }
+
+  // Here's where we do the important work of finding provably correct
+  // invariants at each node using a worklist algorithm.
+  prove_invariants(dual, target, rewrite);
+
+  // Compute the final invariant we want to prove at all exits
+  auto final_invariant = new ConjunctionInvariant();
+  final_invariant->add_invariant(new MemoryEqualityInvariant());
+  final_invariant->add_invariant(new StateEqualityInvariant(target.live_outs()));
+
+  // Verify the final invariant
+  bool all_correct = verify_final_invariants(dual, final_invariant, target, rewrite);
+
+  // Cleanup and report
+  reset_mm();
+  cout << endl;
+
+  if (all_correct) {
+    cout << "VERIFIED." << endl << endl;
+    return true;
+  } else {
+    cout << endl << endl;
+    return false;
+  }
 }
 
 /*
