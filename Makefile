@@ -133,6 +133,7 @@ SRC_OBJ=\
 	src/state/rflags.o \
 	\
 	src/stategen/stategen.o \
+	src/stategen/string_testcases.o \
 	\
 	src/symstate/array.o \
 	src/symstate/bitvector.o \
