@@ -50,11 +50,15 @@ class PathManager
   end
 
   def testcases
-    @base_path + "/testcases/"
+    @base_path + "/testcases"
   end
 
   def trace
-    @base_path + "/trace"
+    if @options[:trace].nil? then
+      @base_path + "/trace"
+    else
+      @options[:trace]
+    end
   end
 
 end

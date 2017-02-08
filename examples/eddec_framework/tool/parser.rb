@@ -4,8 +4,16 @@ require 'optparse'
 
 class ArgumentParser
 
+  def abi_and(list)
+    if list.class == String then
+      list = [list]
+    end
+    others = list.map { |x| "%#{x}" }
+    "{ %rbx %rsp %rbp %r12 %r13 %r14 %r15 #{others.join(" ")} }"
+  end
+
   def sources
-    [ {:name => "strlen", :function => "test_strlen.s", :filename => "strlen.c"} ]
+    [ {:name => "strlen", :function => "test_strlen.s", :filename => "strlen.c", :liveouts => abi_and("rax") } ]
   end
 
   def parse_cmd_line
@@ -13,6 +21,7 @@ class ArgumentParser
       :target_opt  => [],
       :rewrite_opt => [],
       :string_tcs  => [],
+      :tc_copies   => 4,
       :verbose     => false,
       :source_path => Dir.pwd + "/../sources",
       :compiler    => "gcc",
@@ -39,6 +48,10 @@ class ArgumentParser
         @options[:verbose] = true
       end
 
+      opts.on("-o", "--output FILE", String) do |path|
+        @options[:trace] = path
+      end
+
       opts.on("--target-opt NAME", String) do |name|
         @options[:target_opt].push(clean_optimization(name))
       end
@@ -46,18 +59,21 @@ class ArgumentParser
         @options[:rewrite_opt].push(clean_optimization(name))
       end
 
+
       opts.on("--string-tcs SPECIFIER", String) do |stringtc|
         parts = stringtc.split(":")
-        if parts.length != 4 then
-          error "String test case specification must be of form register:min-len:max-len:count"
+        if parts.length != 3 then
+          error "String test case specification must be of form register:min-len:max-len"
         end
 
         @options[:string_tcs].push({
           :register => clean_register(parts[0]),
           :min_len => parts[1].to_i,
           :max_len => parts[2].to_i,
-          :count => parts[3].to_i
         })
+      end
+      opts.on("--tc-count N", Integer) do |count|
+        @options[:tc_copies] = count
       end
     end.parse!
 
