@@ -52,7 +52,7 @@ void StringTcGen::build_random_string(CpuState& tc, unordered_map<uint64_t, cppu
   }
 
   // add null terminator
-  if(buff.null_terminate)
+  if (buff.null_terminate)
     bv.get_fixed_byte(length-1) = 0;
 
   // good to go!

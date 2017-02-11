@@ -35,11 +35,11 @@ using namespace stoke;
 using namespace x64asm;
 
 auto& strings_arg = ValueArg<string>::create("strings")
-                  .description("Ensure these strings are in the buffer.");
+                    .description("Ensure these strings are in the buffer.");
 
 auto& count_arg = ValueArg<size_t>::create("count")
-                       .description("How many of each type of buffer configuration to generate")
-                       .default_val(4);
+                  .description("How many of each type of buffer configuration to generate")
+                  .default_val(4);
 
 auto& output_arg = ValueArg<string>::create("output")
                    .description("file to write testcases");
@@ -47,28 +47,28 @@ auto& output_arg = ValueArg<string>::create("output")
 
 template<typename Out>
 void split(const std::string &s, char delim, Out result) {
-    std::stringstream ss;
-    ss.str(s);
-    std::string item;
-    while (std::getline(ss, item, delim)) {
-        *(result++) = item;
-    }
+  std::stringstream ss;
+  ss.str(s);
+  std::string item;
+  while (std::getline(ss, item, delim)) {
+    *(result++) = item;
+  }
 }
 
 
 std::vector<std::string> split(const std::string &s, char delim) {
-    std::vector<std::string> elems;
-    split(s, delim, std::back_inserter(elems));
-    return elems;
+  std::vector<std::string> elems;
+  split(s, delim, std::back_inserter(elems));
+  return elems;
 }
 
 void configure_generator_strings(StringTcGen& generator) {
 
- auto strings = strings_arg.value(); 
- auto strings_vector = split(strings, ',');
- for(auto spec : strings_vector) {
+  auto strings = strings_arg.value();
+  auto strings_vector = split(strings, ',');
+  for (auto spec : strings_vector) {
     auto pieces = split(spec, ':');
-    if(pieces.size() != 3) {
+    if (pieces.size() != 3) {
       Console::error(1) << "string specifier " << spec << " is invalid.";
     }
     R64 r = rax;
@@ -79,7 +79,7 @@ void configure_generator_strings(StringTcGen& generator) {
     size_t min_len = stoi(pieces[1]);
     size_t max_len = stoi(pieces[2]);
     generator.add_random_string(min_len, max_len, r);
- }
+  }
 
 }
 
@@ -99,7 +99,7 @@ int main(int argc, char** argv) {
   auto tcs = generator.generate_all(count_arg.value());
 
   /** Write tcs to file. */
-  if(output_arg.has_been_provided()) {
+  if (output_arg.has_been_provided()) {
     ofstream ofs(output_arg.value());
     tcs.write_text(ofs);
   } else {
