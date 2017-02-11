@@ -18,8 +18,8 @@ void AlignmentPath::extend(AlignmentGrid::Point p) {
 #undef LAST_POINT
 
   // Check that the indices are within bounds
-  assert(p.target_entry < max_target_entries_);
-  assert(p.rewrite_entry < max_rewrite_entries_);
+  assert(p.target_entry < grid_.target_trace_length());
+  assert(p.rewrite_entry < grid_.rewrite_trace_length());
 
   // Add point to the path
   path_.push_back(p);

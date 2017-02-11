@@ -45,6 +45,7 @@ public:
 
   SymbolicExecutor() {
     filter_ = NULL;
+    set_nacl(false);
   }
 
   SymbolicExecutor& set_filter(Filter* filter) {
