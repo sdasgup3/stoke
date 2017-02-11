@@ -136,6 +136,9 @@ public:
   void set_lineno(size_t line) {
     lineno_ = line;
   }
+  size_t get_lineno() const {
+    return lineno_;
+  }
 
   /** Replace symbolic values with variables and add constraints.*/
   void simplify();
