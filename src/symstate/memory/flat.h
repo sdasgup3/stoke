@@ -71,6 +71,11 @@ public:
   /** Extra constraints needed to make everything work. */
   std::vector<SymBool> constraints_;
 
+  virtual SymMemory* clone() {
+    return new FlatMemory(*this);
+  }
+
+
 private:
 
   /** A variable that represents the heap state */

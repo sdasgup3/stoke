@@ -89,6 +89,10 @@ public:
     return "trivial";
   }
 
+  virtual SymMemory* clone() {
+    return new TrivialMemory(*this);
+  }
+
 private:
 
   /** List of all reads */

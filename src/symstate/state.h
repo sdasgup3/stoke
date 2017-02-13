@@ -45,6 +45,34 @@ public:
       delete memory;
   }
 
+  /** Copy constructor.  We need this so that we can do a deep clone of the memory state. */
+  SymState (const SymState& other) : gp(16,64), sse(16,256) {
+    gp = other.gp;
+    sse = other.sse;
+    rf = other.rf;
+    sigbus = other.sigbus;
+    sigfpe = other.sigfpe;
+    sigsegv = other.sigsegv;
+    rip = other.rip;
+    shadow = other.shadow;
+    lineno_ = other.lineno_;
+
+    if(other.memory != NULL) {
+      memory = other.memory->clone(); 
+      delete_memory_ = true; /* we allocate it, we delete it */
+    } else {
+      memory = NULL;
+      delete_memory_ = false;
+    }
+  }
+
+  /** Copy assignment operator. */
+  SymState& operator=(const SymState& other) {
+    SymState copy(other);
+    *this = std::move(copy);
+    return *this;
+  }
+
   /** Symbolic general purpose registers */
   SymRegs gp;
   /** Symbolic SSE registers */

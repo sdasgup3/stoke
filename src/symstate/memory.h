@@ -36,6 +36,9 @@ public:
     return *this;
   }
 
+  /** Return a clone of this object. */
+  virtual SymMemory* clone() = 0;
+
   /** Updates the memory with a write.
    *  Returns condition for segmentation fault */
   virtual SymBool write(SymBitVector address, SymBitVector value, uint16_t size, size_t line_no) = 0;

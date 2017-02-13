@@ -82,6 +82,9 @@ public:
     return "cell";
   }
 
+  virtual SymMemory* clone() {
+    return new CellMemory(*this);
+  }
 
 
 private:
