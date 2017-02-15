@@ -31,6 +31,8 @@
 #include <iostream>
 #include <set>
 
+#define DEBUG_EDDEC(X) { X }
+
 using namespace std;
 using namespace stoke;
 using namespace x64asm;
@@ -237,6 +239,53 @@ void EDdecValidator::prove_invariants(DualAutomata& dual, const Cfg& init_target
   }
 }
 
+bool EDdecValidator::verify_exhaustive(DualAutomata& dual, const Cfg& target, const Cfg& rewrite) {
+
+  DEBUG_EDDEC(cout << "[verify_exhaustive]" << endl;)
+
+  /** Algorithm:
+    * 
+    * Loop through each state of the dual automata.
+    * For each state, prove that one of the outbound edges must be taken.
+    *
+    * We have an outer loop over reachable states, and then for each one we do a check.
+    */
+
+  auto reachable_states = dual.get_reachable_states();
+  auto exit_states = dual.exit_states();
+
+  for(auto state : reachable_states) {
+
+    if(exit_states.count(state))
+      continue;
+
+    DEBUG_EDDEC(cout << "[verify_exhaustive] state " << state << endl;)
+
+    auto edges = dual.next_edges(state);
+    vector<CfgPath> Ps;
+    vector<CfgPath> Qs;
+
+    for(auto edge : edges) {
+      Ps.push_back(edge.te);
+      Qs.push_back(edge.re);
+      DEBUG_EDDEC(cout << "   P: " << edge.te << "   Q: " << edge.re << endl;)
+    }
+
+    auto invariant = dual.get_invariant(state);
+    DEBUG_EDDEC(cout << "   invariant: " << *invariant << endl;)
+
+    bool this_case_good = check_exhaustive(target, rewrite, Ps, Qs, *invariant);
+    DEBUG_EDDEC(cout << "   this state exhaustive: " << this_case_good << endl;)
+
+    if(!this_case_good)
+      return false;
+  }
+
+  return true;
+
+}
+   
+
 bool EDdecValidator::verify_final_invariants(DualAutomata& dual, Invariant* final_invariant, const Cfg& init_target, const Cfg& init_rewrite) {
   bool all_correct = true;
 
@@ -338,12 +387,16 @@ bool EDdecValidator::verify(const Cfg& target, const Cfg& rewrite) {
 
   // Verify the final invariant
   bool all_correct = verify_final_invariants(dual, final_invariant, target, rewrite);
+  // Ensure that the dual has all the possible paths
+  bool all_exhausted = verify_exhaustive(dual, target, rewrite);
+
+  bool verified = all_correct && all_exhausted;
 
   // Cleanup and report
   reset_mm();
   cout << endl;
 
-  if (all_correct) {
+  if (verified) {
     cout << "VERIFIED." << endl << endl;
     return true;
   } else {

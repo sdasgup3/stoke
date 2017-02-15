@@ -29,8 +29,9 @@
 
 
 #define OBLIG_DEBUG(X) { }
-#define CONSTRAINT_DEBUG(X) { }
+#define CONSTRAINT_DEBUG(X) { X }
 #define BUILD_TC_DEBUG(X) { }
+#define DEBUG_CHECK_EXHAUST(X) { X }
 #define ALIAS_DEBUG(X) { }
 #define ALIAS_CASE_DEBUG(X) { }
 #define ALIAS_STRING_DEBUG(X) { }
@@ -217,8 +218,8 @@ SymBool ObligationChecker::path_condition(const Cfg& target, const Cfg& rewrite,
   constraints.insert(constraints.begin(), target_state.constraints.begin(), target_state.constraints.end());
   constraints.insert(constraints.begin(), rewrite_state.constraints.begin(), rewrite_state.constraints.end());
 
-  SymBool path_condition;
-  for(auto it : constraints) {
+  SymBool path_condition = SymBool::_true();
+  for (auto it : constraints) {
     path_condition = path_condition & it;
   }
 
@@ -245,7 +246,7 @@ bool ObligationChecker::is_sat(MemoryModel* memory_model, vector<SymBool>& const
       throw VALIDATOR_ERROR("solver: " + solver_.get_error());
     }
 
-    if(this_case_sat) {
+    if (this_case_sat) {
       return true;
     }
   }
@@ -254,13 +255,14 @@ bool ObligationChecker::is_sat(MemoryModel* memory_model, vector<SymBool>& const
 }
 
 bool ObligationChecker::check_exhaustive(const Cfg& target, const Cfg& rewrite,
-                                         const vector<CfgPath>& Ps, const vector<CfgPath>& Qs,
-                                         const Invariant& assume) {
+    const vector<CfgPath>& Ps, const vector<CfgPath>& Qs,
+    const Invariant& assume) {
 
   init_mm();
   have_ceg_ = false;
 
   // Initialize the memory model
+  DEBUG_CHECK_EXHAUST( cout << "[check_exhaustive] Generating memory model" << endl; )
   auto memory_model = new FlatModel(solver_, filter_, target, rewrite, Ps[0], Qs[0], assume, assume);
 
   // Create initial states
@@ -278,6 +280,7 @@ bool ObligationChecker::check_exhaustive(const Cfg& target, const Cfg& rewrite,
   /** Now we setup memory. */
   memory_model->initial_state_setup(state_t, state_r);
 
+  DEBUG_CHECK_EXHAUST( cout << "  * symbolic execution" << endl; )
   /** Add assumptions */
   // TODO pass line numbers as appropriate here
   size_t target_invariant_lineno = 0;
@@ -288,7 +291,7 @@ bool ObligationChecker::check_exhaustive(const Cfg& target, const Cfg& rewrite,
 
   /** Build a query based on the path conditions. */
   vector<SymState> final_states;
-  for(size_t i = 0; i < Ps.size(); ++i) {
+  for (size_t i = 0; i < Ps.size(); ++i) {
     SymState target_copy = state_t;
     SymState rewrite_copy = state_r;
     final_states.push_back(rewrite_copy);
@@ -298,9 +301,10 @@ bool ObligationChecker::check_exhaustive(const Cfg& target, const Cfg& rewrite,
     constraints.push_back(!pc);
   }
 
+  DEBUG_CHECK_EXHAUST( cout << "  * invoking solver" << endl; )
   // Invoke the solver on each aliasing case
   bool sat = is_sat(static_cast<MemoryModel*>(memory_model), constraints, final_states);
-  
+
   // Deal with result
   if (sat) {
     CEG_DEBUG(cout << "  (Proof failed, no counterexample)" << endl;)
@@ -382,7 +386,7 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite,
   // Invoke the solver on each aliasing case
   vector<SymState> final_states = {state_t, state_r};
   bool sat = is_sat(memory_model, constraints, final_states);
-  
+
   // Deal with result
   if (sat) {
 

@@ -51,7 +51,7 @@ public:
     states of the target and the rewrite. */
   std::vector<SymBool> extra_constraints(std::vector<SymState>& final_states, size_t case_no) {
     std::vector<SymBool> constraints;
-    for(auto final_state : final_states) {
+    for (auto final_state : final_states) {
       auto target_con = static_cast<FlatMemory*>(final_state.memory)->get_constraints();
       constraints.insert(constraints.begin(), target_con.begin(), target_con.end());
     }

@@ -47,9 +47,19 @@ def stoke_extract_obj(source, destination)
   `#{command}`
 end
 
-def verify(target, rewrite, live_outs, testcases, tracefile)
-  command = "stoke debug verify --strategy eddec --alias_strategy flat --solver z3 --solver_timeout 15000"
-  command = command + " --target #{target} --rewrite #{rewrite} --live_out \"#{live_outs}\" --testcases #{testcases}"
+def verify(target, rewrite, config_file, live_outs, testcases, tracefile)
+  File.open(config_file, 'w') do |config|
+    config.puts "--strategy eddec"
+    config.puts "--alias_strategy flat"
+    config.puts "--solver z3"
+    config.puts "--solver_timeout 15000"
+    config.puts "--target #{target}"
+    config.puts "--rewrite #{rewrite}"
+    config.puts "--live_out \"#{live_outs}\""
+    config.puts "--testcases #{testcases}"
+  end
+
+  command = "stoke debug verify --config #{config_file} | tee #{tracefile}"
   debug "verify command", command
   `#{command} | tee #{tracefile}`
 end
@@ -70,7 +80,12 @@ def main
 
   #generate test cases
   generate_tcs(paths.testcases, options)
-  verify(paths.target_extract_asm, paths.rewrite_extract_asm, options[:target][:liveouts], paths.testcases, paths.trace)
+  verify(paths.target_extract_asm, 
+         paths.rewrite_extract_asm, 
+         paths.verify_config,
+         options[:target][:liveouts], 
+         paths.testcases, 
+         paths.trace)
 
   if not options[:keep]
     paths.cleanup

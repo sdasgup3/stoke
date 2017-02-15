@@ -41,6 +41,10 @@ class PathManager
     @base_path + "/rewrite_extract/"
   end
 
+  def verify_config
+    @base_path + "/verify.conf"
+  end
+
   def target_extract_asm
     self.target_extract_dir + @options[:target][:function]
   end

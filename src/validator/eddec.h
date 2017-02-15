@@ -92,6 +92,8 @@ private:
   /** At all the exit states prove that a given final invariant holds. Returns
     whether proof was successful. */
   bool verify_final_invariants(DualAutomata& dual, Invariant* final_invariant, const Cfg& init_target, const Cfg& init_rewrite);
+  /** Prove the dual is exhaustive of all paths. */
+  bool verify_exhaustive(DualAutomata& dual, const Cfg& init_target, const Cfg& init_rewrite);
 
 };
 
