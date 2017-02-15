@@ -57,8 +57,8 @@ public:
     shadow = other.shadow;
     lineno_ = other.lineno_;
 
-    if(other.memory != NULL) {
-      memory = other.memory->clone(); 
+    if (other.memory != NULL) {
+      memory = other.memory->clone();
       delete_memory_ = true; /* we allocate it, we delete it */
     } else {
       memory = NULL;

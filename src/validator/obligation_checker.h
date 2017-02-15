@@ -141,6 +141,12 @@ public:
 
 private:
 
+  /** Compute the path condition for a particular path pair.*/
+  SymBool path_condition(const Cfg& target, const Cfg& rewrite, SymState& tstate, SymState& rstate, const CfgPath& P, const CfgPath& Q);
+
+  /** Query the solver and check if SAT, discharging cases as necessary. */
+  bool is_sat(MemoryModel* model, std::vector<SymBool>& query, std::vector<SymState>& final_states);
+
   /** Extract the counterexample from the model.  Returns 'true' if successful.
     Takes as input the memory model and any ghost variables. */
   bool get_counterexample(MemoryModel* memory_model,
@@ -175,6 +181,8 @@ private:
 
   /** Get all the ghost invariables contained in two invariants. */
   std::vector<std::string> union_ghost_variables(const Invariant& assume, const Invariant& prove) const;
+  /** Get all the ghost invariables contained in two invariants. */
+  std::vector<std::string> union_ghost_variables(const Invariant& statement) const;
 
   /** Set all ghost variables to a fresh symbolic value. */
   void reset_ghost_variables(SymState& ss, std::vector<std::string> ghosts);

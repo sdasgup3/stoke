@@ -35,12 +35,6 @@ public:
     return 1;
   }
 
-  /** Start working on a given case.  Updates any internal fields needed.
-   You must call this after the constructor but before initial_state_setup.*/
-  void begin_case(size_t n) {
-    // NOP
-  }
-
   /** Allocate the data structures necessary for memory bookkeeping in the
     circuits and the state.memory pointer.  In a given case, should be called
     before generating any constraints. */
@@ -55,16 +49,12 @@ public:
   /** Generate any additional constraints necessary.  This should be done
     after building all the circuits.  It should be passed the final symbolic
     states of the target and the rewrite. */
-  std::vector<SymBool> generate_constraints(SymState& target_state, SymState& rewrite_state) {
-    auto target_mem = static_cast<FlatMemory*>(target_state.memory);
-    auto rewrite_mem = static_cast<FlatMemory*>(rewrite_state.memory);
-
+  std::vector<SymBool> extra_constraints(std::vector<SymState>& final_states, size_t case_no) {
     std::vector<SymBool> constraints;
-    auto target_con = target_mem->get_constraints();
-    constraints.insert(constraints.begin(), target_con.begin(), target_con.end());
-
-    auto rewrite_con = rewrite_mem->get_constraints();
-    constraints.insert(constraints.begin(), rewrite_con.begin(), rewrite_con.end());
+    for(auto final_state : final_states) {
+      auto target_con = static_cast<FlatMemory*>(final_state.memory)->get_constraints();
+      constraints.insert(constraints.begin(), target_con.begin(), target_con.end());
+    }
 
     return constraints;
   }

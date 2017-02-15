@@ -43,19 +43,13 @@ public:
     whole proof (e.g. aliasing arrangements. */
   virtual size_t get_case_count() const = 0;
 
-  /** Start working on a given case.  Updates any internal fields needed.
-   You must call this after the constructor but before initial_state_setup.*/
-  virtual void begin_case(size_t) = 0;
-
   /** Allocate the data structures necessary for memory bookkeeping in the
     circuits and the state.memory pointer.  In a given case, should be called
     before symbolic execution. */
   virtual void initial_state_setup(SymState& target_state, SymState& rewrite_state) = 0;
 
-  /** Generate any additional constraints necessary.  This should be done
-    after building all the circuits.  It should be passed the final symbolic
-    states of the target and the rewrite. */
-  virtual std::vector<SymBool> generate_constraints(SymState& target_state, SymState& rewrite_state) = 0;
+  /** Any extra constraints required for a given case. */
+  virtual std::vector<SymBool> extra_constraints(std::vector<SymState>& final_states, size_t case_no) = 0;
 
   /** Fill in all the memory data for a test case.  Return 'true' if successful.
    These should be only called after generating a model.  They should be passed the

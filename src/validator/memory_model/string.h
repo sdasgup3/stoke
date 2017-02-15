@@ -37,6 +37,7 @@ public:
       target_cases_.push_back(pair.first);
       rewrite_cases_.push_back(pair.second);
     }
+    begin_case(0);
   }
 
   /** Some memory models will require discharing multiple cases to do the
@@ -68,7 +69,7 @@ public:
   /** Generate any additional constraints necessary.  This should be done
     after building all the circuits.  It should be passed the final symbolic
     states of the target and the rewrite. */
-  std::vector<SymBool> generate_constraints(SymState& target_state, SymState& rewrite_state) {
+  std::vector<SymBool> extra_constraints(std::vector<SymState>& final_states, size_t case_no) {
     std::vector<SymBool> cons;
     auto con = current_case_target_cells_->aliasing_formula(*current_case_rewrite_cells_);
     cons.push_back(con);

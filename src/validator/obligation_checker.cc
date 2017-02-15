@@ -19,6 +19,7 @@
 #include "src/symstate/memory/trivial.h"
 #include "src/validator/obligation_checker.h"
 #include "src/validator/invariants/conjunction.h"
+#include "src/validator/invariants/false.h"
 #include "src/validator/invariants/memory_equality.h"
 #include "src/validator/invariants/state_equality.h"
 #include "src/validator/invariants/true.h"
@@ -101,13 +102,22 @@ bool ObligationChecker::check_counterexample(const Cfg& target, const Cfg& rewri
 
 
 /** Find all the ghost variables in two invariants */
+vector<string> ObligationChecker::union_ghost_variables(const Invariant& assume) const {
+  FalseInvariant _false;
+  return union_ghost_variables(assume, _false);
+}
+
+
+/** Find all the ghost variables in two invariants */
 vector<string> ObligationChecker::union_ghost_variables(const Invariant& assume, const Invariant& prove) const {
 
   /** Get all the ghost variables and remove duplicates. */
-  set<string> ghost_names;
   auto assume_variables = assume.get_variables();
   auto all_variables = prove.get_variables();
   all_variables.insert(all_variables.begin(), assume_variables.begin(), assume_variables.end());
+
+  /** Remove duplicates. */
+  set<string> ghost_names;
   for (auto var : all_variables) {
     if (var.is_ghost) {
       ghost_names.insert(var.name);
@@ -194,6 +204,116 @@ void ObligationChecker::create_final_states(SymState& state_t, SymState& state_r
 }
 
 
+/** Compute the path condition for a particular path pair. */
+SymBool ObligationChecker::path_condition(const Cfg& target, const Cfg& rewrite, SymState& target_state, SymState& rewrite_state, const CfgPath& P, const CfgPath& Q) {
+
+  vector<SymBool> constraints;
+
+  /** Execute along the paths. */
+  executor_.execute(target, P, target_state, constraints);
+  executor_.execute(rewrite, Q, rewrite_state, constraints);
+
+  /** Gather any constraints from the states (?) */
+  constraints.insert(constraints.begin(), target_state.constraints.begin(), target_state.constraints.end());
+  constraints.insert(constraints.begin(), rewrite_state.constraints.begin(), rewrite_state.constraints.end());
+
+  SymBool path_condition;
+  for(auto it : constraints) {
+    path_condition = path_condition & it;
+  }
+
+  return path_condition;
+}
+
+bool ObligationChecker::is_sat(MemoryModel* memory_model, vector<SymBool>& constraints, vector<SymState>& final_states) {
+
+
+  size_t num_cases = memory_model->get_case_count();
+  for (size_t cur_case = 0; cur_case < num_cases; ++cur_case) {
+
+    /** TODO: make more efficient with push/pop */
+    auto query = constraints;
+
+    /** Add miscenaneous constraints from memory model */
+    auto mem_cons = memory_model->extra_constraints(final_states, cur_case);
+    query.insert(query.begin(), mem_cons.begin(), mem_cons.end());
+
+    /** Query the solver. */
+    bool this_case_sat = solver_.is_sat(query);
+
+    if (solver_.has_error()) {
+      throw VALIDATOR_ERROR("solver: " + solver_.get_error());
+    }
+
+    if(this_case_sat) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool ObligationChecker::check_exhaustive(const Cfg& target, const Cfg& rewrite,
+                                         const vector<CfgPath>& Ps, const vector<CfgPath>& Qs,
+                                         const Invariant& assume) {
+
+  init_mm();
+  have_ceg_ = false;
+
+  // Initialize the memory model
+  auto memory_model = new FlatModel(solver_, filter_, target, rewrite, Ps[0], Qs[0], assume, assume);
+
+  // Create initial states
+  vector<SymBool> constraints;
+
+  SymState state_t("1_INIT");
+  SymState state_r("2_INIT");
+
+  /** Here we need to figure out if there are any ghost variables we need to add to the
+    symbolic representations. */
+  auto ghost_vector = union_ghost_variables(assume);
+  reset_ghost_variables(state_t, ghost_vector);
+  reset_ghost_variables(state_r, ghost_vector);
+
+  /** Now we setup memory. */
+  memory_model->initial_state_setup(state_t, state_r);
+
+  /** Add assumptions */
+  // TODO pass line numbers as appropriate here
+  size_t target_invariant_lineno = 0;
+  size_t rewrite_invariant_lineno = 0;
+  auto assumption = assume(state_t, state_r, target_invariant_lineno, rewrite_invariant_lineno);
+  CONSTRAINT_DEBUG(cout << "Assuming " << assumption << endl;);
+  constraints.push_back(assumption);
+
+  /** Build a query based on the path conditions. */
+  vector<SymState> final_states;
+  for(size_t i = 0; i < Ps.size(); ++i) {
+    SymState target_copy = state_t;
+    SymState rewrite_copy = state_r;
+    final_states.push_back(rewrite_copy);
+    final_states.push_back(target_copy);
+    auto pc = path_condition(target, rewrite, target_copy, rewrite_copy, Ps[i], Qs[i]);
+    cout << "PATH CONDITION: " << pc << endl;
+    constraints.push_back(!pc);
+  }
+
+  // Invoke the solver on each aliasing case
+  bool sat = is_sat(static_cast<MemoryModel*>(memory_model), constraints, final_states);
+  
+  // Deal with result
+  if (sat) {
+    CEG_DEBUG(cout << "  (Proof failed, no counterexample)" << endl;)
+  } else {
+    CEG_DEBUG(cout << "  (This case verified)" << endl;)
+  }
+
+  memory_model->cleanup();
+  stop_mm();
+  return !sat;
+
+}
+
 
 bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite,
                               const CfgPath& P, const CfgPath& Q,
@@ -211,103 +331,79 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite,
   // Initialize the memory model
   auto memory_model = initialize_memory_model(target, rewrite, P, Q, assume, prove);
 
-  size_t num_cases = memory_model->get_case_count();
-  for (size_t cur_case = 0; cur_case < num_cases; ++cur_case) {
-    memory_model->begin_case(cur_case);
+  // Create initial states
+  vector<SymBool> constraints;
 
-    // Create initial states
-    vector<SymBool> constraints;
+  SymState state_t("1_INIT");
+  SymState state_r("2_INIT");
 
-    SymState state_t("1_INIT");
-    SymState state_r("2_INIT");
+  /** Here we need to figure out if there are any ghost variables we need to add to the
+    symbolic representations. */
+  auto ghost_vector = union_ghost_variables(assume, prove);
+  reset_ghost_variables(state_t, ghost_vector);
+  reset_ghost_variables(state_r, ghost_vector);
 
-    /** Here we need to figure out if there are any ghost variables we need to add to the
-      symbolic representations. */
-    auto ghost_vector = union_ghost_variables(assume, prove);
-    reset_ghost_variables(state_t, ghost_vector);
-    reset_ghost_variables(state_r, ghost_vector);
+  /** Now we setup memory. */
+  memory_model->initial_state_setup(state_t, state_r);
 
-    /** Now we setup memory. */
-    memory_model->initial_state_setup(state_t, state_r);
-
-    /** Do the symbolic execution */
-    // TODO pass line numbers as appropriate here
-    size_t target_invariant_lineno = 0;
-    size_t rewrite_invariant_lineno = 0;
-    auto assumption = assume(state_t, state_r, target_invariant_lineno, rewrite_invariant_lineno);
-    CONSTRAINT_DEBUG(cout << "Assuming " << assumption << endl;);
-    constraints.push_back(assumption);
+  /** Add assumptions */
+  // TODO pass line numbers as appropriate here
+  size_t target_invariant_lineno = 0;
+  size_t rewrite_invariant_lineno = 0;
+  auto assumption = assume(state_t, state_r, target_invariant_lineno, rewrite_invariant_lineno);
+  CONSTRAINT_DEBUG(cout << "Assuming " << assumption << endl;);
+  constraints.push_back(assumption);
 
 
-    executor_.execute(target, P, state_t, constraints);
-    executor_.execute(rewrite, Q, state_r, constraints);
+  /** Do the symbolic execution */
+  executor_.execute(target, P, state_t, constraints);
+  executor_.execute(rewrite, Q, state_r, constraints);
 
-    /** Add assumptions */
-    /** Add miscenaneous constraints from memory model */
-    auto mem_cons = memory_model->generate_constraints(state_t, state_r);
-    constraints.insert(constraints.begin(), mem_cons.begin(), mem_cons.end());
+  /** Add miscelaneous constraints from circuit building */
+  constraints.insert(constraints.begin(), state_t.constraints.begin(), state_t.constraints.end());
+  constraints.insert(constraints.begin(), state_r.constraints.begin(), state_r.constraints.end());
 
-    /** Add miscelaneous constraints from circuit building */
-    constraints.insert(constraints.begin(), state_t.constraints.begin(), state_t.constraints.end());
-    constraints.insert(constraints.begin(), state_r.constraints.begin(), state_r.constraints.end());
+  CONSTRAINT_DEBUG(
+    cout << endl << "CONSTRAINTS" << endl << endl;;
+  for (auto it : constraints) {
+  cout << it << endl;
+})
 
-    CONSTRAINT_DEBUG(
-      cout << endl << "CONSTRAINTS" << endl << endl;;
-    for (auto it : constraints) {
-    cout << it << endl;
-  })
+  // Add proof constraint
+  // TODO pass line numbers as appropriate
+  auto prove_constraint = !prove(state_t, state_r, target_invariant_lineno, rewrite_invariant_lineno);
+  CONSTRAINT_DEBUG(cout << "Proof inequality: " << prove_constraint << endl;)
 
-    // Add proof constraint
-    // TODO pass line numbers as appropriate
-    auto prove_constraint = !prove(state_t, state_r, target_invariant_lineno, rewrite_invariant_lineno);
-    CONSTRAINT_DEBUG(cout << "Proof inequality: " << prove_constraint << endl;)
+  constraints.push_back(prove_constraint);
 
-    constraints.push_back(prove_constraint);
+  // Extract the final states of target/rewrite
+  create_final_states(state_t, state_r, ghost_vector, constraints);
 
-    // Extract the final states of target/rewrite
-    create_final_states(state_t, state_r, ghost_vector, constraints);
+  // Invoke the solver on each aliasing case
+  vector<SymState> final_states = {state_t, state_r};
+  bool sat = is_sat(memory_model, constraints, final_states);
+  
+  // Deal with result
+  if (sat) {
 
-    // Invoke the solver
-    bool is_sat = solver_.is_sat(constraints);
-    if (solver_.has_error()) {
-      throw VALIDATOR_ERROR("solver: " + solver_.get_error());
-    }
+    // Compute counterexample
+    get_counterexample(memory_model, ghost_vector, state_t, state_r);
 
-    if (is_sat) {
-
-      get_counterexample(memory_model, ghost_vector, state_t, state_r);
-
-      if (check_counterexample(target, rewrite, P, Q, assume, prove, ceg_t_, ceg_r_)) {
-        have_ceg_ = true;
-        CEG_DEBUG(cout << "  (Counterexample verified in sandbox)" << endl;)
-      } else {
-        CEG_DEBUG(cout << "  (Spurious counterexample detected)" << endl;)
-      }
-
-      memory_model->cleanup();
-
-      stop_mm();
-
-      return false;
+    if (check_counterexample(target, rewrite, P, Q, assume, prove, ceg_t_, ceg_r_)) {
+      have_ceg_ = true;
+      CEG_DEBUG(cout << "  (Counterexample verified in sandbox)" << endl;)
     } else {
-
-      memory_model->cleanup();
-
-      CEG_DEBUG(cout << "  (This case verified)" << endl;)
-
+      CEG_DEBUG(cout << "  (Spurious counterexample detected)" << endl;)
     }
 
+  } else {
+    CEG_DEBUG(cout << "  (This case verified)" << endl;)
   }
 
+  memory_model->cleanup();
   stop_mm();
-  return true;
+  return !sat;
 
 }
 
-bool ObligationChecker::check_exhaustive(const Cfg& target, const Cfg& rewrite,
-    const vector<CfgPath>& ps, const vector<CfgPath>& qs,
-    const Invariant& assume) {
-
-  return false;
-}
 
