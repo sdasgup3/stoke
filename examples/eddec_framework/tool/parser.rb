@@ -13,10 +13,22 @@ class ArgumentParser
   end
 
   def sources
-    [ {:name => "strlen", :function => "test_strlen.s", :filename => "strlen.c", :liveouts => abi_and("rax") } ]
+    [ 
+      {:name => "strlen",            :function => "test_strlen.s", :filename => "strlen.c",             :liveouts => abi_and("rax") },
+      {:name => "strlen-bug-1",      :function => "test_strlen.s", :filename => "strlen-bug-1.c",       :liveouts => abi_and("rax") },
+      {:name => "strlen-bug-branch", :function => "test_strlen.s", :filename => "strlen-bug-branch.c",  :liveouts => abi_and("rax") },
+      {:name => "strcpy",            :function => "test_strcpy.s", :filename => "strcpy.c",             :liveouts => abi_and("rax") },
+    ]
   end
 
   def parse_cmd_line
+    parser = self.parser
+    parser.parse!
+    clean_options
+    @options
+  end
+
+  def parser
     @options = {
       :target_opt  => [],
       :rewrite_opt => [],
@@ -61,23 +73,25 @@ class ArgumentParser
 
 
       opts.on("--string-tcs SPECIFIER", String) do |stringtc|
-        parts = stringtc.split(":")
-        if parts.length != 3 then
-          error "String test case specification must be of form register:min-len:max-len"
-        end
-
-        @options[:string_tcs].push({
-          :register => clean_register(parts[0]),
-          :min_len => parts[1].to_i,
-          :max_len => parts[2].to_i,
-        })
+        @options[:string_tcs].push(clean_string_tc(stringtc))
       end
       opts.on("--tc-count N", Integer) do |count|
         @options[:tc_copies] = count
       end
-    end.parse!
+    end
+  end
 
-    clean_options
+  def clean_string_tc(stringtc)
+    parts = stringtc.split(":")
+    if parts.length != 3 then
+      error "String test case specification must be of form register:min-len:max-len"
+    end
+
+    {
+      :register => clean_register(parts[0]),
+      :min_len => parts[1].to_i,
+      :max_len => parts[2].to_i,
+    }
   end
 
   def clean_register(r)
@@ -95,8 +109,8 @@ class ArgumentParser
     if m = /unroll-?(\d+)/.match(dc) then
       return { :method => "unroll", :level => m[1].to_i }
     end
-    if m = /peel-?(\d+)/.match(dc) then
-      return { :method => "peel", :level => m[1].to_i }
+    if m = /vectorize/.match(dc) then
+      return { :method => "vectorize" }
     end
     if m = /o-?(\d+)/.match(dc) then
       return { :method => "standard", :level => m[1].to_i }

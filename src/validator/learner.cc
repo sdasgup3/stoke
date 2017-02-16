@@ -85,7 +85,6 @@ vector<Variable> get_memory_variables(const Cfg& target, const Cfg& rewrite) {
 
 
 /** Return a set of possible memory null invariants */
-/*
 vector<MemoryNullInvariant*> build_memory_null_invariants(RegSet target_regs, RegSet rewrite_regs, const Cfg& target, const Cfg& rewrite) {
   vector<MemoryNullInvariant*> invariants;
 
@@ -114,7 +113,7 @@ vector<MemoryNullInvariant*> build_memory_null_invariants(RegSet target_regs, Re
         continue;
 
       auto mni = new MemoryNullInvariant(it, is_rewrite, true);
-      //invariants.push_back(mni);  //FIXME: bring me back to life
+      invariants.push_back(mni);  //FIXME: bring me back to life
 
       //cout << "Ok, made a " << *mni << endl;
 
@@ -130,7 +129,7 @@ vector<MemoryNullInvariant*> build_memory_null_invariants(RegSet target_regs, Re
   //}
 
   return invariants;
-}*/
+}
 
 /** Return a set of possible inequality invariants. */
 vector<InequalityInvariant*> InvariantLearner::build_inequality_invariants(RegSet target_regs, RegSet rewrite_regs) const {
@@ -302,8 +301,7 @@ ConjunctionInvariant* InvariantLearner::learn(x64asm::RegSet target_regs,
     }
   }
 
-  /*
-  auto potential_memory_nulls = build_memory_null_invariants(target_regs, rewrite_regs, target, rewrite);
+  auto potential_memory_nulls = build_memory_null_invariants(target_regs, rewrite_regs, target_, rewrite_);
   for (auto mem_null : potential_memory_nulls) {
     //cout << "Testing " << *mem_null << endl;
     if (mem_null->check(target_states, rewrite_states)) {
@@ -314,7 +312,6 @@ ConjunctionInvariant* InvariantLearner::learn(x64asm::RegSet target_regs,
       delete mem_null;
     }
   }
-  */
 
   for (auto ghost : ghosts_) {
     auto pointer_null = new PointerNullInvariant(ghost, 1);

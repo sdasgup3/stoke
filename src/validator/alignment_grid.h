@@ -102,8 +102,16 @@ public:
   /** How many registers DISAGREE at a particular point on the grid? */
   size_t num_registers_disagree(Point p);
 
+  /** How many registers can be found of target/rewrite that don't have
+    matching value somewhere in rewrite/target? */
+  size_t num_registers_unique(Point p);
+
+
   /** Retrieve the state in the dual automata corresponding to a point in this grid. */
   DualAutomata::State point_to_abstraction(Point p);
+
+  /** print a copy of the grid, along with a value at each point. */
+  void print(std::function<uint64_t(Point)> callback);
 
 private:
 

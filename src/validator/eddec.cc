@@ -244,7 +244,7 @@ bool EDdecValidator::verify_exhaustive(DualAutomata& dual, const Cfg& target, co
   DEBUG_EDDEC(cout << "[verify_exhaustive]" << endl;)
 
   /** Algorithm:
-    * 
+    *
     * Loop through each state of the dual automata.
     * For each state, prove that one of the outbound edges must be taken.
     *
@@ -254,9 +254,9 @@ bool EDdecValidator::verify_exhaustive(DualAutomata& dual, const Cfg& target, co
   auto reachable_states = dual.get_reachable_states();
   auto exit_states = dual.exit_states();
 
-  for(auto state : reachable_states) {
+  for (auto state : reachable_states) {
 
-    if(exit_states.count(state))
+    if (exit_states.count(state))
       continue;
 
     DEBUG_EDDEC(cout << "[verify_exhaustive] state " << state << endl;)
@@ -265,9 +265,13 @@ bool EDdecValidator::verify_exhaustive(DualAutomata& dual, const Cfg& target, co
     vector<CfgPath> Ps;
     vector<CfgPath> Qs;
 
-    for(auto edge : edges) {
-      Ps.push_back(edge.te);
-      Qs.push_back(edge.re);
+    for (auto edge : edges) {
+      auto edge_copy = edge;
+      edge_copy.te.insert(edge_copy.te.begin(), state.ts);
+      edge_copy.re.insert(edge_copy.re.begin(), state.rs);
+
+      Ps.push_back(edge_copy.te);
+      Qs.push_back(edge_copy.re);
       DEBUG_EDDEC(cout << "   P: " << edge.te << "   Q: " << edge.re << endl;)
     }
 
@@ -277,14 +281,14 @@ bool EDdecValidator::verify_exhaustive(DualAutomata& dual, const Cfg& target, co
     bool this_case_good = check_exhaustive(target, rewrite, Ps, Qs, *invariant);
     DEBUG_EDDEC(cout << "   this state exhaustive: " << this_case_good << endl;)
 
-    if(!this_case_good)
+    if (!this_case_good)
       return false;
   }
 
   return true;
 
 }
-   
+
 
 bool EDdecValidator::verify_final_invariants(DualAutomata& dual, Invariant* final_invariant, const Cfg& init_target, const Cfg& init_rewrite) {
   bool all_correct = true;

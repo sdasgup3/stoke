@@ -13,6 +13,10 @@ class PathManager
     @options = options
   end
 
+  def directory
+    @base_path
+  end
+
   def cleanup
     FileUtils.remove_dir(@base_path)
   end
@@ -55,6 +59,26 @@ class PathManager
 
   def testcases
     @base_path + "/testcases"
+  end
+
+  def testcase_errors
+    @base_path + "/testcase_errors"
+  end
+
+  def testcase_stdout
+    @base_path + "/testcase_stdout"
+  end
+
+  def target_compile_errors
+    @base_path + "/target_compile.err"
+  end
+
+  def rewrite_compile_errors
+    @base_path + "/rewrite_compile.err"
+  end
+
+  def verify_errors
+    @base_path + "/verify.err"
   end
 
   def trace

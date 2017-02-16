@@ -224,7 +224,7 @@ AlignmentPath* strategy_dfs(AlignmentGrid& grid) {
   return path_dfs_wrapper(empty, grid.target_trace_length(), grid.rewrite_trace_length());
 }
 
-void strategy_perfect_searcher(AlignmentGrid& grid, AlignmentPath* path) {
+void strategy_perfect_searcher(AlignmentGrid& grid, AlignmentPath* path, size_t min_value) {
 
   auto start = path->end();
 
@@ -242,10 +242,10 @@ void strategy_perfect_searcher(AlignmentGrid& grid, AlignmentPath* path) {
         something_in_range = true;
 
         if (grid.memory_states_match(test) &&
-            grid.num_registers_disagree(test) == 0) {
+            grid.num_registers_unique(test) <= min_value) {
 
           path->extend(test);
-          strategy_perfect_searcher(grid, path);
+          strategy_perfect_searcher(grid, path, min_value);
           return;
         }
       }
@@ -257,14 +257,40 @@ void strategy_perfect_searcher(AlignmentGrid& grid, AlignmentPath* path) {
 // Come up with a path that hits all the cells with identical registers and memory.
 AlignmentPath* strategy_perfect(AlignmentGrid& grid) {
 
-  AlignmentPath* path = new AlignmentPath(grid);
-  strategy_perfect_searcher(grid, path);
+  cout << "Num registers unique on grid: " << endl;
+  grid.print([&grid] (AlignmentGrid::Point p) { return grid.num_registers_unique(p); });
 
-  // ensure the exit is contained in the path
-  if (path->end() != grid.bottom_right())
-    path->extend(grid.bottom_right());
+  AlignmentPath* best_path = NULL;
+  AlignmentPath* curr_path = NULL;
+  size_t best_value = 0;
+  for(size_t min_value = 0; min_value <= 32; min_value++) {
+    curr_path = new AlignmentPath(grid);
 
-  return path;
+    // build the path
+    strategy_perfect_searcher(grid, curr_path, min_value);
+
+    // ensure the exit is contained in the path
+    if (curr_path->end() != grid.bottom_right())
+      curr_path->extend(grid.bottom_right());
+
+    // see if this path or the last one is better
+    if (best_path == NULL) {
+      best_path = curr_path;
+      best_value = min_value;
+    } else if (best_path->sum_of_squares_length() > curr_path->sum_of_squares_length()) {
+      // we found an improvement, keep going.
+      delete best_path;
+      best_path = curr_path;
+      best_value = min_value;
+    } else {
+      // this new path is useless
+      delete curr_path;
+    }
+  }
+
+  cout << "Picking best path with min_value=" << best_value << 
+          " and sum of squares score=" << best_path->sum_of_squares_length() << endl;
+  return best_path;
 }
 
 void debug_equiv_classes(vector<CpuState>& testcases, vector<vector<CpuState>>& classes) {
@@ -362,10 +388,18 @@ void DualBuilder::add_edge_between_alignment_points(DualAutomata& dual,
                                   rewrite_trace[p.rewrite_entry].first);
   vector<Abstraction::State> target_edge;
   vector<Abstraction::State> rewrite_edge;
-  for (size_t k = p.target_entry+1; k <= q.target_entry; ++k)
+  cout << "  -> Adding edge TARGET: ";
+  for (size_t k = p.target_entry+1; k <= q.target_entry; ++k) {
     target_edge.push_back(target_trace[k].first);
-  for (size_t k = p.rewrite_entry+1; k <= q.rewrite_entry; ++k)
+    cout << target_trace[k].first << "  ";
+  }
+  cout << "REWRITE ";
+  for (size_t k = p.rewrite_entry+1; k <= q.rewrite_entry; ++k) {
     rewrite_edge.push_back(rewrite_trace[k].first);
+    cout << target_trace[k].first << "  ";
+  }
+  cout << endl;
+
   dual.add_edge(DualAutomata::Edge(start_state, target_edge, rewrite_edge));
 
 }
