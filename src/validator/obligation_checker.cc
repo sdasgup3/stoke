@@ -29,7 +29,7 @@
 
 
 #define OBLIG_DEBUG(X) { }
-#define CONSTRAINT_DEBUG(X) { X }
+#define CONSTRAINT_DEBUG(X) { }
 #define BUILD_TC_DEBUG(X) { }
 #define DEBUG_CHECK_EXHAUST(X) { X }
 #define ALIAS_DEBUG(X) { }
@@ -206,20 +206,21 @@ void ObligationChecker::create_final_states(SymState& state_t, SymState& state_r
 
 
 /** Compute the path condition for a particular path pair. */
-SymBool ObligationChecker::path_condition(const Cfg& target, const Cfg& rewrite, SymState& target_state, SymState& rewrite_state, const CfgPath& P, const CfgPath& Q) {
-
-  vector<SymBool> constraints;
+SymBool ObligationChecker::path_condition(const Cfg& target, const Cfg& rewrite, 
+                                          SymState& target_state, SymState& rewrite_state, 
+                                          Cfg::id_type target_start, Cfg::id_type rewrite_start, 
+                                          const CfgPath& P, const CfgPath& Q) {
 
   /** Execute along the paths. */
-  executor_.execute(target, P, target_state, constraints);
-  executor_.execute(rewrite, Q, rewrite_state, constraints);
+  auto target_constraints = executor_.path_condition(target, target_start, P, target_state);
+  auto rewrite_constraints = executor_.path_condition(rewrite, rewrite_start, Q, rewrite_state);
 
-  /** Gather any constraints from the states (?) */
-  constraints.insert(constraints.begin(), target_state.constraints.begin(), target_state.constraints.end());
-  constraints.insert(constraints.begin(), rewrite_state.constraints.begin(), rewrite_state.constraints.end());
-
+  /** Extract the constraints as a conjunction */
   SymBool path_condition = SymBool::_true();
-  for (auto it : constraints) {
+  for (auto it : target_constraints) {
+    path_condition = path_condition & it;
+  }
+  for (auto it : rewrite_constraints) {
     path_condition = path_condition & it;
   }
 
@@ -255,6 +256,7 @@ bool ObligationChecker::is_sat(MemoryModel* memory_model, vector<SymBool>& const
 }
 
 bool ObligationChecker::check_exhaustive(const Cfg& target, const Cfg& rewrite,
+    Cfg::id_type target_start, Cfg::id_type rewrite_start,
     const vector<CfgPath>& Ps, const vector<CfgPath>& Qs,
     const Invariant& assume) {
 
@@ -296,7 +298,7 @@ bool ObligationChecker::check_exhaustive(const Cfg& target, const Cfg& rewrite,
     SymState rewrite_copy = state_r;
     final_states.push_back(rewrite_copy);
     final_states.push_back(target_copy);
-    auto pc = path_condition(target, rewrite, target_copy, rewrite_copy, Ps[i], Qs[i]);
+    auto pc = path_condition(target, rewrite, target_copy, rewrite_copy, target_start, rewrite_start, Ps[i], Qs[i]);
     cout << "PATH CONDITION: " << pc << endl;
     constraints.push_back(!pc);
   }
@@ -320,6 +322,7 @@ bool ObligationChecker::check_exhaustive(const Cfg& target, const Cfg& rewrite,
 
 
 bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite,
+                              const Cfg::id_type target_block, const Cfg::id_type rewrite_block,
                               const CfgPath& P, const CfgPath& Q,
                               const Invariant& assume, const Invariant& prove) {
 
@@ -358,10 +361,14 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite,
   CONSTRAINT_DEBUG(cout << "Assuming " << assumption << endl;);
   constraints.push_back(assumption);
 
-
   /** Do the symbolic execution */
-  executor_.execute(target, P, state_t, constraints);
-  executor_.execute(rewrite, Q, state_r, constraints);
+  executor_.execute(target, P, state_t);
+  executor_.execute(rewrite, Q, state_r);
+
+  auto target_condition = executor_.path_condition(target, target_block, P, state_t);
+  auto rewrite_condition = executor_.path_condition(rewrite, rewrite_block, Q, state_r);
+
+  /** Get the path constraints. */
 
   /** Add miscelaneous constraints from circuit building */
   constraints.insert(constraints.begin(), state_t.constraints.begin(), state_t.constraints.end());

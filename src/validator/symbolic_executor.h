@@ -68,23 +68,35 @@ public:
     return *this;
   }
 
-  /** Run Cfg along path P starting from state.  Update state in place and add any path
-    constraints to the vector. */
-  void execute(const Cfg&, const CfgPath& P, SymState& state, std::vector<SymBool>& path_constraints) const;
+  /** Run Cfg along path P starting from state.  Update state in place. */
+  void execute(const Cfg& cfg, const CfgPath& P, SymState& state) const {
+    std::vector<SymBool> path_constraints;
+    execute(cfg, P, state, path_constraints);
+  }
 
-  enum JumpType {
-    NONE, // jump target is the fallthrough
-    FALL_THROUGH,
-    JUMP
-  };
-  /** Is there a jump in the path following this basic block? */
-  static JumpType is_jump(const Cfg&, const CfgPath& P, size_t i);
+
+  /** Extract the condition that one takes a particular path through the CFG starting at the
+    instruction before the conditional jump (if any) or after the 'start_block'. */
+  std::vector<SymBool> path_condition(const Cfg& cfg, Cfg::id_type start_block, const CfgPath& P, 
+                                      SymState& state) const;
 
   /** Rewrite a CFG unrolled along a path. */
   static Cfg rewrite_cfg_with_path(const Cfg& cfg, const CfgPath& p) {
     LineMap m;
     return rewrite_cfg_with_path(cfg, p, m);
   }
+
+  /** Used for is_jump */
+  enum JumpType {
+    NONE,           
+    FALL_THROUGH,  
+    JUMP
+  };
+
+  /** Is there a jump between two basic blocks that execute successively? */
+  static JumpType is_jump(const Cfg&, Cfg::id_type block1, Cfg::id_type block2);
+
+
 
 private:
 
@@ -95,14 +107,32 @@ private:
     size_t line_number;
     x64asm::Label label;
     uint64_t rip_offset;
+    size_t code_index;
   };
 
 
   typedef std::map<size_t,LineInfo> LineMap;
 
-  /** Build the circuit for a single basic block */
-  void build_circuit(const Cfg&, Cfg::id_type, JumpType, SymState&, size_t& line_no,
-                     const LineMap& line_map, std::vector<SymBool>& path_constraints) const;
+  /** Run Cfg along path P starting from state.  Update state in place and add any path
+    constraints to the vector. */
+  void execute(const Cfg&, const CfgPath& P, SymState& state, std::vector<SymBool>& path_constraints) const;
+
+  /** Build the circuit for a single basic block.  Returns true if it's a return statement. */
+  void execute_bb(const Cfg&, Cfg::id_type, JumpType, SymState&, size_t& line_no,
+                  const LineMap& line_map, std::vector<SymBool>& path_constraints) const;
+
+
+  /** Execute one instruction (of some type). Returns true on return statements. */
+  bool execute_instr(const x64asm::Instruction& instr, SymState& state, LineInfo& line_info,
+                     JumpType jump, std::vector<SymBool>& path_constraints) const;
+
+  /** Execute a jcc instruction. */
+  void execute_jcc(const x64asm::Instruction& instr, SymState& state,
+                   JumpType jump, std::vector<SymBool>& path_constraints) const;
+
+  /** Execute one instruction with a handler (circuit) */
+  void execute_circuit(const x64asm::Instruction& instr, SymState& state, LineInfo& line_no) const;
+
 
   /** Rewrite a CFG so that it always executes a particular path, replacing
     jumps with NOPs.  Fill a map that contains information relating the new

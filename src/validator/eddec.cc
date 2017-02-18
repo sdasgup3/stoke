@@ -210,7 +210,7 @@ void EDdecValidator::prove_invariants(DualAutomata& dual, const Cfg& init_target
         cout << "  Proving " << *partial_inv << endl;
         bool valid = false;
         try {
-          valid = check(init_target, init_rewrite, edge.te, edge.re, *start_inv, *partial_inv);
+          valid = check(init_target, init_rewrite, edge.from.ts, edge.from.rs, edge.te, edge.re, *start_inv, *partial_inv);
         } catch (validator_error e) {
           valid = false;
           cout << "   * encountered " << e.what() << "; assuming false.";
@@ -266,19 +266,15 @@ bool EDdecValidator::verify_exhaustive(DualAutomata& dual, const Cfg& target, co
     vector<CfgPath> Qs;
 
     for (auto edge : edges) {
-      auto edge_copy = edge;
-      edge_copy.te.insert(edge_copy.te.begin(), state.ts);
-      edge_copy.re.insert(edge_copy.re.begin(), state.rs);
-
-      Ps.push_back(edge_copy.te);
-      Qs.push_back(edge_copy.re);
+      Ps.push_back(edge.te);
+      Qs.push_back(edge.re);
       DEBUG_EDDEC(cout << "   P: " << edge.te << "   Q: " << edge.re << endl;)
     }
 
     auto invariant = dual.get_invariant(state);
     DEBUG_EDDEC(cout << "   invariant: " << *invariant << endl;)
 
-    bool this_case_good = check_exhaustive(target, rewrite, Ps, Qs, *invariant);
+    bool this_case_good = check_exhaustive(target, rewrite, state.ts, state.rs, Ps, Qs, *invariant);
     DEBUG_EDDEC(cout << "   this state exhaustive: " << this_case_good << endl;)
 
     if (!this_case_good)
@@ -305,7 +301,7 @@ bool EDdecValidator::verify_final_invariants(DualAutomata& dual, Invariant* fina
     // i.e. live-outs and memory are equal
     bool valid = false;
     try {
-      valid = check(init_target, init_rewrite, {}, {}, *return_inv, *final_invariant);
+      valid = check(init_target, init_rewrite, init_target.get_entry(), init_rewrite.get_entry(), {}, {}, *return_inv, *final_invariant);
     } catch (validator_error e) {
       valid = false;
       cout << "   * encountered " << e.what() << "; assuming false.";

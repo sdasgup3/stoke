@@ -398,8 +398,17 @@ vector<pair<CellMemory*, CellMemory*>> StringModel::enumerate_aliasing_string() 
   vector<SymBool> constraints;
 
   // Symbolic execution
-  executor_.execute(target_, P_, target_state, constraints);
-  executor_.execute(rewrite_, Q_, rewrite_state, constraints);
+  executor_.execute(target_, P_, target_state);
+  executor_.execute(rewrite_, Q_, rewrite_state);
+
+  auto target_condition = executor_.path_condition(target_, target_.get_entry(), P_, target_state);
+  auto rewrite_condition = executor_.path_condition(rewrite_, rewrite_.get_entry(), Q_, rewrite_state);
+
+  for(auto it : target_condition)
+    constraints.push_back(it);
+  for(auto it : rewrite_condition)
+    constraints.push_back(it);
+
 
   // Add miscelaneous constraints
   for (auto& it : target_state.constraints)

@@ -258,12 +258,14 @@ void strategy_perfect_searcher(AlignmentGrid& grid, AlignmentPath* path, size_t 
 AlignmentPath* strategy_perfect(AlignmentGrid& grid) {
 
   cout << "Num registers unique on grid: " << endl;
-  grid.print([&grid] (AlignmentGrid::Point p) { return grid.num_registers_unique(p); });
+  grid.print([&grid] (AlignmentGrid::Point p) {
+    return grid.num_registers_unique(p);
+  });
 
   AlignmentPath* best_path = NULL;
   AlignmentPath* curr_path = NULL;
   size_t best_value = 0;
-  for(size_t min_value = 0; min_value <= 32; min_value++) {
+  for (size_t min_value = 0; min_value <= 32; min_value++) {
     curr_path = new AlignmentPath(grid);
 
     // build the path
@@ -288,8 +290,8 @@ AlignmentPath* strategy_perfect(AlignmentGrid& grid) {
     }
   }
 
-  cout << "Picking best path with min_value=" << best_value << 
-          " and sum of squares score=" << best_path->sum_of_squares_length() << endl;
+  cout << "Picking best path with min_value=" << best_value <<
+       " and sum of squares score=" << best_path->sum_of_squares_length() << endl;
   return best_path;
 }
 

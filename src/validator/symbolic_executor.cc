@@ -21,7 +21,31 @@ using namespace stoke;
 using namespace x64asm;
 
 
-void SymbolicExecutor::execute(const Cfg& cfg, const CfgPath& P, SymState& state, std::vector<SymBool>& path_constraints) const {
+vector<SymBool> SymbolicExecutor::path_condition(const Cfg& cfg, Cfg::id_type start_block, const CfgPath& P, SymState& state) const {
+
+  vector<SymBool> path_constraints;
+
+  // if start block has a conditional jump, we need to generate that condition separately
+  auto jump_type = is_jump(cfg, start_block, P[0]);
+  if(jump_type != JumpType::NONE) {
+    size_t num_instrs = cfg.num_instrs(start_block);
+    size_t end_index = cfg.get_index(std::pair<Cfg::id_type, size_t>(start_block, num_instrs-1));
+    auto instr = cfg.get_code()[end_index];
+
+    assert(instr.is_jcc()); // how else could there be a conditional jump?
+
+    execute_jcc(instr, state, jump_type, path_constraints);
+  }
+
+
+  // now do the rest of the path
+  execute(cfg, P, state, path_constraints);
+
+  return path_constraints;
+}
+
+
+void SymbolicExecutor::execute(const Cfg& cfg, const CfgPath& P, SymState& state, vector<SymBool>& path_constraints) const {
 
   // Compute line maps
   LineMap line_map;
@@ -29,15 +53,20 @@ void SymbolicExecutor::execute(const Cfg& cfg, const CfgPath& P, SymState& state
 
   // Build the circuits
   size_t line_no = 0;
-  for (size_t i = 0; i < P.size(); ++i)
-    build_circuit(cfg, P[i], is_jump(cfg,P,i), state, line_no, line_map, path_constraints);
+  for (size_t i = 0; i < P.size(); ++i) {
+    auto jump_type = JumpType::NONE;
+    if(i < P.size() - 1)
+      jump_type = is_jump(cfg, P[i], P[i+1]);
+
+    execute_bb(cfg, P[i], jump_type, state, line_no, line_map, path_constraints);
+  }
 
 }
 
-
-void SymbolicExecutor::build_circuit(const Cfg& cfg, Cfg::id_type bb, JumpType jump,
-                                     SymState& state, size_t& line_no, const LineMap& line_map,
-                                     vector<SymBool>& path_constraints) const {
+/** Execute one basic block. */
+void SymbolicExecutor::execute_bb(const Cfg& cfg, Cfg::id_type bb, JumpType jump,
+                                   SymState& state, size_t& line_no, const LineMap& line_map,
+                                   vector<SymBool>& path_constraints) const {
 
   if (cfg.num_instrs(bb) == 0)
     return;
@@ -45,100 +74,107 @@ void SymbolicExecutor::build_circuit(const Cfg& cfg, Cfg::id_type bb, JumpType j
   size_t start_index = cfg.get_index(std::pair<Cfg::id_type, size_t>(bb, 0));
   size_t end_index = start_index + cfg.num_instrs(bb);
 
+  // Iterate through instructions in basic block
   for (size_t i = start_index; i < end_index; ++i) {
-    auto li = line_map.at(line_no);
+    auto line_info = line_map.at(line_no);
     line_no++;
     auto instr = cfg.get_code()[i];
 
-    if (instr.is_jcc()) {
-      // get the name of the condition
-      string name = opcode_write_att(instr.get_opcode());
-      string condition = name.substr(1);
-      auto constraint = ConditionalHandler::condition_predicate(condition, state);
-
-      // figure out if its this condition (jump case) or negation (fallthrough)
-      //cout << "INSTR: " << instr << endl;
-      switch (jump) {
-      case JumpType::JUMP:
-        //cout << "Assuming jump for " << instr << endl;
-        path_constraints.push_back(constraint);
-        break;
-      case JumpType::FALL_THROUGH:
-        //cout << "Assuming fall-through for " << instr << endl;
-        constraint = !constraint;
-        path_constraints.push_back(constraint);
-        break;
-      case JumpType::NONE:
-        break;
-      default:
-        assert(false);
-      }
-
-    } else if (instr.is_label_defn() || instr.is_nop() || instr.is_any_jump()) {
-      continue;
-    } else if (instr.is_ret()) {
-      return;
-    } else {
-      // Build the handler for the instruction
-      state.set_lineno(line_no-1);
-      state.rip = SymBitVector::constant(64, li.rip_offset);
-
-      if (nacl_) {
-        // We need to add constraints keeping the index register (if present)
-        // away from the edges of the ddress space.
-        if (instr.is_explicit_memory_dereference()) {
-          auto mem = instr.get_operand<M8>(instr.mem_index());
-          if (mem.contains_index()) {
-            R64 index = mem.get_index();
-            auto address = state[index];
-            state.constraints.push_back(address >= SymBitVector::constant(64, 0x10));
-            state.constraints.push_back(address <= SymBitVector::constant(64, 0xfffffff0));
-          }
-        }
-      }
-
-      //cout << "LINE=" << line_no-1 << ": " << instr << endl;
-      auto constraints = (*filter_)(instr, state);
-      for (auto constraint : constraints) {
-        state.constraints.push_back(constraint);
-      }
-
-      if (filter_->has_error()) {
-        throw VALIDATOR_ERROR(filter_->error());
-      }
-    }
+    bool is_return = execute_instr(instr, state, line_info, jump, path_constraints);
+    if(is_return)
+      break;
   }
 }
 
-SymbolicExecutor::JumpType SymbolicExecutor::is_jump(const Cfg& cfg, const CfgPath& P, size_t i) {
+/** Returns true on return statements. */
+bool SymbolicExecutor::execute_instr(const Instruction& instr, SymState& state, LineInfo& line_info,
+                                     JumpType jump, vector<SymBool>& path_constraints) const {
+  if(instr.is_jcc()) {
+    execute_jcc(instr, state, jump, path_constraints);
+    return false;
+  } else if (instr.is_label_defn() || instr.is_nop() || instr.is_any_jump()) {
+    return false;
+  } else if (instr.is_ret()) {
+    return true;
+  } else {
+    execute_circuit(instr, state, line_info);
+    return false;
+  } 
+}
 
-  if (i == P.size() - 1)
-    return JumpType::NONE;
+/** Execute one conditional jump. */
+void SymbolicExecutor::execute_jcc(const Instruction& instr, SymState& state, 
+                                     JumpType jump, vector<SymBool>& path_constraints) const {
+  // get the name of the condition
+  string name = opcode_write_att(instr.get_opcode());
+  string condition = name.substr(1);
+  auto constraint = ConditionalHandler::condition_predicate(condition, state);
 
-  auto block = P[i];
+  // figure out if its this condition (jump case) or negation (fallthrough)
+  switch (jump) {
+  case JumpType::JUMP:
+    path_constraints.push_back(constraint);
+    break;
+  case JumpType::FALL_THROUGH:
+    constraint = !constraint;
+    path_constraints.push_back(constraint);
+    break;
+  case JumpType::NONE:
+    break;
+  default:
+    assert(false);
+  }
+}
 
+/** Execute one instruction with a handler (circuit) */
+void SymbolicExecutor::execute_circuit(const Instruction& instr, SymState& state, LineInfo& line_info) const {
+  // Build the handler for the instruction
+  state.set_lineno(line_info.code_index-1);
+  state.rip = SymBitVector::constant(64, line_info.rip_offset);
+
+  if (nacl_) {
+    // We need to add constraints keeping the index register (if present)
+    // away from the edges of the ddress space.
+    if (instr.is_explicit_memory_dereference()) {
+      auto mem = instr.get_operand<M8>(instr.mem_index());
+      if (mem.contains_index()) {
+        R64 index = mem.get_index();
+        auto address = state[index];
+        state.constraints.push_back(address >= SymBitVector::constant(64, 0x10));
+        state.constraints.push_back(address <= SymBitVector::constant(64, 0xfffffff0));
+      }
+    }
+  }
+
+  auto constraints = (*filter_)(instr, state);
+  for (auto constraint : constraints) {
+    state.constraints.push_back(constraint);
+  }
+
+  if (filter_->has_error()) {
+    throw VALIDATOR_ERROR(filter_->error());
+  }
+}
+
+SymbolicExecutor::JumpType SymbolicExecutor::is_jump(const Cfg& cfg, const Cfg::id_type block, const Cfg::id_type next_block) {
+
+  // there are no successors
   auto itr = cfg.succ_begin(block);
   if (itr == cfg.succ_end(block)) {
-    // there are no successors
-    //cout << "is_jump " << block << " NONE" << endl;
     return JumpType::NONE;
   }
 
+  // there is only only successor
   itr++;
   if (itr == cfg.succ_end(block)) {
-    // there is only only successor
-    //cout << "is_jump " << block << " NONE" << endl;
     return JumpType::NONE;
   }
 
   // ok, there are at least 2 successors
-  auto next_block = P[i+1];
   if (next_block == block + 1) {
-    //cout << "is_jump " << block << " FALL" << endl;
     return JumpType::FALL_THROUGH;
   }
   else {
-    //cout << "is_jump " << block << " JUMP" << endl;
     return JumpType::JUMP;
   }
 }
@@ -146,7 +182,7 @@ SymbolicExecutor::JumpType SymbolicExecutor::is_jump(const Cfg& cfg, const CfgPa
 
 
 Cfg SymbolicExecutor::rewrite_cfg_with_path(const Cfg& cfg, const CfgPath& p,
-    map<size_t,LineInfo>& to_populate) {
+    LineMap& to_populate) {
   Code code;
   auto function = cfg.get_function();
 
@@ -162,6 +198,7 @@ Cfg SymbolicExecutor::rewrite_cfg_with_path(const Cfg& cfg, const CfgPath& p,
       li.label = function.get_leading_label();
       li.line_number = i;
       li.rip_offset = function.hex_offset(i) + function.get_rip_offset() + function.hex_size(i);
+      li.code_index = code.size();
       to_populate[code.size()] = li;
 
       if (cfg.get_code()[i].is_jump()) {

@@ -79,8 +79,8 @@ size_t AlignmentGrid::num_registers_unique(Point p) {
   // initialize everything to true and then change to
   // false when we find contradictions.
   bool target_rewrite_match[r64s.size()][r64s.size()];
-  for(size_t i = 0; i < r64s.size(); ++i)
-    for(size_t j = 0; j < r64s.size(); ++j)
+  for (size_t i = 0; i < r64s.size(); ++i)
+    for (size_t j = 0; j < r64s.size(); ++j)
       target_rewrite_match[i][j] = true;
 
   // mark the registers that disagree
@@ -88,9 +88,9 @@ size_t AlignmentGrid::num_registers_unique(Point p) {
     auto ts = target_data[i];
     auto rs = rewrite_data[i];
 
-    for(size_t j = 0; j < r64s.size(); ++j) {
-      for(size_t k = 0; k < r64s.size(); ++k) {
-        if(ts[r64s[j]] != rs[r64s[k]])
+    for (size_t j = 0; j < r64s.size(); ++j) {
+      for (size_t k = 0; k < r64s.size(); ++k) {
+        if (ts[r64s[j]] != rs[r64s[k]])
           target_rewrite_match[j][k] = false;
       }
     }
@@ -98,28 +98,28 @@ size_t AlignmentGrid::num_registers_unique(Point p) {
 
   // count the number of target registers with no rewrite match
   size_t count = 0;
-  for(size_t i = 0; i < r64s.size(); ++i) {
+  for (size_t i = 0; i < r64s.size(); ++i) {
     bool match = false;
-    for(size_t j = 0; j < r64s.size(); ++j) {
-      if(target_rewrite_match[i][j]) {
+    for (size_t j = 0; j < r64s.size(); ++j) {
+      if (target_rewrite_match[i][j]) {
         match = true;
         break;
       }
     }
-    if(!match)
+    if (!match)
       count++;
   }
 
   // count the number of rewrite registers with no target match
-  for(size_t i = 0; i < r64s.size(); ++i) {
+  for (size_t i = 0; i < r64s.size(); ++i) {
     bool match = false;
-    for(size_t j = 0; j < r64s.size(); ++j) {
-      if(target_rewrite_match[j][i]) {
+    for (size_t j = 0; j < r64s.size(); ++j) {
+      if (target_rewrite_match[j][i]) {
         match = true;
         break;
       }
     }
-    if(!match)
+    if (!match)
       count++;
   }
 
@@ -157,18 +157,18 @@ void AlignmentGrid::print(std::function<uint64_t(Point)> callback) {
   // print headers
   size_t width = 5;
   cout << setw(width) << " ";
-  for(size_t i = 0, ie = target_trace_length(); i < ie; ++i) {
+  for (size_t i = 0, ie = target_trace_length(); i < ie; ++i) {
     cout << setw(width) << target_traces_[0][i].first;
   }
   cout << endl;
 
   // print rows
-  for(size_t i = 0, ie = rewrite_trace_length(); i < ie; ++i) {
+  for (size_t i = 0, ie = rewrite_trace_length(); i < ie; ++i) {
     //header
     cout << setw(width) << rewrite_traces_[0][i].first;
 
     //row
-    for(size_t j = 0, je = target_trace_length(); j < je; ++j) {
+    for (size_t j = 0, je = target_trace_length(); j < je; ++j) {
       Point p(j, i);
       cout << setw(width) << callback(p);
     }

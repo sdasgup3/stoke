@@ -336,8 +336,9 @@ int main(int argc, char** argv) {
     try {
       for (auto tp : target_paths) {
         for (auto rp : rewrite_paths) {
-          auto res = obc.check(static_cast<Cfg&>(target),
-                               rewrite, tp, rp, *invariant, *invariant);
+          auto res = obc.check(static_cast<Cfg&>(target), rewrite, 
+                               target.get_entry(), rewrite.get_entry(),
+                               tp, rp, *invariant, *invariant);
 
           if (!res) {
             verify_success = false;

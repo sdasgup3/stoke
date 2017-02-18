@@ -73,7 +73,10 @@ Instruction get_last_instr(const Cfg& cfg, Cfg::id_type block) {
 
 /** Returns an invariant representing the fact that the first state transition in the path is taken. */
 Invariant* get_jump_inv(const Cfg& cfg, const CfgPath& p, bool is_rewrite) {
-  auto jump_type = SymbolicExecutor::is_jump(cfg, p, 0);
+  auto jump_type = SymbolicExecutor::JumpType::NONE;
+  if(p.size() > 1) { 
+    SymbolicExecutor::is_jump(cfg, p[0], p[1]);
+  }
 
   if (jump_type == SymbolicExecutor::JumpType::NONE) {
     return new TrueInvariant();
@@ -180,14 +183,14 @@ void DdecValidator::make_tcs(const Cfg& target, const Cfg& rewrite) {
 
   for (auto p : target_paths) {
     DDEC_DEBUG(cout << "Trying path " << p << " ; on target" << endl;)
-    bool equiv = check(target, nop_cfg, p, empty_path, _true, _false);
+    bool equiv = check(target, nop_cfg, 1, 1, p, empty_path, _true, _false);
     if (!equiv && checker_has_ceg()) {
       sandbox_->insert_input(checker_get_target_ceg());
     }
   }
   for (auto p : rewrite_paths) {
     DDEC_DEBUG(cout << "Trying path " << p << " ; on rewrite" << endl;)
-    bool equiv = check(rewrite, nop_cfg, p, empty_path, _true, _false);
+    bool equiv = check(rewrite, nop_cfg, 1, 1, empty_path, p, _true, _false);
     if (!equiv && checker_has_ceg()) {
       sandbox_->insert_input(checker_get_target_ceg());
     }
@@ -370,7 +373,7 @@ bool DdecValidator::check_proof(const Cfg& target, const Cfg& rewrite, const vec
             DDEC_DEBUG(cout << "Checking " << copy << " { " << p << " ; " << q << " } "
                        << *(*end_inv)[m] << endl;)
 
-            bool equiv = check(target, rewrite, p, q, copy, *(*end_inv)[m]);
+            bool equiv = check(target, rewrite, target_cuts[i], rewrite_cuts[i], p, q, copy, *(*end_inv)[m]);
             if (!equiv) {
               failed_invariants[j].push_back(m);
               success = false;
@@ -410,7 +413,7 @@ bool DdecValidator::check_proof(const Cfg& target, const Cfg& rewrite, const vec
             DDEC_DEBUG(cout << "Checking for cpt " << i << " -> " << j << " against " << i << " -> " << k << endl;)
             DDEC_DEBUG(cout << "Checking " << copy << " { " << p << " ; " << q << " } false " << endl;)
             FalseInvariant fi;
-            bool equiv = check(target, rewrite, p, q, copy, fi);
+            bool equiv = check(target, rewrite, target_cuts[i], rewrite_cuts[i], p, q, copy, fi);
             if (!equiv) {
               DDEC_DEBUG(print_summary(invariants);)
               return false;
