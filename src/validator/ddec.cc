@@ -74,7 +74,7 @@ Instruction get_last_instr(const Cfg& cfg, Cfg::id_type block) {
 /** Returns an invariant representing the fact that the first state transition in the path is taken. */
 Invariant* get_jump_inv(const Cfg& cfg, const CfgPath& p, bool is_rewrite) {
   auto jump_type = SymbolicExecutor::JumpType::NONE;
-  if(p.size() > 1) { 
+  if (p.size() > 1) {
     SymbolicExecutor::is_jump(cfg, p[0], p[1]);
   }
 
@@ -183,14 +183,14 @@ void DdecValidator::make_tcs(const Cfg& target, const Cfg& rewrite) {
 
   for (auto p : target_paths) {
     DDEC_DEBUG(cout << "Trying path " << p << " ; on target" << endl;)
-    bool equiv = check(target, nop_cfg, 1, 1, p, empty_path, _true, _false);
+    bool equiv = check(target, nop_cfg, target.get_entry(), nop_cfg.get_entry(), p, empty_path, _true, _false);
     if (!equiv && checker_has_ceg()) {
       sandbox_->insert_input(checker_get_target_ceg());
     }
   }
   for (auto p : rewrite_paths) {
     DDEC_DEBUG(cout << "Trying path " << p << " ; on rewrite" << endl;)
-    bool equiv = check(rewrite, nop_cfg, 1, 1, empty_path, p, _true, _false);
+    bool equiv = check(rewrite, nop_cfg, rewrite.get_entry(), nop_cfg.get_entry(), p, empty_path, _true, _false);
     if (!equiv && checker_has_ceg()) {
       sandbox_->insert_input(checker_get_target_ceg());
     }

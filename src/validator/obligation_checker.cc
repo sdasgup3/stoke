@@ -206,10 +206,10 @@ void ObligationChecker::create_final_states(SymState& state_t, SymState& state_r
 
 
 /** Compute the path condition for a particular path pair. */
-SymBool ObligationChecker::path_condition(const Cfg& target, const Cfg& rewrite, 
-                                          SymState& target_state, SymState& rewrite_state, 
-                                          Cfg::id_type target_start, Cfg::id_type rewrite_start, 
-                                          const CfgPath& P, const CfgPath& Q) {
+SymBool ObligationChecker::path_condition(const Cfg& target, const Cfg& rewrite,
+    SymState& target_state, SymState& rewrite_state,
+    Cfg::id_type target_start, Cfg::id_type rewrite_start,
+    const CfgPath& P, const CfgPath& Q) {
 
   /** Execute along the paths. */
   auto target_constraints = executor_.path_condition(target, target_start, P, target_state);

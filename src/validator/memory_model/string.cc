@@ -404,9 +404,9 @@ vector<pair<CellMemory*, CellMemory*>> StringModel::enumerate_aliasing_string() 
   auto target_condition = executor_.path_condition(target_, target_.get_entry(), P_, target_state);
   auto rewrite_condition = executor_.path_condition(rewrite_, rewrite_.get_entry(), Q_, rewrite_state);
 
-  for(auto it : target_condition)
+  for (auto it : target_condition)
     constraints.push_back(it);
-  for(auto it : rewrite_condition)
+  for (auto it : rewrite_condition)
     constraints.push_back(it);
 
 

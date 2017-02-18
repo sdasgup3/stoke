@@ -110,15 +110,15 @@ public:
 
   /** Check.  Ensures that if 'assume' holds before executing paths p and q, then
     'prove' holds afterward. */
-  bool check(const Cfg& target, const Cfg& rewrite, 
+  bool check(const Cfg& target, const Cfg& rewrite,
              Cfg::id_type target_block, Cfg::id_type rewrite_block,
              const CfgPath& p, const CfgPath& q,
              const Invariant& assume, const Invariant& prove);
 
   /** Ensure that paths from a given starting point are exhaustive. */
-  bool check_exhaustive(const Cfg& target, const Cfg& rewrite, 
+  bool check_exhaustive(const Cfg& target, const Cfg& rewrite,
                         Cfg::id_type target_block, Cfg::id_type rewrite_block,
-                        const std::vector<CfgPath>& ps, const std::vector<CfgPath>& qs, 
+                        const std::vector<CfgPath>& ps, const std::vector<CfgPath>& qs,
                         const Invariant& assume);
 
   bool checker_has_ceg() {
@@ -147,9 +147,9 @@ public:
 private:
 
   /** Compute the path condition for a particular path pair.*/
-  SymBool path_condition(const Cfg& target, const Cfg& rewrite, 
-                         SymState& target_state, SymState& rewrite_state, 
-                         Cfg::id_type target_start, Cfg::id_type rewrite_start, 
+  SymBool path_condition(const Cfg& target, const Cfg& rewrite,
+                         SymState& target_state, SymState& rewrite_state,
+                         Cfg::id_type target_start, Cfg::id_type rewrite_start,
                          const CfgPath& P, const CfgPath& Q);
 
 

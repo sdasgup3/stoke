@@ -27,7 +27,7 @@ vector<SymBool> SymbolicExecutor::path_condition(const Cfg& cfg, Cfg::id_type st
 
   // if start block has a conditional jump, we need to generate that condition separately
   auto jump_type = is_jump(cfg, start_block, P[0]);
-  if(jump_type != JumpType::NONE) {
+  if (jump_type != JumpType::NONE) {
     size_t num_instrs = cfg.num_instrs(start_block);
     size_t end_index = cfg.get_index(std::pair<Cfg::id_type, size_t>(start_block, num_instrs-1));
     auto instr = cfg.get_code()[end_index];
@@ -55,7 +55,7 @@ void SymbolicExecutor::execute(const Cfg& cfg, const CfgPath& P, SymState& state
   size_t line_no = 0;
   for (size_t i = 0; i < P.size(); ++i) {
     auto jump_type = JumpType::NONE;
-    if(i < P.size() - 1)
+    if (i < P.size() - 1)
       jump_type = is_jump(cfg, P[i], P[i+1]);
 
     execute_bb(cfg, P[i], jump_type, state, line_no, line_map, path_constraints);
@@ -65,8 +65,8 @@ void SymbolicExecutor::execute(const Cfg& cfg, const CfgPath& P, SymState& state
 
 /** Execute one basic block. */
 void SymbolicExecutor::execute_bb(const Cfg& cfg, Cfg::id_type bb, JumpType jump,
-                                   SymState& state, size_t& line_no, const LineMap& line_map,
-                                   vector<SymBool>& path_constraints) const {
+                                  SymState& state, size_t& line_no, const LineMap& line_map,
+                                  vector<SymBool>& path_constraints) const {
 
   if (cfg.num_instrs(bb) == 0)
     return;
@@ -81,7 +81,7 @@ void SymbolicExecutor::execute_bb(const Cfg& cfg, Cfg::id_type bb, JumpType jump
     auto instr = cfg.get_code()[i];
 
     bool is_return = execute_instr(instr, state, line_info, jump, path_constraints);
-    if(is_return)
+    if (is_return)
       break;
   }
 }
@@ -89,7 +89,7 @@ void SymbolicExecutor::execute_bb(const Cfg& cfg, Cfg::id_type bb, JumpType jump
 /** Returns true on return statements. */
 bool SymbolicExecutor::execute_instr(const Instruction& instr, SymState& state, LineInfo& line_info,
                                      JumpType jump, vector<SymBool>& path_constraints) const {
-  if(instr.is_jcc()) {
+  if (instr.is_jcc()) {
     execute_jcc(instr, state, jump, path_constraints);
     return false;
   } else if (instr.is_label_defn() || instr.is_nop() || instr.is_any_jump()) {
@@ -99,12 +99,12 @@ bool SymbolicExecutor::execute_instr(const Instruction& instr, SymState& state, 
   } else {
     execute_circuit(instr, state, line_info);
     return false;
-  } 
+  }
 }
 
 /** Execute one conditional jump. */
-void SymbolicExecutor::execute_jcc(const Instruction& instr, SymState& state, 
-                                     JumpType jump, vector<SymBool>& path_constraints) const {
+void SymbolicExecutor::execute_jcc(const Instruction& instr, SymState& state,
+                                   JumpType jump, vector<SymBool>& path_constraints) const {
   // get the name of the condition
   string name = opcode_write_att(instr.get_opcode());
   string condition = name.substr(1);
