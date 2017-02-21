@@ -21,9 +21,10 @@ using namespace stoke;
 using namespace x64asm;
 
 
-vector<SymBool> SymbolicExecutor::path_condition(const Cfg& cfg, Cfg::id_type start_block, const CfgPath& P, SymState& state) const {
+vector<SymBool> SymbolicExecutor::path_condition(const Cfg& cfg, Cfg::id_type start_block, const CfgPath& P, const SymState& state) const {
 
   vector<SymBool> path_constraints;
+  SymState our_state = state;
 
   // if start block has a conditional jump, we need to generate that condition separately
   auto jump_type = is_jump(cfg, start_block, P[0]);
@@ -34,12 +35,12 @@ vector<SymBool> SymbolicExecutor::path_condition(const Cfg& cfg, Cfg::id_type st
 
     assert(instr.is_jcc()); // how else could there be a conditional jump?
 
-    execute_jcc(instr, state, jump_type, path_constraints);
+    execute_jcc(instr, our_state, jump_type, path_constraints);
   }
 
 
   // now do the rest of the path
-  execute(cfg, P, state, path_constraints);
+  execute(cfg, P, our_state, path_constraints);
 
   return path_constraints;
 }

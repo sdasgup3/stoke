@@ -78,7 +78,7 @@ public:
   /** Extract the condition that one takes a particular path through the CFG starting at the
     instruction before the conditional jump (if any) or after the 'start_block'. */
   std::vector<SymBool> path_condition(const Cfg& cfg, Cfg::id_type start_block, const CfgPath& P,
-                                      SymState& state) const;
+                                      const SymState& state) const;
 
   /** Rewrite a CFG unrolled along a path. */
   static Cfg rewrite_cfg_with_path(const Cfg& cfg, const CfgPath& p) {
