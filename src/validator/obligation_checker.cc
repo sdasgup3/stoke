@@ -28,7 +28,7 @@
 #include "src/validator/memory_model/string.h"
 
 
-#define OBLIG_DEBUG(X) { }
+#define OBLIG_DEBUG(X) { X }
 #define CONSTRAINT_DEBUG(X) { X }
 #define BUILD_TC_DEBUG(X) { }
 #define DEBUG_CHECK_EXHAUST(X) { X }
@@ -365,10 +365,11 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite,
   executor_.execute(target, P, state_t);
   executor_.execute(rewrite, Q, state_r);
 
+  /** Get the path constraints. */
   auto target_condition = executor_.path_condition(target, target_block, P, state_t);
   auto rewrite_condition = executor_.path_condition(rewrite, rewrite_block, Q, state_r);
-
-  /** Get the path constraints. */
+  constraints.insert(constraints.begin(), target_condition.begin(), target_condition.end());
+  constraints.insert(constraints.begin(), rewrite_condition.begin(), rewrite_condition.end());
 
   /** Add miscelaneous constraints from circuit building */
   constraints.insert(constraints.begin(), state_t.constraints.begin(), state_t.constraints.end());
