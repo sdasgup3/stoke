@@ -35,12 +35,19 @@ vector<SymBool> SymbolicExecutor::path_condition(const Cfg& cfg, Cfg::id_type st
 
     assert(instr.is_jcc()); // how else could there be a conditional jump?
 
+    cout << "[ path condition debug ] executing " << instr << endl;
+
     execute_jcc(instr, our_state, jump_type, path_constraints);
   }
 
 
   // now do the rest of the path
+  cout << "[ path condition debug ] executing path " << P << endl;
   execute(cfg, P, our_state, path_constraints);
+
+  for(auto it : path_constraints) {
+    cout << "[ path condition debug ] got " << it << endl;
+  }
 
   return path_constraints;
 }
@@ -110,6 +117,10 @@ void SymbolicExecutor::execute_jcc(const Instruction& instr, SymState& state,
   string name = opcode_write_att(instr.get_opcode());
   string condition = name.substr(1);
   auto constraint = ConditionalHandler::condition_predicate(condition, state);
+
+  cout << "[execute_jcc] for instr " << instr << " with type " << jump << endl;
+  cout << "[execute_jcc] generated " << constraint << endl;
+
 
   // figure out if its this condition (jump case) or negation (fallthrough)
   switch (jump) {
