@@ -17,6 +17,7 @@
 
 #include "src/validator/memory_model.h"
 #include <unordered_map>
+#include <algorithm>
 
 namespace stoke {
 
@@ -89,15 +90,20 @@ public:
 
 private:
 
-  /** Combines a few different maps via union. */
+  /** Combines a few different maps via union.  We're looking at the number of bytes
+    located in each location, and so we take the maximum. */
   template <typename K, typename V>
-  std::map<K,V> append_maps(std::vector<std::map<K,V>> maps) {
+  std::map<K,V> merge_maps(std::vector<std::map<K,V>> maps) {
 
     std::map<K,V> output;
 
     for (auto m : maps) {
       for (auto p : m) {
-        output[p.first] = p.second;
+        if(output.count(p.first)) {
+          output[p.first] = std::max(p.second, output[p.first]);
+        } else {
+          output[p.first] = p.second;
+        }
       }
     }
 
@@ -113,7 +119,7 @@ private:
     map_builder.push_back(rewrite_memory_.get_access_list());
     map_builder.push_back(static_cast<FlatMemory*>(target.memory)->get_access_list());
     map_builder.push_back(static_cast<FlatMemory*>(rewrite.memory)->get_access_list());
-    return append_maps(map_builder);
+    return merge_maps(map_builder);
   }
 
   /** Fill in memory.  Some of this can be done just from the array in the model, however

@@ -81,6 +81,8 @@ bool BoundedValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
   has_error_ = false;
   init_mm();
 
+  cout << "Initial rewrite: " << endl << init_rewrite.get_code() << endl;
+
   auto target = inline_functions(init_target);
   auto rewrite = inline_functions(init_rewrite);
 
@@ -91,12 +93,13 @@ bool BoundedValidator::verify(const Cfg& init_target, const Cfg& init_rewrite) {
 
     // Step 1: get all the paths from the enumerator
     for (auto path : CfgPaths::enumerate_paths(target, bound_)) {
-      //cout << "adding TP: " << path << endl;
+      cout << "adding TP: " << path << endl;
       target_paths.push_back(path);
     }
-    //cout << "REWRITE: " << endl << rewrite.get_code() << endl;
+    cout << "REWRITE: " << endl << rewrite.get_code() << endl;
     for (auto path : CfgPaths::enumerate_paths(rewrite, bound_)) {
-      //cout << "adding RP: " << path << endl;
+      cout << "bound_ = " << bound_ << endl;
+      cout << "adding RP: " << path << endl;
       rewrite_paths.push_back(path);
     }
 

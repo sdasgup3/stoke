@@ -356,7 +356,7 @@ TEST_F(BoundedValidatorBaseTest, RipWritingEquiv) {
   std::stringstream ssr;
   ssr << ".foo:" << std::endl;
   ssr << "movq $0xc0ded00d, (%rip)" << std::endl;
-  sst << "xorl %eax, %eax" << std::endl;
+  ssr << "xorl %eax, %eax" << std::endl;
   ssr << "retq" << std::endl;
   auto rewrite = make_cfg(ssr, all(), live_outs, 0xcafef00d);
 
@@ -612,7 +612,7 @@ TEST_F(BoundedValidatorBaseTest, NoHeapOutStackOutStillSensitiveToReads) {
 
   std::stringstream ssr;
   ssr << ".foo:" << std::endl;
-  sst << "movq (%rax), %rax" << std::endl;
+  ssr << "movq (%rax), %rax" << std::endl;
   ssr << "retq" << std::endl;
   auto rewrite = make_cfg(ssr, live_outs, live_outs);
 
@@ -2115,26 +2115,26 @@ TEST_F(BoundedValidatorBaseTest, WcscpyWrong1) {
   auto target = make_cfg(sst, def_ins, live_outs);
 
   std::stringstream ssr;
-  sst << ".wcscpy:" << std::endl;
-  sst << "movl %esi, %edx" << std::endl;
-  sst << "movl (%r15,%rdx,1), %ecx" << std::endl;
-  sst << "movq %rdi, %rax" << std::endl;
-  sst << "testl %edx, %ecx" << std::endl;
-  sst << "nop" << std::endl;
-  sst << "movw %ax, %dx" << std::endl;
-  sst << "je .L_140f20" << std::endl;
-  sst << "nop" << std::endl;
-  sst << ".L_140f00:" << std::endl;
-  sst << "orl %esp, %edx" << std::endl;
-  sst << "movq %rcx, (%r15,%rdx,1)" << std::endl;
-  sst << "addl $0x4, %esi" << std::endl;
-  sst << "movl (%r15,%rsi,1), %ecx" << std::endl;
-  sst << "addl $0x4, %edx" << std::endl;
-  sst << "testl %ecx, %ecx" << std::endl;
-  sst << "jne .L_140f00" << std::endl;
-  sst << "nop" << std::endl;
-  sst << ".L_140f20:" << std::endl;
-  sst << "retq" << std::endl;
+  ssr << ".wcscpy:" << std::endl;
+  ssr << "movl %esi, %edx" << std::endl;
+  ssr << "movl (%r15,%rdx,1), %ecx" << std::endl;
+  ssr << "movq %rdi, %rax" << std::endl;
+  ssr << "testl %edx, %ecx" << std::endl;
+  ssr << "nop" << std::endl;
+  ssr << "movw %ax, %dx" << std::endl;
+  ssr << "je .L_140f20" << std::endl;
+  ssr << "nop" << std::endl;
+  ssr << ".L_140f00:" << std::endl;
+  ssr << "orl %esp, %edx" << std::endl;
+  ssr << "movq %rcx, (%r15,%rdx,1)" << std::endl;
+  ssr << "addl $0x4, %esi" << std::endl;
+  ssr << "movl (%r15,%rsi,1), %ecx" << std::endl;
+  ssr << "addl $0x4, %edx" << std::endl;
+  ssr << "testl %ecx, %ecx" << std::endl;
+  ssr << "jne .L_140f00" << std::endl;
+  ssr << "nop" << std::endl;
+  ssr << ".L_140f20:" << std::endl;
+  ssr << "retq" << std::endl;
   auto rewrite = make_cfg(ssr, def_ins, live_outs);
 
 

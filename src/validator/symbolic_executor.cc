@@ -45,7 +45,7 @@ vector<SymBool> SymbolicExecutor::path_condition(const Cfg& cfg, Cfg::id_type st
   cout << "[ path condition debug ] executing path " << P << endl;
   execute(cfg, P, our_state, path_constraints);
 
-  for(auto it : path_constraints) {
+  for (auto it : path_constraints) {
     cout << "[ path condition debug ] got " << it << endl;
   }
 
