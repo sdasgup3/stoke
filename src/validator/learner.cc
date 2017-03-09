@@ -18,6 +18,7 @@
 #include "src/validator/invariants/equality.h"
 #include "src/validator/invariants/false.h"
 #include "src/validator/invariants/flag.h"
+#include "src/validator/invariants/flag_set.h"
 #include "src/validator/invariants/implication.h"
 #include "src/validator/invariants/inequality.h"
 #include "src/validator/invariants/memory_equality.h"
@@ -223,6 +224,72 @@ vector<SignInvariant*> build_sign_invariants(RegSet target_regs, RegSet rewrite_
   return invariants;
 }
 
+bool invariant_holds(Invariant* invariant, const vector<CpuState>& target_states, const vector<CpuState>& rewrite_states) {
+
+  for (size_t i = 0; i < target_states.size(); ++i)
+    if (!invariant->check(target_states[i], rewrite_states[i]))
+      return false;
+
+  return true;
+}
+
+/** Returns true if the invariant is added. */
+bool add_or_delete_inv(vector<Invariant*>& invs, Invariant* inv, const vector<CpuState>& target_states, const vector<CpuState>& rewrite_states) {
+  if (invariant_holds(inv, target_states, rewrite_states)) {
+    invs.push_back(inv);
+    return true;
+  } else {
+    delete inv;
+    return false;
+  }
+}
+
+vector<Invariant*> build_flag_invariants(
+  x64asm::RegSet target_regs,
+  x64asm::RegSet rewrite_regs,
+  const vector<CpuState>& target_states,
+  const vector<CpuState>& rewrite_states) {
+
+  cout << "target_regs: " << target_regs << endl;
+  cout << "rewrite_regs: " << rewrite_regs << endl;
+
+  vector<Invariant*> inv;
+
+  for (auto tf = target_regs.flags_begin(); tf != target_regs.flags_end(); ++tf) {
+
+    // Generate target flag true
+    // these leak memory it unused
+    Invariant* tf_true = new FlagSetInvariant(*tf, false, false);
+    Invariant* tf_false = new FlagSetInvariant(*tf, false, true);
+
+    // Generate target flag flase
+    for (auto rf = rewrite_regs.flags_begin(); rf != rewrite_regs.flags_end(); ++rf) {
+
+      Invariant* rf_true = new FlagSetInvariant(*rf, true, false);
+      Invariant* rf_false = new FlagSetInvariant(*rf, true, true);
+
+      auto target_implies_rewrite = new ImplicationInvariant(tf_true, rf_true);
+      auto not_target_implies_rewrite = new ImplicationInvariant(tf_false, rf_true);
+      auto target_implies_not_rewrite = new ImplicationInvariant(tf_true, rf_false);
+      auto not_target_implies_not_rewrite = new ImplicationInvariant(tf_false, rf_false);
+
+      bool keep = false;
+      keep |= add_or_delete_inv(inv, target_implies_rewrite, target_states, rewrite_states);
+      keep |= add_or_delete_inv(inv, not_target_implies_rewrite, target_states, rewrite_states);
+      keep |= add_or_delete_inv(inv, target_implies_not_rewrite, target_states, rewrite_states);
+      keep |= add_or_delete_inv(inv, not_target_implies_not_rewrite, target_states, rewrite_states);
+
+      if (!keep) {
+        delete rf_true;
+        delete rf_false;
+      }
+    }
+  }
+
+  return inv;
+}
+
+
 ConjunctionInvariant* InvariantLearner::learn(x64asm::RegSet target_regs,
     x64asm::RegSet rewrite_regs,
     const vector<CpuState>& target_states,
@@ -301,6 +368,11 @@ ConjunctionInvariant* InvariantLearner::learn(x64asm::RegSet target_regs,
     }
   }
 
+  // flag invariants
+  auto potential_flags = build_flag_invariants(target_regs, rewrite_regs, target_states, rewrite_states);
+  for (auto it : potential_flags)
+    conj->add_invariant(it);
+
   auto potential_memory_nulls = build_memory_null_invariants(target_regs, rewrite_regs, target_, rewrite_);
   for (auto mem_null : potential_memory_nulls) {
     //cout << "Testing " << *mem_null << endl;
@@ -347,8 +419,8 @@ ConjunctionInvariant* InvariantLearner::learn(x64asm::RegSet target_regs,
   auto mem_vars = get_memory_variables(target_, rewrite_);
   for (auto var : mem_vars) {
     cout << "Checking mem var: " << var << endl;
-    if (var.size == 8) {
-      cout << " * size 8 :)" << endl;
+    if (var.size <= 8) {
+      cout << " * size <= 8 :)" << endl;
       columns.push_back(var);
     } else {
       cout << " * size " << var.size << endl;

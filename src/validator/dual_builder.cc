@@ -348,9 +348,20 @@ DualAutomata DualBuilder::build_dual(Abstraction* target_abstraction,
 
     // find a path using strategy of choice
     //AlignmentPath* path = strategy_dfs(grid);
-    AlignmentPath* path = strategy_perfect(grid);
+    //AlignmentPath* path = strategy_perfect(grid);
+
+    auto hypotheses = grid.enumerate_hypotheses();
+    for (auto hypothesis : hypotheses) {
+      cout << "=== HYPOTHESIS ===" << endl;
+      cout << "  Start: " << hypothesis.start << endl;
+      cout << "  End: " << hypothesis.end << endl;
+      cout << "  Iterations: " << hypothesis.iteration_count() << endl;
+      cout << "  Target: " << hypothesis.target_start << endl;
+      cout << "  Rewrite: " << hypothesis.rewrite_start << endl;
+    }
 
     // report and update DFA
+    AlignmentPath* path = NULL;
     if (path != NULL) {
       cout << "  Performance Score: " << path->sum_of_squares_length() << endl;
       add_edge_on_path(dual, target_traces[0], rewrite_traces[0], *path);

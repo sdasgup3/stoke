@@ -24,6 +24,10 @@ using namespace x64asm;
 vector<SymBool> SymbolicExecutor::path_condition(const Cfg& cfg, Cfg::id_type start_block, const CfgPath& P, const SymState& state) const {
 
   vector<SymBool> path_constraints;
+
+  if (P.size() == 0)
+    return path_constraints;
+
   SymState our_state = state;
 
   // if start block has a conditional jump, we need to generate that condition separately

@@ -99,7 +99,7 @@ private:
 
     for (auto m : maps) {
       for (auto p : m) {
-        if(output.count(p.first)) {
+        if (output.count(p.first)) {
           output[p.first] = std::max(p.second, output[p.first]);
         } else {
           output[p.first] = p.second;

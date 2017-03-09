@@ -29,7 +29,7 @@
 
 
 #define OBLIG_DEBUG(X) { X }
-#define CONSTRAINT_DEBUG(X) { X }
+#define CONSTRAINT_DEBUG(X) { }
 #define BUILD_TC_DEBUG(X) { }
 #define DEBUG_CHECK_EXHAUST(X) { X }
 #define ALIAS_DEBUG(X) { }

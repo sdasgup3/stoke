@@ -39,11 +39,41 @@ public:
     bool operator!=(const Point& other) {
       return !(*this == other);
     }
+
+    size_t distance2(Point q) {
+      size_t xd = q.target_entry*target_entry;
+      size_t yd = q.rewrite_entry*rewrite_entry;
+      return xd*xd + yd*yd;
+    }
   };
 
+  struct InductiveHypothesis {
+
+    Point start;
+    Point end;
+    Abstraction::State target_start;
+    Abstraction::State rewrite_start;
+    std::vector<Abstraction::State> target_states;
+    std::vector<Abstraction::State> rewrite_states;
+
+    InductiveHypothesis(Point p, Point q) : start(p), end(q) { }
+
+    size_t iteration_count() {
+      assert(target_states.size() || rewrite_states.size());
+
+      if (target_states.size() > 0) {
+        return (end.target_entry - start.target_entry)/target_states.size();
+      } else {
+        return (end.rewrite_entry - start.rewrite_entry)/rewrite_states.size();
+      }
+    }
+  };
 
   AlignmentGrid(Abstraction* target_abstraction, Abstraction* rewrite_abstraction,
                 std::vector<Abstraction::FullTrace> target_traces, std::vector<Abstraction::FullTrace> rewrite_traces);
+
+  /** Build a subgrid starting at a certain point. */
+  AlignmentGrid build_subgrid(Point p);
 
   /** How many target entries are in the grid? */
   size_t target_trace_length() {
@@ -96,6 +126,9 @@ public:
     return get_states_at_point(rewrite_traces_, p.rewrite_entry);
   }
 
+  /** Enumerate possible inductive hypothesis. */
+  std::vector<InductiveHypothesis> enumerate_hypotheses();
+
   /** Do memmory states match at a particular point on the grid? */
   bool memory_states_match(Point p);
 
@@ -138,6 +171,11 @@ private:
   /** Traces from the target/rewrite. */
   std::vector<Abstraction::FullTrace> target_traces_;
   std::vector<Abstraction::FullTrace> rewrite_traces_;
+
+  /** Helper function: turn a trace into a subtrace */
+  static Abstraction::FullTrace build_subtrace(Abstraction::FullTrace, size_t from);
+
+
 
 };
 

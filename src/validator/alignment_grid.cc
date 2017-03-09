@@ -16,12 +16,123 @@ AlignmentGrid::AlignmentGrid(Abstraction* target_abstraction, Abstraction* rewri
   max_rewrite_entries_ = rewrite_traces_[0].size();
 }
 
+Abstraction::FullTrace AlignmentGrid::build_subtrace(Abstraction::FullTrace trace, size_t from) {
+
+  Abstraction::FullTrace subtrace;
+  for (size_t i = from; i < trace.size(); ++i) {
+    subtrace.push_back(trace[i]);
+  }
+
+  return subtrace;
+}
+
+
+AlignmentGrid AlignmentGrid::build_subgrid(Point p) {
+
+  vector<Abstraction::FullTrace> target_traces;
+  vector<Abstraction::FullTrace> rewrite_traces;
+
+  for (auto trace : target_traces_) {
+    target_traces.push_back(build_subtrace(trace, p.target_entry));
+  }
+  for (auto trace : rewrite_traces_) {
+    rewrite_traces.push_back(build_subtrace(trace, p.rewrite_entry));
+  }
+
+  AlignmentGrid subgrid(target_abstraction_, rewrite_abstraction_, target_traces, rewrite_traces);
+
+  return subgrid;
+
+}
+
 
 /** Find the corresponding state in the dual automata to a given point. */
 DualAutomata::State AlignmentGrid::point_to_abstraction(Point p) {
   auto target_state = target_traces_[0][p.target_entry].first;
   auto rewrite_state = rewrite_traces_[0][p.rewrite_entry].first;
   return DualAutomata::State(target_state, rewrite_state);
+}
+
+/** Enumerate possible inductive hypothesis. */
+std::vector<AlignmentGrid::InductiveHypothesis> AlignmentGrid::enumerate_hypotheses() {
+
+  vector<InductiveHypothesis> results;
+
+  /** Go through every point in the grid and see if we can find a repeating
+    pattern from there. */
+  for (size_t i = 0; i < max_target_entries_; ++i) {
+    for (size_t j = 0; j < max_rewrite_entries_; ++j) {
+      Point start(i, j);
+
+      Abstraction::State target_start_state = target_traces_[0][i].first;
+      Abstraction::State rewrite_start_state = rewrite_traces_[0][j].first;
+
+      // Find the next cutpoint of this form
+      size_t next_i = 0;
+      for (size_t k = i+1; k < max_target_entries_; ++k) {
+        if (target_traces_[0][k].first == target_start_state) {
+          next_i = k;
+          break;
+        }
+      }
+
+      if (next_i == 0)
+        continue;
+
+      size_t next_j = 0;
+      for (size_t k = j+1; k < max_rewrite_entries_; ++k) {
+        if (rewrite_traces_[0][k].first == rewrite_start_state) {
+          next_j = k;
+          break;
+        }
+      }
+
+      if (next_j == 0)
+        continue;
+
+      // got something... see how far we can take it!
+      vector<Abstraction::State> target_states;
+      vector<Abstraction::State> rewrite_states;
+
+      for (size_t k = i+1; k <= next_i; ++k) {
+        target_states.push_back(target_traces_[0][k].first);
+      }
+      for (size_t k = j+1; k <= next_j; ++k) {
+        rewrite_states.push_back(rewrite_traces_[0][k].first);
+      }
+
+      Point last_good = start;
+      Point current = start;
+      size_t iteration_count = 0;
+      while (current.target_entry + target_states.size() < max_target_entries_ &&
+             current.rewrite_entry + rewrite_states.size() < max_rewrite_entries_) {
+
+        current.target_entry += target_states.size();
+        current.rewrite_entry += rewrite_states.size();
+
+        if (target_traces_[0][current.target_entry].first == target_start_state &&
+            rewrite_traces_[0][current.rewrite_entry].first == rewrite_start_state) {
+          last_good = current;
+          iteration_count++;
+        } else {
+          break;
+        }
+      }
+
+      // OK, now we can generate a result
+      InductiveHypothesis ih(start, last_good);
+      ih.target_start = target_start_state;
+      ih.rewrite_start = rewrite_start_state;
+      ih.target_states = target_states;
+      ih.rewrite_states = rewrite_states;
+      results.push_back(ih);
+
+      assert(iteration_count == ih.iteration_count());
+    }
+  }
+
+  return results;
+
 }
 
 /** Do memmory states match at a particular point on the grid? */
@@ -179,3 +290,4 @@ void AlignmentGrid::print(std::function<uint64_t(Point)> callback) {
   cout.copyfmt(init);
 
 }
+
