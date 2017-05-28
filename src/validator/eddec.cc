@@ -365,8 +365,12 @@ bool EDdecValidator::verify(const Cfg& target, const Cfg& rewrite) {
   Abstraction* target_automata = new BlockAbstraction(target, *sandbox_);
   Abstraction* rewrite_automata = new BlockAbstraction(rewrite, *sandbox_);
 
-  DualBuilder db;
-  auto dual = db.build_dual(target_automata, rewrite_automata, transformed_inputs);
+  InvariantLearner learner(target, rewrite);
+  DualBuilder db(learner, *this);
+
+  auto initial_invariant = get_initial_invariant(target);
+
+  auto dual = db.build_dual(target_automata, rewrite_automata, transformed_inputs, initial_invariant);
   std::cout << "BUILT DUAL AUTOMATA" << std::endl;
   dual.print_all();
 

@@ -53,15 +53,46 @@ DualAutomata::State AlignmentGrid::point_to_abstraction(Point p) {
   return DualAutomata::State(target_state, rewrite_state);
 }
 
-/** Enumerate possible inductive hypothesis. */
-std::vector<AlignmentGrid::InductiveHypothesis> AlignmentGrid::enumerate_hypotheses() {
+std::vector<AlignmentGrid::Point> AlignmentGrid::enumerate_hypothesis_points(DualAutomata::Edge& edge) {
 
-  vector<InductiveHypothesis> results;
+  map<size_t, map<size_t, bool>> points_with_hypothesis;
+  vector<Point> points;
+
+  auto endpoint = edge.from;
+
+  for(size_t i = 0; i < max_target_entries_; ++i) {
+    for(size_t j = 0; j < max_rewrite_entries_; ++j) {
+
+      if(points_with_hypothesis[i][j])
+        continue;
+
+      if(endpoint.ts == target_traces_[0][i].first &&
+         endpoint.rs == rewrite_traces_[0][j].first) {
+
+      }
+      
+    }
+  }
+
+
+  return points;
+}
+
+/** Enumerate possible inductive hypothesis. */
+std::vector<DualAutomata::Edge> AlignmentGrid::enumerate_hypotheses() {
+
+  vector<DualAutomata::Edge> results;
+  map<size_t, map<size_t, bool>> points_with_hypothesis;
+
 
   /** Go through every point in the grid and see if we can find a repeating
     pattern from there. */
   for (size_t i = 0; i < max_target_entries_; ++i) {
     for (size_t j = 0; j < max_rewrite_entries_; ++j) {
+
+      if(points_with_hypothesis[i][j])
+        continue;
+
       Point start(i, j);
 
       Abstraction::State target_start_state = target_traces_[0][i].first;
@@ -91,6 +122,8 @@ std::vector<AlignmentGrid::InductiveHypothesis> AlignmentGrid::enumerate_hypothe
         continue;
 
       // got something... see how far we can take it!
+      points_with_hypothesis[next_i][next_j] = true;
+
       vector<Abstraction::State> target_states;
       vector<Abstraction::State> rewrite_states;
 
@@ -101,30 +134,17 @@ std::vector<AlignmentGrid::InductiveHypothesis> AlignmentGrid::enumerate_hypothe
         rewrite_states.push_back(rewrite_traces_[0][k].first);
       }
 
+      // count loop iterations
       Point last_good = start;
-      Point current = start;
-      size_t iteration_count = 0;
-      while (current.target_entry + target_states.size() < max_target_entries_ &&
-             current.rewrite_entry + rewrite_states.size() < max_rewrite_entries_) {
-
-        current.target_entry += target_states.size();
-        current.rewrite_entry += rewrite_states.size();
-
-        if (target_traces_[0][current.target_entry].first == target_start_state &&
-            rewrite_traces_[0][current.rewrite_entry].first == rewrite_start_state) {
-          last_good = current;
-          iteration_count++;
-        } else {
-          break;
-        }
-      }
+      size_t iteration_count = count_loop_iterations(last_good, target_states, rewrite_states,
+        [&points_with_hypothesis] (Point p) {
+          points_with_hypothesis[p.target_entry][p.rewrite_entry] = true;
+        }     
+      );
 
       // OK, now we can generate a result
-      InductiveHypothesis ih(start, last_good);
-      ih.target_start = target_start_state;
-      ih.rewrite_start = rewrite_start_state;
-      ih.target_states = target_states;
-      ih.rewrite_states = rewrite_states;
+      DualAutomata::State endpoint(target_start_state, rewrite_start_state);
+      DualAutomata::Edge ih(endpoint, target_states, rewrite_states);
       results.push_back(ih);
 
       assert(iteration_count == ih.iteration_count());
@@ -133,6 +153,38 @@ std::vector<AlignmentGrid::InductiveHypothesis> AlignmentGrid::enumerate_hypothe
 
   return results;
 
+}
+
+size_t AlignmentGrid::count_loop_iterations(Point& p, 
+    const vector<Abstraction::State>& target_states, 
+    const vector<Abstraction::State>& rewrite_states,
+    function<void (Point p)> callback
+    ) {
+
+  auto target_start_state = target_traces_[0][p.target_entry].first;
+  auto rewrite_start_state = rewrite_traces_[0][p.rewrite_entry].first;
+
+  Point last_good = p;
+  Point current = p;
+  size_t iteration_count = 0;
+  while (current.target_entry + target_states.size() < max_target_entries_ &&
+         current.rewrite_entry + rewrite_states.size() < max_rewrite_entries_) {
+
+    current.target_entry += target_states.size();
+    current.rewrite_entry += rewrite_states.size();
+
+    if (target_traces_[0][current.target_entry].first == target_start_state &&
+        rewrite_traces_[0][current.rewrite_entry].first == rewrite_start_state) {
+      callback(last_good);
+      last_good = current;
+      iteration_count++;
+    } else {
+      break;
+    }
+  }
+
+  p = last_good;
+  return iteration_count;
 }
 
 /** Do memmory states match at a particular point on the grid? */

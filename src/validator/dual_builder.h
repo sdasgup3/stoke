@@ -29,13 +29,14 @@ class DualBuilder {
 
 public:
 
-  DualBuilder() {
+  DualBuilder(InvariantLearner& learner, ObligationChecker& checker) : 
+    learner_(learner), checker_(checker) {
   }
 
   /** Build an automata that finds the correspondences between
     the target and the rewrite. */
   DualAutomata build_dual(Abstraction* target_abstraction, Abstraction* rewrite_abstraction,
-                          std::vector<CpuState> testcases);
+                          std::vector<CpuState> testcases, Invariant* initial_invariant);
 
 private:
 
@@ -59,6 +60,43 @@ private:
                                          const Abstraction::FullTrace& rewrite_trace,
                                          const AlignmentGrid::Point& p,
                                          const AlignmentGrid::Point& q) const;
+
+
+  /** Find inductive invariants, prove them, and add them to dual atuomata. */
+  void search_and_prove(const std::vector<AlignmentGrid>& grids, DualAutomata& dual, Invariant* assume);
+
+  /** Find an invariant for a hypothesis given. */
+  ConjunctionInvariant* find_hypothesis_invariant(
+      const DualAutomata::Edge& hypothesis,
+      const std::vector<AlignmentGrid>& grids);
+
+  /** Find target and rewrite states for hypothesis. */
+  void find_hypothesis_states(const DualAutomata::Edge& hypothesis,
+                              const std::vector<AlignmentGrid>& grids,
+                              std::vector<CpuState>& target_states,
+                              std::vector<CpuState>& rewrite_states);
+
+  /** Take a hypothesis and invariant, and throw out the parts of the invariant that we can't prove. */
+  void refine_and_prove_initial_invariant(
+      const std::vector<AlignmentGrid>& grid,
+      const DualAutomata::Edge& hypothesis, 
+      Invariant const * assume,
+      ConjunctionInvariant* invariant);
+
+
+  /** Take a hypothesis and invariant, and throw out the parts of the invariant that we can't prove. */
+  void refine_and_prove_inductive_hypothesis(DualAutomata::Edge& hypothesis, 
+                                   ConjunctionInvariant* invariant);
+
+  /** State for the current work. */
+  Abstraction* target_abstraction_;
+  Abstraction* rewrite_abstraction_;
+
+  /** Invariant Learner. */
+  InvariantLearner& learner_;
+
+  /** Obligation Checker. */
+  ObligationChecker& checker_;
 
 };
 
