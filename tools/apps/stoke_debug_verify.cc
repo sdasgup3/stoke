@@ -120,7 +120,11 @@ int main(int argc, char** argv) {
     const auto target_result = *(sb.result_begin());
     sb.run(rewrite);
     const auto rewrite_result = *(sb.result_begin());
-    Console::msg() << diff_states(target_result, rewrite_result, show_unchanged, show_all_registers, target.live_outs() | target.def_ins());
+    bool reg_diff = false;
+    Console::msg() << diff_states(target_result, rewrite_result, show_unchanged, show_all_registers, target.live_outs() | target.def_ins(), reg_diff);
+    if(!reg_diff) {
+      Console::msg() << "Counterexample does not differ on registers." << endl; 
+    }
     Console::msg() << endl;
   } else if (!res) {
     Console::msg() << endl << "No counterexample available." << endl;
