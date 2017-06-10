@@ -50,7 +50,9 @@ string green(string s) {
 }
 
 string diff_states(const CpuState& state1, const CpuState& state2, bool show_unchanged,
-                   bool show_all_registers, const RegSet& regs_to_show) {
+                   bool show_all_registers, const RegSet& regs_to_show, bool& reg_difference) {
+
+  reg_difference = false;
 
   // string representation of all registers we want to show
   vector<string> regs;
@@ -75,6 +77,8 @@ string diff_states(const CpuState& state1, const CpuState& state2, bool show_unc
   }
 
   ostringstream result;
+
+  /** Check if error codes match. */
   if (state1.code != state2.code) {
     result << red("Target and rewrite did not finish with the same error code:") << endl << endl;
     if (state1.code != ErrorCode::NORMAL) {
@@ -95,11 +99,18 @@ string diff_states(const CpuState& state1, const CpuState& state2, bool show_unc
       os << "Both target and rewrite returned abnormally with signal " << dec << (int)state1.code << " [" << readable_error_code(state1.code) << "]";
       result << green(os.str()) << endl;
     } else {
+      /** Case where both target, rewrite finish normally */
+
+      // Get string representations of each state
       ostringstream os1, os2;
       os1 << state1 << endl;
       os2 << state2 << endl;
+
+      // Get a list of the lines of the outputs of each state
       vector<string> ss1 = split_string(os1.str(), "\n");
       vector<string> ss2 = split_string(os2.str(), "\n");
+
+      // Compare the lines one-by-one
       size_t len = min(ss1.size(), ss2.size());
       for (size_t i = 0; i < len; i++) {
         os1.str("");
@@ -111,6 +122,9 @@ string diff_states(const CpuState& state1, const CpuState& state2, bool show_unc
           os2 << green(s2);
         } else {
           if (s1 != s2 || show_unchanged) {
+            // We've found a difference between the two lines, now we need to
+            // decide if we're going to show it or not.
+
             // is this a register?
             if (!show_all_registers && s1[0] == '%' && s2[0] == '%') {
               string reg = s1.substr(0, s1.find(" "));
@@ -119,7 +133,13 @@ string diff_states(const CpuState& state1, const CpuState& state2, bool show_unc
               if (find(regs.begin(), regs.end(), reg) == regs.end()) {
                 continue; // ignore
               }
+
+              // there's a register that's different -- report it.
+              reg_difference = true;
             }
+
+            // We've decided we've found a difference worth printing.
+            // Loop through character by character and color appropriately.
             for (size_t j = 0; j < s1.size(); j++) {
               if (s1[j] == s2[j]) {
                 os1 << s1[j];

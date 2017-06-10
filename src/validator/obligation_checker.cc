@@ -28,10 +28,10 @@
 #include "src/validator/memory_model/string.h"
 
 
-#define OBLIG_DEBUG(X) { X }
+#define OBLIG_DEBUG(X) { }
 #define CONSTRAINT_DEBUG(X) { }
 #define BUILD_TC_DEBUG(X) { }
-#define DEBUG_CHECK_EXHAUST(X) { X }
+#define DEBUG_CHECK_EXHAUST(X) { }
 #define ALIAS_DEBUG(X) { }
 #define ALIAS_CASE_DEBUG(X) { }
 #define ALIAS_STRING_DEBUG(X) { }
@@ -39,7 +39,7 @@
 #ifdef STOKE_DEBUG_CEG
 #define CEG_DEBUG(X) { X }
 #else
-#define CEG_DEBUG(X) { }
+#define CEG_DEBUG(X) { X }
 #endif
 
 #define MAX(X,Y) ( (X) > (Y) ? (X) : (Y) )
@@ -326,6 +326,19 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite,
                               const CfgPath& P, const CfgPath& Q,
                               const Invariant& assume, const Invariant& prove) {
 
+  // For debug info, count total number of LOC
+  size_t target_loc = 0;
+  size_t rewrite_loc = 0;
+  for (auto bb : P) {
+    target_loc += target.num_instrs(bb);
+  }
+  for (auto bb : Q) {
+    rewrite_loc += rewrite.num_instrs(bb);
+  }
+  cout << "LOCINFO " << dec << target_loc << " " << rewrite_loc << endl;
+  auto time_start = std::chrono::high_resolution_clock::now();
+
+
   OBLIG_DEBUG(cout << "===========================================" << endl;)
   OBLIG_DEBUG(cout << "Obligation Check." << endl;)
   OBLIG_DEBUG(cout << "Paths P: " << P << " Q: " << Q << endl;)
@@ -411,6 +424,10 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite,
   } else {
     CEG_DEBUG(cout << "  (This case verified)" << endl;)
   }
+
+  auto elapsed = std::chrono::high_resolution_clock::now() - time_start;
+  long long microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
+  cout << "TIMEINFO " << dec << microseconds << endl;
 
   memory_model->cleanup();
   stop_mm();

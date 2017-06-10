@@ -32,7 +32,7 @@ std::string green(std::string s);
 /** Returns a string description of the difference between two cpu states. */
 std::string diff_states(const stoke::CpuState& state1, const stoke::CpuState& state2,
                         bool show_unchanged, bool show_all_registers,
-                        const x64asm::RegSet& regs_to_show);
+                        const x64asm::RegSet& regs_to_show, bool& reg_diff);
 
 } // namespace stoke
 
