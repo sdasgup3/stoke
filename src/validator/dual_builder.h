@@ -29,7 +29,7 @@ class DualBuilder {
 
 public:
 
-  DualBuilder(InvariantLearner& learner, ObligationChecker& checker) : 
+  DualBuilder(InvariantLearner& learner, ObligationChecker& checker) :
     learner_(learner), checker_(checker) {
   }
 
@@ -67,8 +67,8 @@ private:
 
   /** Find an invariant for a hypothesis given. */
   ConjunctionInvariant* find_hypothesis_invariant(
-      const DualAutomata::Edge& hypothesis,
-      const std::vector<AlignmentGrid>& grids);
+    const DualAutomata::Edge& hypothesis,
+    const std::vector<AlignmentGrid>& grids);
 
   /** Find target and rewrite states for hypothesis. */
   void find_hypothesis_states(const DualAutomata::Edge& hypothesis,
@@ -78,15 +78,15 @@ private:
 
   /** Take a hypothesis and invariant, and throw out the parts of the invariant that we can't prove. */
   void refine_and_prove_initial_invariant(
-      const std::vector<AlignmentGrid>& grid,
-      const DualAutomata::Edge& hypothesis, 
-      Invariant const * assume,
-      ConjunctionInvariant* invariant);
+    const std::vector<AlignmentGrid>& grid,
+    const DualAutomata::Edge& hypothesis,
+    Invariant const * assume,
+    ConjunctionInvariant* invariant);
 
 
   /** Take a hypothesis and invariant, and throw out the parts of the invariant that we can't prove. */
-  void refine_and_prove_inductive_hypothesis(DualAutomata::Edge& hypothesis, 
-                                   ConjunctionInvariant* invariant);
+  void refine_and_prove_inductive_hypothesis(DualAutomata::Edge& hypothesis,
+      ConjunctionInvariant* invariant);
 
   /** State for the current work. */
   Abstraction* target_abstraction_;

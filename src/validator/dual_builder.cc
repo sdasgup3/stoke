@@ -323,66 +323,66 @@ void debug_class(AlignmentGrid& grid) {
 
 /** Find an invariant for a hypothesis given. */
 ConjunctionInvariant* DualBuilder::find_hypothesis_invariant(
-    const DualAutomata::Edge& hypothesis, 
-    const vector<AlignmentGrid>& grids) {
+  const DualAutomata::Edge& hypothesis,
+  const vector<AlignmentGrid>& grids) {
 
-    auto last_target_state = hypothesis.te[hypothesis.te.size() - 1];
-    auto last_rewrite_state = hypothesis.re[hypothesis.re.size() - 1];
+  auto last_target_state = hypothesis.te[hypothesis.te.size() - 1];
+  auto last_rewrite_state = hypothesis.re[hypothesis.re.size() - 1];
 
-    RegSet target_registers = target_abstraction_->defined_regs(last_target_state) & rewrite_abstraction_->live_out_regs(last_rewrite_state);
-    RegSet rewrite_registers = rewrite_abstraction_->defined_regs(last_rewrite_state) & rewrite_abstraction_->live_out_regs(last_rewrite_state);
+  RegSet target_registers = target_abstraction_->defined_regs(last_target_state) & rewrite_abstraction_->live_out_regs(last_rewrite_state);
+  RegSet rewrite_registers = rewrite_abstraction_->defined_regs(last_rewrite_state) & rewrite_abstraction_->live_out_regs(last_rewrite_state);
 
-    vector<CpuState> target_states;
-    vector<CpuState> rewrite_states;
-    find_hypothesis_states(hypothesis, grids, target_states, rewrite_states);
+  vector<CpuState> target_states;
+  vector<CpuState> rewrite_states;
+  find_hypothesis_states(hypothesis, grids, target_states, rewrite_states);
 
-    ConjunctionInvariant* learnt = learner_.learn(target_registers, rewrite_registers,
-                                                  target_states, rewrite_states);
+  ConjunctionInvariant* learnt = learner_.learn(target_registers, rewrite_registers,
+                                 target_states, rewrite_states);
 
-    /** Debug */
-    /*
-    for(size_t i = 0; i < learnt->size(); ++i) {
-      auto inv = (*learnt)[i];
-      cout << *inv << endl;
-    }
-    */
+  /** Debug */
+  /*
+  for(size_t i = 0; i < learnt->size(); ++i) {
+    auto inv = (*learnt)[i];
+    cout << *inv << endl;
+  }
+  */
 
-    return learnt;
+  return learnt;
 
 }
 
 /** Find target and rewrite states for hypothesis. */
 void DualBuilder::find_hypothesis_states(const DualAutomata::Edge& hypothesis,
-                              const std::vector<AlignmentGrid>& grids,
-                              std::vector<CpuState>& target_states,
-                              std::vector<CpuState>& rewrite_states) {
+    const std::vector<AlignmentGrid>& grids,
+    std::vector<CpuState>& target_states,
+    std::vector<CpuState>& rewrite_states) {
 
   // TODO: fix this function.  It might not be getting all the correct data (not sure)
 
   /** Find all grids where this hypothesis applies for >= 1 iteration and get
     all corresponding pairs of states. */
-  for(auto grid : grids) {
+  for (auto grid : grids) {
     auto target_trace = grid.target_trace(0);
     auto rewrite_trace = grid.rewrite_trace(0);
 
-    for(size_t i = 0; i < target_trace.size(); ++i) {
+    for (size_t i = 0; i < target_trace.size(); ++i) {
 
-      if(target_trace[i].first != hypothesis.from.ts)
+      if (target_trace[i].first != hypothesis.from.ts)
         continue;
 
-      for(size_t j = 0; j < rewrite_trace.size(); ++j) {
+      for (size_t j = 0; j < rewrite_trace.size(); ++j) {
 
-        if(target_states.size() > 60)
+        if (target_states.size() > 60)
           break; // too many makes everything slow.
 
-        if(rewrite_trace[j].first != hypothesis.from.rs)
+        if (rewrite_trace[j].first != hypothesis.from.rs)
           continue;
 
         // Check the number of iterations we see this thing repeating
         AlignmentGrid::Point start_for_grid(i,j);
         size_t iteration_count = grid.count_loop_iterations(start_for_grid, hypothesis.te, hypothesis.re);
         AlignmentGrid::Point current(i,j);
-        for(size_t i = 0; i < iteration_count; ++i) {
+        for (size_t i = 0; i < iteration_count; ++i) {
           assert(grid.in_range(current));
 
           auto new_target_states = grid.target_states(current);
@@ -400,10 +400,10 @@ void DualBuilder::find_hypothesis_states(const DualAutomata::Edge& hypothesis,
 }
 
 void DualBuilder::refine_and_prove_initial_invariant(
-    const vector<AlignmentGrid>& grids,
-    const DualAutomata::Edge& hypothesis, 
-    Invariant const * initial_invariant,
-    ConjunctionInvariant* invariant) {
+  const vector<AlignmentGrid>& grids,
+  const DualAutomata::Edge& hypothesis,
+  Invariant const * initial_invariant,
+  ConjunctionInvariant* invariant) {
 
   // TODO: simplify this with new functions
   auto target = target_abstraction_->get_cfg();
@@ -413,29 +413,29 @@ void DualBuilder::refine_and_prove_initial_invariant(
   std::vector<CfgPath> target_paths;
   std::vector<CfgPath> rewrite_paths;
 
-  for(auto grid : grids) {
+  for (auto grid : grids) {
     // starting from (0,0) to hypothesis.start
     CfgPath target_states;
     CfgPath rewrite_states;
 
-    for(size_t i = 0; i < hypothesis.from.ts; ++i) {
+    for (size_t i = 0; i < hypothesis.from.ts; ++i) {
       target_states.push_back(grid.target_trace(0)[i].first);
       cout << "Target state: " << grid.target_trace(0)[i].first << endl;
     }
-    for(size_t i = 0; i < hypothesis.from.rs; ++i) {
+    for (size_t i = 0; i < hypothesis.from.rs; ++i) {
       rewrite_states.push_back(grid.rewrite_trace(0)[i].first);
       cout << "Rewrite state: " << grid.target_trace(0)[i].first << endl;
     }
 
     bool need_to_add = true;
-    for(size_t i = 0; i < target_paths.size(); ++i) {
-      if(target_paths[i] == target_states ||
-         rewrite_paths[i] == rewrite_states) {
-        need_to_add = false; 
+    for (size_t i = 0; i < target_paths.size(); ++i) {
+      if (target_paths[i] == target_states ||
+          rewrite_paths[i] == rewrite_states) {
+        need_to_add = false;
       }
     }
 
-    if(need_to_add) {
+    if (need_to_add) {
       target_paths.push_back(target_states);
       rewrite_paths.push_back(rewrite_states);
     }
@@ -443,7 +443,7 @@ void DualBuilder::refine_and_prove_initial_invariant(
 
   // DEBUG: print the different paths we need to check
   cout << target_paths.size() << " PATHS FOR INITIAL PART OF PROOF" << endl;
-  for(size_t k = 0; k < target_paths.size(); ++k) {
+  for (size_t k = 0; k < target_paths.size(); ++k) {
     cout << target_paths[k] << " | " << rewrite_paths[k] << endl;
   }
 
@@ -451,33 +451,33 @@ void DualBuilder::refine_and_prove_initial_invariant(
   do {
     // remove failed invariants from previous iterations
     size_t incr = 0;
-    for(auto i : failed_invariants) {
+    for (auto i : failed_invariants) {
       invariant->remove(i - incr);
       incr++;
     }
     failed_invariants.clear();
 
-    for(size_t i = 0; i < invariant->size(); ++i) {
+    for (size_t i = 0; i < invariant->size(); ++i) {
       // for each path -- check if we can prove each of the remaining invariants
-      for(size_t j = 0; j < target_paths.size(); ++j) {
-        bool success = checker_.check(target, rewrite, 
-                         target_abstraction_->start_state(),
-                         rewrite_abstraction_->start_state(),
-                         target_paths[j], rewrite_paths[j],
-                         *initial_invariant, *(*invariant)[i]);
-        if(!success) {
+      for (size_t j = 0; j < target_paths.size(); ++j) {
+        bool success = checker_.check(target, rewrite,
+                                      target_abstraction_->start_state(),
+                                      rewrite_abstraction_->start_state(),
+                                      target_paths[j], rewrite_paths[j],
+                                      *initial_invariant, *(*invariant)[i]);
+        if (!success) {
           failed_invariants.push_back(i);
           break;
         }
       }
     }
-                  
-  } while(failed_invariants.size() > 0);
+
+  } while (failed_invariants.size() > 0);
 }
 
 void DualBuilder::refine_and_prove_inductive_hypothesis(
-    DualAutomata::Edge& hypothesis, 
-    ConjunctionInvariant* invariant) {
+  DualAutomata::Edge& hypothesis,
+  ConjunctionInvariant* invariant) {
 
   auto target = target_abstraction_->get_cfg();
   auto rewrite = rewrite_abstraction_->get_cfg();
@@ -486,40 +486,40 @@ void DualBuilder::refine_and_prove_inductive_hypothesis(
   do {
     // remove failed invariants from previous iterations
     size_t incr = 0;
-    for(auto i : failed_invariants) {
+    for (auto i : failed_invariants) {
       invariant->remove(i - incr);
       incr++;
     }
     failed_invariants.clear();
 
     // check if we can prove each of the remaining invariants
-    for(size_t i = 0; i < invariant->size(); ++i) {
-      bool success = checker_.check(target, rewrite, 
-                       hypothesis.from.ts, hypothesis.from.rs,
-                       hypothesis.te, hypothesis.re,
-                       *invariant, *(*invariant)[i]);
-      if(!success)
+    for (size_t i = 0; i < invariant->size(); ++i) {
+      bool success = checker_.check(target, rewrite,
+                                    hypothesis.from.ts, hypothesis.from.rs,
+                                    hypothesis.te, hypothesis.re,
+                                    *invariant, *(*invariant)[i]);
+      if (!success)
         failed_invariants.push_back(i);
     }
-                  
-  } while(failed_invariants.size() > 0);
+
+  } while (failed_invariants.size() > 0);
 }
 
 
 void DualBuilder::search_and_prove(const vector<AlignmentGrid>& grids, DualAutomata& dual, Invariant* assume) {
 
   vector<DualAutomata::Edge> all_hypotheses;
-  for(auto grid : grids) {
+  for (auto grid : grids) {
     auto hypotheses = grid.enumerate_hypotheses();
-    for(auto h : hypotheses) {
-      if(find(all_hypotheses.begin(), all_hypotheses.end(), h) == all_hypotheses.end())
+    for (auto h : hypotheses) {
+      if (find(all_hypotheses.begin(), all_hypotheses.end(), h) == all_hypotheses.end())
         all_hypotheses.push_back(h);
     }
   }
 
   /* TODO: fix this
-  sort(all_hypotheses.begin(), all_hypotheses.end(), 
-      [] (const DualAutomata::Edge& h1, 
+  sort(all_hypotheses.begin(), all_hypotheses.end(),
+      [] (const DualAutomata::Edge& h1,
           const DualAutomata::Edge& h2) -> bool {
         return h1.iteration_count() > h2.iteration_count();
       });*/
@@ -548,7 +548,7 @@ void DualBuilder::search_and_prove(const vector<AlignmentGrid>& grids, DualAutom
     /** Debug */
 
     cout << "============== PROVEN ==============" << endl;
-    for(size_t i = 0; i < invariant->size(); ++i) {
+    for (size_t i = 0; i < invariant->size(); ++i) {
       auto inv = (*invariant)[i];
       cout << *inv << endl;
     }
