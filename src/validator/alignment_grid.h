@@ -112,10 +112,10 @@ public:
 
   /** Count the number of iterations that a loop takes given a starting point
     in a grid and the states in the loop. */
-  size_t count_loop_iterations(Point& start, 
-      const std::vector<Abstraction::State>& target_states, 
-      const std::vector<Abstraction::State>& rewrite_states,
-      std::function<void (Point)> callback = [] (Point p) {});
+  size_t count_loop_iterations(Point& start,
+                               const std::vector<Abstraction::State>& target_states,
+                               const std::vector<Abstraction::State>& rewrite_states,
+  std::function<void (Point)> callback = [] (Point p) {});
 
   /** Do memmory states match at a particular point on the grid? */
   bool memory_states_match(Point p);

@@ -63,7 +63,8 @@ int main(int argc, char** argv) {
   sb.run(rewrite);
   const auto rewrite_result = *(sb.result_begin());
 
-  Console::msg() << diff_states(target_result, rewrite_result, show_unchanged, !dont_show_all_registers, target.live_outs() | target.def_ins());
+  bool x;
+  Console::msg() << diff_states(target_result, rewrite_result, show_unchanged, !dont_show_all_registers, target.live_outs() | target.def_ins(), x);
 
   return 0;
 }

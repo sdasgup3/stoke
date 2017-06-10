@@ -60,17 +60,17 @@ std::vector<AlignmentGrid::Point> AlignmentGrid::enumerate_hypothesis_points(Dua
 
   auto endpoint = edge.from;
 
-  for(size_t i = 0; i < max_target_entries_; ++i) {
-    for(size_t j = 0; j < max_rewrite_entries_; ++j) {
+  for (size_t i = 0; i < max_target_entries_; ++i) {
+    for (size_t j = 0; j < max_rewrite_entries_; ++j) {
 
-      if(points_with_hypothesis[i][j])
+      if (points_with_hypothesis[i][j])
         continue;
 
-      if(endpoint.ts == target_traces_[0][i].first &&
-         endpoint.rs == rewrite_traces_[0][j].first) {
+      if (endpoint.ts == target_traces_[0][i].first &&
+          endpoint.rs == rewrite_traces_[0][j].first) {
 
       }
-      
+
     }
   }
 
@@ -90,7 +90,7 @@ std::vector<DualAutomata::Edge> AlignmentGrid::enumerate_hypotheses() {
   for (size_t i = 0; i < max_target_entries_; ++i) {
     for (size_t j = 0; j < max_rewrite_entries_; ++j) {
 
-      if(points_with_hypothesis[i][j])
+      if (points_with_hypothesis[i][j])
         continue;
 
       Point start(i, j);
@@ -137,10 +137,10 @@ std::vector<DualAutomata::Edge> AlignmentGrid::enumerate_hypotheses() {
       // count loop iterations
       Point last_good = start;
       size_t iteration_count = count_loop_iterations(last_good, target_states, rewrite_states,
-        [&points_with_hypothesis] (Point p) {
-          points_with_hypothesis[p.target_entry][p.rewrite_entry] = true;
-        }     
-      );
+      [&points_with_hypothesis] (Point p) {
+        points_with_hypothesis[p.target_entry][p.rewrite_entry] = true;
+      }
+                                                    );
 
       // OK, now we can generate a result
       DualAutomata::State endpoint(target_start_state, rewrite_start_state);
@@ -155,11 +155,11 @@ std::vector<DualAutomata::Edge> AlignmentGrid::enumerate_hypotheses() {
 
 }
 
-size_t AlignmentGrid::count_loop_iterations(Point& p, 
-    const vector<Abstraction::State>& target_states, 
+size_t AlignmentGrid::count_loop_iterations(Point& p,
+    const vector<Abstraction::State>& target_states,
     const vector<Abstraction::State>& rewrite_states,
     function<void (Point p)> callback
-    ) {
+                                           ) {
 
   auto target_start_state = target_traces_[0][p.target_entry].first;
   auto rewrite_start_state = rewrite_traces_[0][p.rewrite_entry].first;

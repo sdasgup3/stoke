@@ -39,7 +39,7 @@
 #ifdef STOKE_DEBUG_CEG
 #define CEG_DEBUG(X) { X }
 #else
-#define CEG_DEBUG(X) { }
+#define CEG_DEBUG(X) { X }
 #endif
 
 #define MAX(X,Y) ( (X) > (Y) ? (X) : (Y) )
@@ -329,10 +329,10 @@ bool ObligationChecker::check(const Cfg& target, const Cfg& rewrite,
   // For debug info, count total number of LOC
   size_t target_loc = 0;
   size_t rewrite_loc = 0;
-  for(auto bb : P) {
+  for (auto bb : P) {
     target_loc += target.num_instrs(bb);
   }
-  for(auto bb : Q) {
+  for (auto bb : Q) {
     rewrite_loc += rewrite.num_instrs(bb);
   }
   cout << "LOCINFO " << dec << target_loc << " " << rewrite_loc << endl;

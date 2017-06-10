@@ -62,7 +62,8 @@ int main(int argc, char** argv) {
   if (result.code != ErrorCode::NORMAL) {
     Console::msg() << "Control returned abnormally with signal " << dec << (int)result.code << " [" << readable_error_code(result.code) << "]" << endl;
   } else {
-    Console::msg() << diff_states(initial, result, show_unchanged, !dont_show_all_registers, target.live_outs() | target.def_ins());
+    bool x;
+    Console::msg() << diff_states(initial, result, show_unchanged, !dont_show_all_registers, target.live_outs() | target.def_ins(), x);
   }
 
   return 0;
