@@ -121,6 +121,8 @@ int main(int argc, char** argv) {
     sb.run(rewrite);
     const auto rewrite_result = *(sb.result_begin());
     bool reg_diff = false;
+    cout << "Target result" << endl << target_result << endl;
+    cout << "Rewrite result" << endl << rewrite_result << endl;
     Console::msg() << diff_states(target_result, rewrite_result, show_unchanged, show_all_registers, target.live_outs() | target.def_ins(), reg_diff);
     if (!reg_diff) {
       Console::msg() << "Counterexample does not differ on registers." << endl;
