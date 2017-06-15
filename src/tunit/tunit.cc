@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "src/tunit/tunit.h"
+#include "src/cfg/cfg.h"
 
 #include <algorithm>
 #include <sstream>
@@ -398,6 +399,7 @@ istream& TUnit::read_text(istream& is) {
 
 ostream& TUnit::write_text(ostream& os) const {
   const auto fmt = os.flags();
+  auto cfg = Cfg(*this, x64asm::RegSet::empty(), x64asm::RegSet::empty());
 
   os << "  .text" << endl;
   os << "  .globl " << get_name() << endl;
@@ -460,6 +462,13 @@ ostream& TUnit::write_text(ostream& os) const {
       col << dec << line++;
     }
     col << endl;
+  }
+  col.filter().next();
+
+  // Print basic block number
+  col << "BB" << endl;
+  for (size_t i = 0, ie=code_.size(); i < ie; ++i) {
+    col << dec << cfg.get_loc(i).first << endl;
   }
   col.filter().next();
 
