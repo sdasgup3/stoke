@@ -115,7 +115,7 @@ int main(int argc, char** argv) {
   }
 
   SeedGadget seed;
-  TestcaseGadget tc(seed);
+  //TestcaseGadget tc(seed);
 
   FunctionsGadget aux_fxns;
   TargetGadget target(aux_fxns, false);
@@ -145,7 +145,7 @@ int main(int argc, char** argv) {
     mem = new TrivialMemory();
     state.memory = mem;
   } else {
-    state = SymState(tc);
+    //state = SymState(tc);
   }
 
   // test validator support

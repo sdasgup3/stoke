@@ -248,6 +248,8 @@ BIN=\
 	bin/stoke_tcgen \
 	bin/stoke_rename \
 	\
+	bin/stoke_support_list \
+	bin/stoke_check_circuit \
 	bin/stoke_debug_cfg \
 	bin/stoke_debug_formula \
 	bin/stoke_debug_cost \
