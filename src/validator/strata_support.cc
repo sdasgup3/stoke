@@ -4982,7 +4982,7 @@ std::map<x64asm::Type, int> operands_idx_ = {
 };
 
 x64asm::Operand get_next_operand(x64asm::Type t, uint8_t imm8_val) {
-  // std::cout << "Type: " << t << "\n"; 
+  // std::cout << "Type: " << t << "\n";
   /*
   if (t == x64asm::Type::M_8) {
     return x64asm::M8(x64asm::Constants::rax());
@@ -5083,14 +5083,14 @@ x64asm::Operand get_next_operand(x64asm::Type t, uint8_t imm8_val) {
     operands_idx_[x64asm::Type::M_256] += 1;
   };
 
-  if(t == x64asm::Type::R_8 
-      || t == x64asm::Type::R_16 
+  if (t == x64asm::Type::R_8
+      || t == x64asm::Type::R_16
       || t == x64asm::Type::R_32
       || t == x64asm::Type::R_64) {
-      incr_mem_counters();
+    incr_mem_counters();
   }
 
-  if(t == x64asm::Type::M_8
+  if (t == x64asm::Type::M_8
       || t == x64asm::Type::M_16
       || t == x64asm::Type::M_32
       || t == x64asm::Type::M_64
@@ -5143,7 +5143,7 @@ x64asm::Operand get_next_operand(x64asm::Type t, uint8_t imm8_val) {
     operands_idx_[x64asm::Type::XMM] += 1;
   }
 
-  // std::cout << "Type: " << operands_[t][operands_idx_[t] - 1] << "\n"; 
+  // std::cout << "Type: " << operands_[t][operands_idx_[t] - 1] << "\n";
   return operands_[t][operands_idx_[t] - 1];
 }
 
@@ -5217,8 +5217,8 @@ x64asm::Instruction strata_get_instruction(x64asm::Opcode opc, uint8_t imm8_val)
   else {
     for (size_t i = 0; i < instr.arity(); i++) {
       auto t = instr.type(i);
-      if (strata_is_supported_type(t) 
-          || strata_is_supported_type_reason(t) == StrataSupportedReason::MM 
+      if (strata_is_supported_type(t)
+          || strata_is_supported_type_reason(t) == StrataSupportedReason::MM
           || strata_is_supported_type_reason(t) == StrataSupportedReason::IMMEDIATE
           || strata_is_supported_type_reason(t) == StrataSupportedReason::MEMORY) {
         instr.set_operand(i, get_next_operand(t, imm8_val));

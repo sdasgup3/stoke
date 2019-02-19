@@ -113,7 +113,7 @@ int main(int argc, char** argv) {
   mem = new TrivialMemory();
   state.memory = mem;
 
-  std::string h_string(""); 
+  std::string h_string("");
 
   ComboHandler ch;
 
@@ -122,7 +122,7 @@ int main(int argc, char** argv) {
     if (it.get_opcode() == Opcode::LABEL_DEFN) continue;
     if (it.get_opcode() == Opcode::RET) break;
 
-    
+
     auto h = ch.get_handler(it, level) ;
 
     if (dynamic_cast<StrataHandler *>(h)) {
@@ -162,7 +162,7 @@ int main(int argc, char** argv) {
 
   }
 
-  
+
   std::cout << opc_arg.value() << ":"<< h_string << "\n";
 
   return 0;

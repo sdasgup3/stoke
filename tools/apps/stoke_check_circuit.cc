@@ -128,12 +128,12 @@ int main(int argc, char** argv) {
     // cout << a << "\n";
     // cout << b << "\n";
 
-    
+
     cout << "Simplified a" << "\n";
     cout << solver.getZ3Formula(SymSimplify().simplify(a)) << std::flush << "\n";
     cout << "Simplified b" << "\n";
     cout << solver.getZ3Formula(SymSimplify().simplify(b)) << std::flush << "\n";
-    
+
 
     //bool res = solver.is_sat({ !eq });
     bool res = solver.is_sat({ eq });

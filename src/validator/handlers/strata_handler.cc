@@ -816,37 +816,37 @@ void StrataHandler::build_circuit(const x64asm::Instruction& instr, SymState& fi
   // makes sense for instr in state
   // translate_circuit is instance of class SymVarRenamer
   SymVarRenamer translate_circuit(
-    [&instr, &strata_instr, &start, &opcode_str](SymBitVectorVar* var) -> SymBitVectorAbstract* {
-      auto name = var->name_;
-      if (name.size() <= opcode_str.size() || name.substr(name.size() - opcode_str.size()) != opcode_str) {
-        // no renaming for variable of unfamiliar names
-        return var;
-      }
-      auto real_name = name.substr(0, name.size() - opcode_str.size() - 1);
-      R64 gp = Constants::rax();
-      Ymm ymm = Constants::ymm0();
-      if (stringstream(real_name) >> gp) {
-        return translate_max_register(start, gp, strata_instr, instr);
-      } else if (stringstream(real_name) >> ymm) {
-        return translate_max_register(start, ymm, strata_instr, instr);
-      }
-      assert(false);
-      return NULL;
-    }, 
-    [&start, &opcode_str](SymBoolVar* var) -> SymBoolAbstract* {
-      auto name = var->name_;
-      if (name.size() <= opcode_str.size() || name.substr(name.size() - opcode_str.size()) != opcode_str) {
-        // no renaming for variable of unfamiliar names
-        return var;
-      }
-      auto real_name = name.substr(0, name.size() - opcode_str.size() - 1);
-      Eflags reg = Constants::eflags_cf();
-      if (stringstream(real_name) >> reg) {
-        return (SymBoolAbstract*)start[reg].ptr;
-      }
-      assert(false);
-      return NULL;
+  [&instr, &strata_instr, &start, &opcode_str](SymBitVectorVar* var) -> SymBitVectorAbstract* {
+    auto name = var->name_;
+    if (name.size() <= opcode_str.size() || name.substr(name.size() - opcode_str.size()) != opcode_str) {
+      // no renaming for variable of unfamiliar names
+      return var;
     }
+    auto real_name = name.substr(0, name.size() - opcode_str.size() - 1);
+    R64 gp = Constants::rax();
+    Ymm ymm = Constants::ymm0();
+    if (stringstream(real_name) >> gp) {
+      return translate_max_register(start, gp, strata_instr, instr);
+    } else if (stringstream(real_name) >> ymm) {
+      return translate_max_register(start, ymm, strata_instr, instr);
+    }
+    assert(false);
+    return NULL;
+  },
+  [&start, &opcode_str](SymBoolVar* var) -> SymBoolAbstract* {
+    auto name = var->name_;
+    if (name.size() <= opcode_str.size() || name.substr(name.size() - opcode_str.size()) != opcode_str) {
+      // no renaming for variable of unfamiliar names
+      return var;
+    }
+    auto real_name = name.substr(0, name.size() - opcode_str.size() - 1);
+    Eflags reg = Constants::eflags_cf();
+    if (stringstream(real_name) >> reg) {
+      return (SymBoolAbstract*)start[reg].ptr;
+    }
+    assert(false);
+    return NULL;
+  }
   );
 
   auto extend_or_shrink = [](auto& in, uint64_t size) {

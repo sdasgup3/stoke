@@ -222,7 +222,7 @@ int main(int argc, char** argv) {
     }
     if (use_smtlib_format_arg.value()) {
       //smtlib((c));
-      std::cout << solver.getZ3Formula(c); 
+      std::cout << solver.getZ3Formula(c);
     } else {
       pretty((c));
     }
