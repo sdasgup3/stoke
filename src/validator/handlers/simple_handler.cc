@@ -310,10 +310,11 @@ void SimpleHandler::add_all() {
     ss.set(eflags_zf, SymBool::tmp_var());
     ss.set(eflags_af, SymBool::tmp_var());
     ss.set(eflags_pf, SymBool::tmp_var());
+    ss.set(eflags_sf, SymBool::tmp_var());
 
     ss.set(eflags_of, of);
     ss.set(eflags_cf, of);
-    ss.set(eflags_sf, res[n-1]);
+    //ss.set(eflags_sf, res[n-1]);
   });
 
   add_opcode_str({"imulq", "imull", "imulw"},
@@ -333,10 +334,11 @@ void SimpleHandler::add_all() {
     ss.set(eflags_zf, SymBool::tmp_var());
     ss.set(eflags_af, SymBool::tmp_var());
     ss.set(eflags_pf, SymBool::tmp_var());
+    ss.set(eflags_sf, SymBool::tmp_var());
 
     ss.set(eflags_of, of);
     ss.set(eflags_cf, of);
-    ss.set(eflags_sf, res[n-1]);
+    //ss.set(eflags_sf, res[n-1]);
   });
 
   add_opcode_str({"mulq", "mull", "mulw", "mulb"},
@@ -423,8 +425,9 @@ void SimpleHandler::add_all() {
     ss.set(eflags_zf, SymBool::tmp_var());
     ss.set(eflags_af, SymBool::tmp_var());
     ss.set(eflags_pf, SymBool::tmp_var());
+    ss.set(eflags_sf, SymBool::tmp_var());
 
-    ss.set(eflags_sf, full_res[n-1]);
+    // ss.set(eflags_sf, full_res[n-1]);
     ss.set(eflags_of, of);
     ss.set(eflags_cf, of);
   });
@@ -732,8 +735,13 @@ void SimpleHandler::add_all() {
     ss.set_szp_flags(-a);
   });
 
-  add_opcode_str({"nop", "nopb", "nopw", "nopl", "nopq"},
+  //add_opcode_str({"nop", "nopb", "nopw", "nopl", "nopq"},
+  //[] (SymState& ss) {});
+  add_opcode_str({"nop", "nopb", "nopq"},
   [] (SymState& ss) {});
+
+  add_opcode_str({"nopw", "nopl"},
+  [] (Operand dst, SymBitVector a, SymState& ss) {});
 
   add_opcode_str({"notb", "notw", "notl", "notq"},
   [] (Operand dst, SymBitVector a, SymState& ss) {
@@ -1253,7 +1261,7 @@ void SimpleHandler::add_all() {
 
   add_opcode({VFNMSUB132PD_YMM_YMM_YMM},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
-    SymFunction f("vnfmsub132_double", 64, {64, 64, 64});
+    SymFunction f("vfnmsub132_double", 64, {64, 64, 64});
     ss.set(dst, vectorize(f, a, b, c), true);
   });
 
@@ -1309,7 +1317,7 @@ void SimpleHandler::add_all() {
 
   add_opcode_str({"vfnmsub132sd"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
-    SymFunction f("vnfmsub132_double", 64, {64, 64, 64});
+    SymFunction f("vfnmsub132_double", 64, {64, 64, 64});
     auto res = f(a[63][0], b[63][0], c[63][0]);
     ss.set(dst, SymBitVector::constant(128, 0) || ss[dst][127][64] || res, true);
   });

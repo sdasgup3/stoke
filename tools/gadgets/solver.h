@@ -21,6 +21,7 @@
 #endif
 #include "src/solver/z3solver.h"
 #include "tools/args/solver.inc"
+#include "src/ext/z3/src/api/c++/z3++.h"
 
 namespace stoke {
 
@@ -69,6 +70,17 @@ public:
   }
   virtual std::string get_error() {
     return solver_->get_error();
+  }
+
+  z3::expr getZ3Formula(const SymBool& bv)  {
+    auto z3Solver_ = dynamic_cast<Z3Solver *>(solver_);
+    assert(NULL != z3Solver_);
+    return z3Solver_->getZ3Formula(bv);
+  }
+  z3::expr getZ3Formula(const SymBitVector& bv)  {
+    auto z3Solver_ = dynamic_cast<Z3Solver *>(solver_);
+    assert(NULL != z3Solver_);
+    return z3Solver_->getZ3Formula(bv);
   }
 
 private:

@@ -353,6 +353,7 @@ void StrataHandler::init() {
 
   if (strata_path_ == "") {
     // initialize the strata path once
+    /*
     char buf[1000];
     if (readlink("/proc/self/exe", buf, 999) > 0) {
       strata_path_ = string(buf);
@@ -365,6 +366,8 @@ void StrataHandler::init() {
     // find bin directory
     strata_path_ = strata_path_.substr(0, strata_path_.rfind("/"));
     strata_path_ += "/strata-programs";
+    */
+    strata_path_ += "/home/sdasgup3/Github/master_stoke/bin/strata-programs/";
 
     if (strata_path_ == "") {
       return;
@@ -811,36 +814,40 @@ void StrataHandler::build_circuit(const x64asm::Instruction& instr, SymState& fi
 
   // take a formula for strata_instr in state tmp, and convert it to one that
   // makes sense for instr in state
-  SymVarRenamer translate_circuit([&instr, &strata_instr, &start, &opcode_str](SymBitVectorVar* var) -> SymBitVectorAbstract* {
-    auto name = var->name_;
-    if (name.size() <= opcode_str.size() || name.substr(name.size() - opcode_str.size()) != opcode_str) {
-      // no renaming for variable of unfamiliar names
-      return var;
+  // translate_circuit is instance of class SymVarRenamer
+  SymVarRenamer translate_circuit(
+    [&instr, &strata_instr, &start, &opcode_str](SymBitVectorVar* var) -> SymBitVectorAbstract* {
+      auto name = var->name_;
+      if (name.size() <= opcode_str.size() || name.substr(name.size() - opcode_str.size()) != opcode_str) {
+        // no renaming for variable of unfamiliar names
+        return var;
+      }
+      auto real_name = name.substr(0, name.size() - opcode_str.size() - 1);
+      R64 gp = Constants::rax();
+      Ymm ymm = Constants::ymm0();
+      if (stringstream(real_name) >> gp) {
+        return translate_max_register(start, gp, strata_instr, instr);
+      } else if (stringstream(real_name) >> ymm) {
+        return translate_max_register(start, ymm, strata_instr, instr);
+      }
+      assert(false);
+      return NULL;
+    }, 
+    [&start, &opcode_str](SymBoolVar* var) -> SymBoolAbstract* {
+      auto name = var->name_;
+      if (name.size() <= opcode_str.size() || name.substr(name.size() - opcode_str.size()) != opcode_str) {
+        // no renaming for variable of unfamiliar names
+        return var;
+      }
+      auto real_name = name.substr(0, name.size() - opcode_str.size() - 1);
+      Eflags reg = Constants::eflags_cf();
+      if (stringstream(real_name) >> reg) {
+        return (SymBoolAbstract*)start[reg].ptr;
+      }
+      assert(false);
+      return NULL;
     }
-    auto real_name = name.substr(0, name.size() - opcode_str.size() - 1);
-    R64 gp = Constants::rax();
-    Ymm ymm = Constants::ymm0();
-    if (stringstream(real_name) >> gp) {
-      return translate_max_register(start, gp, strata_instr, instr);
-    } else if (stringstream(real_name) >> ymm) {
-      return translate_max_register(start, ymm, strata_instr, instr);
-    }
-    assert(false);
-    return NULL;
-  }, [&start, &opcode_str](SymBoolVar* var) -> SymBoolAbstract* {
-    auto name = var->name_;
-    if (name.size() <= opcode_str.size() || name.substr(name.size() - opcode_str.size()) != opcode_str) {
-      // no renaming for variable of unfamiliar names
-      return var;
-    }
-    auto real_name = name.substr(0, name.size() - opcode_str.size() - 1);
-    Eflags reg = Constants::eflags_cf();
-    if (stringstream(real_name) >> reg) {
-      return (SymBoolAbstract*)start[reg].ptr;
-    }
-    assert(false);
-    return NULL;
-  });
+  );
 
   auto extend_or_shrink = [](auto& in, uint64_t size) {
     if (in.width() > size) {
@@ -900,6 +907,7 @@ void StrataHandler::build_circuit(const x64asm::Instruction& instr, SymState& fi
       final.set(iter_translated, val_renamed, false, true);
     }
   }
+
   for (auto iter = liveouts.sse_begin(); iter != liveouts.sse_end(); ++iter) {
     auto iter_translated = translate_sse_register(*iter, strata_instr, instr);
     // look up live out in tmp state (after translating operators as necessary)

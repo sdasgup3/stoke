@@ -30,7 +30,8 @@
 #include "tools/gadgets/target.h"
 #include "tools/gadgets/validator.h"
 #include "tools/gadgets/testcases.h"
-#include "tools/gadgets/seed.h"
+#include "src/validator/strata_support.h"
+// #include "tools/gadgets/seed.h"
 
 using namespace cpputil;
 using namespace std;
@@ -64,6 +65,23 @@ auto& use_smtlib_format_arg = FlagArg::create("smtlib_format")
 auto& no_simplify_arg = FlagArg::create("no_simplify")
                         .description("Don't simplify formulas before printing them.");
 
+cpputil::ValueArg<std::string>& strata_path_arg =
+  cpputil::ValueArg<std::string>::create("strata_path")
+  .usage("<path/to/dir>")
+  .description("The path to the directory with the strata circuits (a collection of .s files)")
+  .default_val("");
+
+auto& keep_imm_symbolic_arg =
+  FlagArg::create("keep_imm_symbolic")
+  .description("Should immediates be kept symbolic?");
+
+auto& opc_arg = ValueArg<string>::create("opc")
+                .description("The opcode to consider;  use opcode_number to indicate an imm8 argument");
+
+auto& keep_quiet_arg =
+  FlagArg::create("keep_quiet")
+  .description("No circuit output");
+
 template <typename T>
 string out_padded(T t, size_t min_length, char pad = ' ') {
   stringstream ss;
@@ -83,6 +101,18 @@ bool has_changed(T reg, SymBitVector& sym) {
     const SymBitVectorVar* const var = static_cast<const SymBitVectorVar* const>(sym.ptr);
     if (var->get_name() == ss.str()) return false;
   }
+
+  if (sym.type() == SymBitVector::Type::ITE) {
+    const SymBitVectorIte* const ite = static_cast<const SymBitVectorIte*
+                                       const>(sym.ptr) ;
+    const SymBoolAbstract* const cond = ite->cond_;
+    if (auto var = dynamic_cast<const SymBoolVar* const>(cond)) {
+      if (var->get_name() == ss.str()) {
+        return false;
+      }
+    }
+  }
+
   return true;
 }
 
@@ -106,27 +136,28 @@ int main(int argc, char** argv) {
   DebugHandler::install_sigsegv();
   DebugHandler::install_sigill();
 
-  if (!code_arg.has_been_provided() && !target_arg.has_been_provided()) {
-    Console::error() << "Either --code or --target required." << endl;
-  }
-
   if (code_arg.has_been_provided() && target_arg.has_been_provided()) {
     Console::error() << "At most one of --code and --target can be provided." << endl;
   }
 
-  SeedGadget seed;
-  //TestcaseGadget tc(seed);
+  // SeedGadget seed;
+  // TestcaseGadget tc(seed);
 
-  FunctionsGadget aux_fxns;
-  TargetGadget target(aux_fxns, false);
+  // FunctionsGadget aux_fxns;
+  // TargetGadget target(aux_fxns, false);
 
-  Code code = target.get_code();
+  // Code code = target.get_code();
+  Code code;
   if (code_arg.has_been_provided()) {
     code = code_arg.value();
   }
 
-  Console::msg() << "Target" << endl << endl;
-  Console::msg() << code << endl << endl;
+  if (opc_arg.has_been_provided()) {
+    auto instr = strata_get_instruction_from_string(opc_arg.value());
+    code.push_back(instr);
+  }
+
+  Console::msg() << "code: " << code << endl << endl;
   Console::msg() << "  maybe read:      " << code.maybe_read_set() << endl;
   Console::msg() << "  must read:       " << code.must_read_set() << endl;
   Console::msg() << "  maybe write:     " << code.maybe_write_set() << endl;
@@ -145,7 +176,12 @@ int main(int argc, char** argv) {
     mem = new TrivialMemory();
     state.memory = mem;
   } else {
-    //state = SymState(tc);
+    // state = SymState(tc);
+  }
+
+  // Useful only for immediates
+  if (keep_imm_symbolic_arg.value()) {
+    // state.set_keep_imm_symbolic();
   }
 
   // test validator support
@@ -178,13 +214,15 @@ int main(int argc, char** argv) {
   SymPrettyVisitor pretty(Console::msg());
   SymPrintVisitor smtlib(Console::msg());
 
-  auto print = [&smtlib, &pretty](const auto cc) {
+  SolverGadget solver;
+  auto print = [&solver, &smtlib, &pretty](const auto cc) {
     auto c = SymSimplify().simplify(cc);
     if (no_simplify_arg.value()) {
       c = cc;
     }
     if (use_smtlib_format_arg.value()) {
-      smtlib((c));
+      //smtlib((c));
+      std::cout << solver.getZ3Formula(c); 
     } else {
       pretty((c));
     }
@@ -200,7 +238,7 @@ int main(int argc, char** argv) {
               Constants::eflags_pf() +
               Constants::eflags_af();
   if (only_live_out_arg.value()) {
-    rs &= target.live_outs();
+    // rs &= target.live_outs();
   }
   for (auto gp_it = rs.gp_begin(); gp_it != rs.gp_end(); ++gp_it) {
     auto val = state.lookup(*gp_it);
@@ -223,7 +261,9 @@ int main(int argc, char** argv) {
   if (printed) cout << endl;
   printed = false;
   for (auto flag_it = rs.flags_begin(); flag_it != rs.flags_end(); ++flag_it) {
-    SymBool val = state[*flag_it];
+    // SymBool val = state[*flag_it];
+
+    auto val = state.lookup_bv_flags(*flag_it);
     if (!show_unchanged_arg.value() && !has_changed(flag_it, val)) continue;
     Console::msg() << out_padded(flag_it, 7) << ": ";
     print(val);

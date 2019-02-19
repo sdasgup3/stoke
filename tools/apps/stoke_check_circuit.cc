@@ -114,27 +114,50 @@ int main(int argc, char** argv) {
   }
 
   // check equivalence of two symbolic states for a given register
-  auto is_eq = [&solver](auto& reg, auto a, auto b, stringstream& explanation, auto& cs) {
-    SymBool eq = a == b;
-    //cout << SymSimplify().simplify(a) << "\n\n";
-    //cout << b << "\n\n";
+  auto is_eq = [&](auto& reg, auto a, auto b, stringstream& explanation, auto& cs) {
+    // SymBool eq = a == b;
+    // At times simplification is requires as the sym to z3 transformer might crash.
+    SymBool eq = SymSimplify().simplify(a) == SymSimplify().simplify(b);
+
+    // cout <<  "\n\n" << *reg << ":\n";
+    // SImplified
+    // cout << SymSimplify().simplify(a) << "\n";
+    // cout << SymSimplify().simplify(b) << "\n\n\n";
+
+    // Not simplified
+    // cout << a << "\n";
+    // cout << b << "\n";
+
+    
+    cout << "Simplified a" << "\n";
+    cout << solver.getZ3Formula(SymSimplify().simplify(a)) << std::flush << "\n";
+    cout << "Simplified b" << "\n";
+    cout << solver.getZ3Formula(SymSimplify().simplify(b)) << std::flush << "\n";
+    
+
+    //bool res = solver.is_sat({ !eq });
     bool res = solver.is_sat({ eq });
     if (solver.has_error()) {
       explanation << "  solver encountered error: " << solver.get_error() << endl;
       return false;
     }
+
+    //if (res) {
     if (!res) {
       cout << cs << "\n";
       cout << "\n\n";
 
       explanation << "  states do not agree for '" << (*reg) << "':" << endl;
       auto simplify = true;
+      /*
       if (!simplify) {
         explanation << "    validator: " << (a) << endl;
       } else {
         explanation << "    validator: " << SymSimplify().simplify(a) << endl;
       }
-      explanation << "    sandbox:   " << b << endl;
+      */
+      explanation << "    validator: " << solver.getZ3Formula(SymSimplify().simplify(a)) << endl;
+      explanation << "    sandbox:   " << solver.getZ3Formula(SymSimplify().simplify(b)) << endl;
       return false;
     } else {
       return true;
@@ -158,15 +181,23 @@ int main(int argc, char** argv) {
     rs = rs - instr.maybe_undef_set();
   }
   */
+
   // Just the live_outs
   auto rs = live_out_arg.value();
-
+  auto maybe_undef_rs = maybe_undef_out_arg.value();
 
   //Iterate on each testcase
   cout << "Check Equivalence\n";
   int i = 0;
+  RegSet *dummy = new RegSet();
+  int count = 0;
+
   for (const auto& cs : test_set) {
+    //std::cout << count++ << std::flush << "\n";
+
+
     // Create a formula with initial state as the test input
+
     SymState sym_validator(cs);
     ch.build_circuit(instr, sym_validator);
     if (ch.has_error()) {
@@ -192,6 +223,32 @@ int main(int argc, char** argv) {
     }
     if (!eq) {
       cout << ss.str() << endl;
+    }
+
+
+    // Test for maybe undefs
+    auto eq_undef = true;
+    stringstream ss_undef;
+    ss_undef << "[Undef Test] Sandbox and validator do not agree for '" << instr
+             << "' (opcode " << opcode << ")" << endl;
+    for (auto gp_it = maybe_undef_rs.gp_begin(); gp_it != maybe_undef_rs.gp_end(); ++gp_it) {
+      eq_undef = eq_undef && is_eq(gp_it, sym_validator.lookup(*gp_it),
+                                   sb_validator.lookup(*gp_it), ss_undef, cs);
+    }
+    for (auto sse_it = maybe_undef_rs.sse_begin(); sse_it != maybe_undef_rs.sse_end(); ++sse_it) {
+      eq_undef = eq_undef && is_eq(sse_it, sym_validator.lookup(*sse_it),
+                                   sb_validator.lookup(*sse_it), ss_undef, cs);
+    }
+    for (auto flag_it = maybe_undef_rs.flags_begin(); flag_it != maybe_undef_rs.flags_end(); ++flag_it) {
+      eq_undef = eq_undef && is_eq(flag_it, sym_validator[*flag_it],
+                                   sb_validator[*flag_it], ss_undef, cs);
+    }
+
+    if (!eq_undef) {
+      cout << ss_undef.str() << endl;
+    }
+
+    if (!eq or !eq_undef) {
       return 1;
     }
 
@@ -200,7 +257,10 @@ int main(int argc, char** argv) {
     if (i%1000 == 0 ) {
       cout << "Completed " <<i << "cases" <<  endl;
     }
+
   }
+
+  delete (dummy);
 
   return 0;
 }

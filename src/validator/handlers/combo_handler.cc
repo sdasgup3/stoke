@@ -56,13 +56,18 @@ Handler* ComboHandler::get_handler(const Instruction& instr, Handler::SupportLev
   /* Find the best handler for this instruction */
   Handler* best_handler = NULL;
   sl = Handler::SupportLevel::NONE;
+  
+  int handler_index = -1;
+  int counter = 0;
   for (auto h : handlers_) {
     auto cur_level = h->get_support(instr);
 
     if (cur_level != sl && ((cur_level | sl) == cur_level)) {
       best_handler = h;
+      handler_index = counter;
       sl = cur_level;
     }
+    counter++;
   }
 
   /* If we didn't find a handler, give an error */
@@ -72,6 +77,7 @@ Handler* ComboHandler::get_handler(const Instruction& instr, Handler::SupportLev
     error_ = ss.str();
   }
 
+  //cout << instr << ": Hindex" << handler_index << "(" << handlers_.size() << ")\n";
   return best_handler;
 
 }
