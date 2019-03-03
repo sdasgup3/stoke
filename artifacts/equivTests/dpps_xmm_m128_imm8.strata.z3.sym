@@ -1,0 +1,57 @@
+code: dpps $0x0, (%rbx), %xmm1
+
+  maybe read:      { %rbx %xmm1 }
+  must read:       { %rbx %xmm1 }
+  maybe write:     { %xmm1 }
+  must write:      { %xmm1 }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { sse4_1 }
+
+Formula:
+
+%ymm1  : (let ((a!1 (add_single (ite (= ((_ extract 4 4) Imm8) #b1)
+                            (mul_single ((_ extract 31 0) %ymm1)
+                                        ((_ extract 31 0) TMP_BV_128_0))
+                            #x00000000)
+                       (ite (= ((_ extract 5 5) Imm8) #b1)
+                            (mul_single ((_ extract 63 32) %ymm1)
+                                        ((_ extract 63 32) TMP_BV_128_0))
+                            #x00000000)))
+      (a!2 (add_single (ite (= ((_ extract 6 6) Imm8) #b1)
+                            (mul_single ((_ extract 95 64) %ymm1)
+                                        ((_ extract 95 64) TMP_BV_128_0))
+                            #x00000000)
+                       (ite (= ((_ extract 7 7) Imm8) #b1)
+                            (mul_single ((_ extract 127 96) %ymm1)
+                                        ((_ extract 127 96) TMP_BV_128_0))
+                            #x00000000))))
+(let ((a!3 (concat (ite (= ((_ extract 3 3) Imm8) #b1)
+                        (add_single a!1 a!2)
+                        #x00000000)
+                   (ite (= ((_ extract 2 2) Imm8) #b1)
+                        (add_single a!1 a!2)
+                        #x00000000))))
+(let ((a!4 (concat a!3
+                   (ite (= ((_ extract 1 1) Imm8) #b1)
+                        (add_single a!1 a!2)
+                        #x00000000))))
+(let ((a!5 (concat a!4
+                   (ite (= ((_ extract 0 0) Imm8) #b1)
+                        (add_single a!1 a!2)
+                        #x00000000))))
+  (concat ((_ extract 255 128) %ymm1) a!5)))))
+
+
+Information about memory reads:
+  Value TMP_BV_128_0
+ (16 bytes)
+    was read at address %rbx
+.
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : (or sigsegv (and (not sigfpe) (not sigbus) false))
+

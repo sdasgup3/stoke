@@ -1,0 +1,59 @@
+code: vinsertps $0x0, (%rbx), %xmm2, %xmm1
+
+  maybe read:      { %rbx %xmm1 %xmm2 }
+  must read:       { %rbx %xmm1 %xmm2 }
+  maybe write:     { %ymm1 %xmm2 }
+  must write:      { %ymm1 %xmm2 }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { avx }
+
+Formula:
+
+%ymm1  : (let ((a!1 (ite (= ((_ extract 5 4) Imm8) #b01)
+                ((_ extract 127 96) %ymm2)
+                (ite (= ((_ extract 5 4) Imm8) #b10)
+                     ((_ extract 127 96) %ymm2)
+                     TMP_BV_32_0)))
+      (a!3 (ite (= ((_ extract 5 4) Imm8) #b01)
+                ((_ extract 95 64) %ymm2)
+                (ite (= ((_ extract 5 4) Imm8) #b10)
+                     TMP_BV_32_0
+                     ((_ extract 95 64) %ymm2))))
+      (a!5 (ite (= ((_ extract 5 4) Imm8) #b00)
+                ((_ extract 63 32) %ymm2)
+                (ite (= ((_ extract 5 4) Imm8) #b01)
+                     TMP_BV_32_0
+                     ((_ extract 63 32) %ymm2))))
+      (a!7 (ite (= ((_ extract 0 0) Imm8) #b1)
+                #x00000000
+                (ite (= ((_ extract 5 4) Imm8) #b00)
+                     TMP_BV_32_0
+                     ((_ extract 31 0) %ymm2)))))
+(let ((a!2 (ite (= ((_ extract 3 3) Imm8) #b1)
+                #x00000000
+                (ite (= ((_ extract 5 4) Imm8) #b00)
+                     ((_ extract 127 96) %ymm2)
+                     a!1)))
+      (a!4 (ite (= ((_ extract 2 2) Imm8) #b1)
+                #x00000000
+                (ite (= ((_ extract 5 4) Imm8) #b00)
+                     ((_ extract 95 64) %ymm2)
+                     a!3))))
+(let ((a!6 (concat (concat a!2 a!4)
+                   (ite (= ((_ extract 1 1) Imm8) #b1) #x00000000 a!5))))
+  (concat #x00000000000000000000000000000000 (concat a!6 a!7)))))
+
+
+Information about memory reads:
+  Value TMP_BV_32_0
+ (4 bytes)
+    was read at address %rbx
+.
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : (or sigsegv (and (not sigfpe) (not sigbus) false))
+

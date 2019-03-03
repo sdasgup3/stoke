@@ -1,0 +1,31 @@
+code: vdppd $0x0, %xmm3, %xmm2, %xmm1
+
+  maybe read:      { %xmm2 %xmm3 }
+  must read:       { %xmm2 %xmm3 }
+  maybe write:     { %ymm1 }
+  must write:      { %ymm1 }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { avx }
+
+Formula:
+
+%ymm1  : (let ((a!1 (add_double (ite (= ((_ extract 4 4) Imm8) #b1)
+                            (mul_double ((_ extract 63 0) %ymm2)
+                                        ((_ extract 63 0) %ymm3))
+                            #x0000000000000000)
+                       (ite (= ((_ extract 5 5) Imm8) #b1)
+                            (mul_double ((_ extract 127 64) %ymm2)
+                                        ((_ extract 127 64) %ymm3))
+                            #x0000000000000000))))
+(let ((a!2 (concat (ite (= ((_ extract 1 1) Imm8) #b1) a!1 #x0000000000000000)
+                   (ite (= ((_ extract 0 0) Imm8) #b1) a!1 #x0000000000000000))))
+  (concat #x00000000000000000000000000000000 a!2)))
+
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : sigsegv
+

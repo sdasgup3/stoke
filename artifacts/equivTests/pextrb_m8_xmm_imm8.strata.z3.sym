@@ -1,0 +1,36 @@
+code: pextrb $0x0, %xmm1, (%rbx)
+
+  maybe read:      { %rbx %xmm1 }
+  must read:       { %rbx %xmm1 }
+  maybe write:     { }
+  must write:      { }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { sse4_1 }
+
+Formula:
+
+Information about memory reads:
+  Value TMP_BV_8_0
+ (1 bytes)
+    was read at address %rbx
+.
+
+Information about memory writes:
+  Address %rbx
+ was updated to
+    Value (let ((a!1 (bvlshr ((_ extract 127 0) %ymm1)
+                   (bvshl (concat #x0000000000000000000000000000000
+                                  ((_ extract 3 0) Imm8))
+                          #x00000000000000000000000000000003))))
+  ((_ extract 7 0) a!1))
+ (1 bytes).
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : (or sigsegv
+    (and (not sigfpe) (not sigbus) false)
+    (and (not sigfpe) (not sigbus) false))
+

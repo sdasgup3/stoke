@@ -1,0 +1,61 @@
+code: vpermilps $0x0, (%rbx), %xmm1
+
+  maybe read:      { %rbx }
+  must read:       { %rbx }
+  maybe write:     { %ymm1 }
+  must write:      { %ymm1 }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { avx }
+
+Formula:
+
+%ymm1  : (let ((a!1 (ite (= ((_ extract 7 6) Imm8) #b01)
+                ((_ extract 63 32) TMP_BV_128_0)
+                (ite (= ((_ extract 7 6) Imm8) #b10)
+                     ((_ extract 95 64) TMP_BV_128_0)
+                     ((_ extract 127 96) TMP_BV_128_0))))
+      (a!2 (ite (= ((_ extract 5 4) Imm8) #b01)
+                ((_ extract 63 32) TMP_BV_128_0)
+                (ite (= ((_ extract 5 4) Imm8) #b10)
+                     ((_ extract 95 64) TMP_BV_128_0)
+                     ((_ extract 127 96) TMP_BV_128_0))))
+      (a!3 (ite (= ((_ extract 3 2) Imm8) #b01)
+                ((_ extract 63 32) TMP_BV_128_0)
+                (ite (= ((_ extract 3 2) Imm8) #b10)
+                     ((_ extract 95 64) TMP_BV_128_0)
+                     ((_ extract 127 96) TMP_BV_128_0))))
+      (a!4 (ite (= ((_ extract 1 0) Imm8) #b01)
+                ((_ extract 63 32) TMP_BV_128_0)
+                (ite (= ((_ extract 1 0) Imm8) #b10)
+                     ((_ extract 95 64) TMP_BV_128_0)
+                     ((_ extract 127 96) TMP_BV_128_0)))))
+(let ((a!5 (concat (ite (= ((_ extract 3 2) Imm8) #b00)
+                        ((_ extract 31 0) TMP_BV_128_0)
+                        a!3)
+                   (ite (= ((_ extract 1 0) Imm8) #b00)
+                        ((_ extract 31 0) TMP_BV_128_0)
+                        a!4))))
+(let ((a!6 (concat (ite (= ((_ extract 5 4) Imm8) #b00)
+                        ((_ extract 31 0) TMP_BV_128_0)
+                        a!2)
+                   a!5)))
+(let ((a!7 (concat (ite (= ((_ extract 7 6) Imm8) #b00)
+                        ((_ extract 31 0) TMP_BV_128_0)
+                        a!1)
+                   a!6)))
+  (concat #x00000000000000000000000000000000 a!7)))))
+
+
+Information about memory reads:
+  Value TMP_BV_128_0
+ (16 bytes)
+    was read at address %rbx
+.
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : (or sigsegv (and (not sigfpe) (not sigbus) false))
+

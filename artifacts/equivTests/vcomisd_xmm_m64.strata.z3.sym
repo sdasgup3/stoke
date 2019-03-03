@@ -1,0 +1,41 @@
+code: vcomisd (%rbx), %xmm1
+
+  maybe read:      { %rbx %xmm1 }
+  must read:       { %rbx %xmm1 }
+  maybe write:     { %cf %pf %af %zf %sf %of }
+  must write:      { %cf %pf %af %zf %sf %of }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { avx }
+
+Formula:
+
+%cf    : (let ((a!1 (or (= (comisd ((_ extract 63 0) %ymm1) TMP_BV_64_0) #b00)
+               (= (comisd ((_ extract 63 0) %ymm1) TMP_BV_64_0) #b10))))
+  (ite a!1 #b1 #b0))
+
+%pf    : (ite (= (comisd ((_ extract 63 0) %ymm1) TMP_BV_64_0) #b00) #b1 #b0)
+
+%af    : #b0
+
+%zf    : (let ((a!1 (or (= (comisd ((_ extract 63 0) %ymm1) TMP_BV_64_0) #b00)
+               (= (comisd ((_ extract 63 0) %ymm1) TMP_BV_64_0) #b11))))
+  (ite a!1 #b1 #b0))
+
+%sf    : #b0
+
+%of    : #b0
+
+
+Information about memory reads:
+  Value TMP_BV_64_0
+ (8 bytes)
+    was read at address %rbx
+.
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : (or sigsegv (and (not sigfpe) (not sigbus) false))
+

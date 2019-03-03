@@ -1,0 +1,28 @@
+code: vpsrad $0x0, %xmm2, %xmm1
+
+  maybe read:      { %xmm2 }
+  must read:       { %xmm2 }
+  maybe write:     { %ymm1 }
+  must write:      { %ymm1 }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { avx }
+
+Formula:
+
+%ymm1  : (let ((a!1 (ite (bvugt (concat #x00000000000000 Imm8) #x000000000000001f)
+                #x00000020
+                (concat #x000000 Imm8))))
+(let ((a!2 (concat (bvashr ((_ extract 95 64) %ymm2) a!1)
+                   (concat (bvashr ((_ extract 63 32) %ymm2) a!1)
+                           (bvashr ((_ extract 31 0) %ymm2) a!1)))))
+  (concat #x00000000000000000000000000000000
+          (concat (bvashr ((_ extract 127 96) %ymm2) a!1) a!2))))
+
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : sigsegv
+

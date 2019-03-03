@@ -1,0 +1,81 @@
+code: vdpps $0x0, %ymm3, %ymm2, %ymm1
+
+  maybe read:      { %ymm2 %ymm3 }
+  must read:       { %ymm2 %ymm3 }
+  maybe write:     { %ymm1 }
+  must write:      { %ymm1 }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { avx }
+
+Formula:
+
+%ymm1  : (let ((a!1 (add_single (ite (= ((_ extract 4 4) Imm8) #b1)
+                            (mul_single ((_ extract 159 128) %ymm2)
+                                        ((_ extract 159 128) %ymm3))
+                            #x00000000)
+                       (ite (= ((_ extract 5 5) Imm8) #b1)
+                            (mul_single ((_ extract 191 160) %ymm2)
+                                        ((_ extract 191 160) %ymm3))
+                            #x00000000)))
+      (a!2 (add_single (ite (= ((_ extract 6 6) Imm8) #b1)
+                            (mul_single ((_ extract 223 192) %ymm2)
+                                        ((_ extract 223 192) %ymm3))
+                            #x00000000)
+                       (ite (= ((_ extract 7 7) Imm8) #b1)
+                            (mul_single ((_ extract 255 224) %ymm2)
+                                        ((_ extract 255 224) %ymm3))
+                            #x00000000)))
+      (a!6 (add_single (ite (= ((_ extract 4 4) Imm8) #b1)
+                            (mul_single ((_ extract 31 0) %ymm2)
+                                        ((_ extract 31 0) %ymm3))
+                            #x00000000)
+                       (ite (= ((_ extract 5 5) Imm8) #b1)
+                            (mul_single ((_ extract 63 32) %ymm2)
+                                        ((_ extract 63 32) %ymm3))
+                            #x00000000)))
+      (a!7 (add_single (ite (= ((_ extract 6 6) Imm8) #b1)
+                            (mul_single ((_ extract 95 64) %ymm2)
+                                        ((_ extract 95 64) %ymm3))
+                            #x00000000)
+                       (ite (= ((_ extract 7 7) Imm8) #b1)
+                            (mul_single ((_ extract 127 96) %ymm2)
+                                        ((_ extract 127 96) %ymm3))
+                            #x00000000))))
+(let ((a!3 (concat (ite (= ((_ extract 3 3) Imm8) #b1)
+                        (add_single a!1 a!2)
+                        #x00000000)
+                   (ite (= ((_ extract 2 2) Imm8) #b1)
+                        (add_single a!1 a!2)
+                        #x00000000)))
+      (a!8 (concat (ite (= ((_ extract 3 3) Imm8) #b1)
+                        (add_single a!6 a!7)
+                        #x00000000)
+                   (ite (= ((_ extract 2 2) Imm8) #b1)
+                        (add_single a!6 a!7)
+                        #x00000000))))
+(let ((a!4 (concat a!3
+                   (ite (= ((_ extract 1 1) Imm8) #b1)
+                        (add_single a!1 a!2)
+                        #x00000000)))
+      (a!9 (concat a!8
+                   (ite (= ((_ extract 1 1) Imm8) #b1)
+                        (add_single a!6 a!7)
+                        #x00000000))))
+(let ((a!5 (concat a!4
+                   (ite (= ((_ extract 0 0) Imm8) #b1)
+                        (add_single a!1 a!2)
+                        #x00000000)))
+      (a!10 (concat a!9
+                    (ite (= ((_ extract 0 0) Imm8) #b1)
+                         (add_single a!6 a!7)
+                         #x00000000))))
+  (concat a!5 a!10)))))
+
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : sigsegv
+

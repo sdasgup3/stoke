@@ -30,13 +30,17 @@ class SymState {
 public:
 
   /** Returns a new symbolic CPU state filled with 0s*/
-  SymState() : gp(16, 64), sse(16, 256), memory(NULL), delete_memory_(false) { }
+  SymState() : gp(16, 64), sse(16, 256), memory(NULL), delete_memory_(false) {
+    keep_imm_symbolic = false;
+  }
   /** Builds a symbolic CPU state from a concrete one */
   SymState(const CpuState& cs) : gp(16, 64), sse(16, 256) {
+    keep_imm_symbolic = false;
     build_from_cpustate(cs);
   }
   /** Builds a symbolic CPU state with variable name suffix */
   SymState(const std::string& suffix, bool no_suffix = false) : gp(16, 64), sse(16, 256), memory(NULL), delete_memory_(false) {
+    keep_imm_symbolic = false;
     build_with_suffix(suffix, no_suffix);
   }
 
@@ -45,6 +49,35 @@ public:
       delete memory;
   }
 
+  void clearSymRegs()  {
+    return;
+    auto gpcontents = gp.getcontents();
+    for (auto& elem: gpcontents) {
+      if (elem.ptr) {
+        delete elem.ptr;
+      }
+    }
+    auto ssecontents = sse.getcontents();
+    for (auto& elem: ssecontents) {
+      if (elem.ptr) {
+        delete elem.ptr;
+      }
+    }
+
+    for (auto& elem: rf) {
+      if (elem.ptr) {
+        delete elem.ptr;
+      }
+    }
+
+    delete sigbus.ptr;
+    delete sigfpe.ptr;
+    delete sigsegv.ptr;
+    delete rip.ptr;
+  }
+
+  /** Flag to print ims as symbolic values */
+  bool keep_imm_symbolic;
   /** Symbolic general purpose registers */
   SymRegs gp;
   /** Symbolic SSE registers */
@@ -53,6 +86,8 @@ public:
   SymMemory* memory;
   /** Symbolic rflags: CF, PF, AF, ZF, SF, OF */
   std::array<SymBool, 6> rf;
+  std::array<SymBitVector, 6> bv_rf;
+
   /** Has a #NP, #SS or #AC exception occurred? (These trigger SIGBUG on linux)*/
   SymBool sigbus;
   /** Has a #DE, #MF or #XM exception occurred? (These trigger SIGFPE on linux) */
@@ -80,6 +115,8 @@ public:
   SymBitVector operator[](const x64asm::Operand o);
   /** Lookup the symbolic representation of a particular flag */
   SymBool operator[](const x64asm::Eflags rf) const;
+
+  SymBitVector lookup_bv_flags(const x64asm::Eflags rf) const;
   /** Lookup the symbolic representation of a generic operand.
     * Will not trigger symbolic segfaults.  Cannot be used to do memory. */
   SymBitVector lookup(const x64asm::Operand o) const;
@@ -142,6 +179,11 @@ public:
 
   /** Replace symbolic values with variables and add constraints.*/
   void simplify();
+
+  /** Avoid concretizing the immediate operand and keep it symbolic */
+  void set_keep_imm_symbolic() {
+    keep_imm_symbolic = true;
+  }
 
   std::ostream& write_text(std::ostream& os) const;
 

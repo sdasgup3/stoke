@@ -1,0 +1,25 @@
+code: pextrw $0x1, %xmm1, %ebx
+
+  maybe read:      { %xmm1 }
+  must read:       { %xmm1 }
+  maybe write:     { %rbx }
+  must write:      { %rbx }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { sse2 }
+
+Formula:
+
+%rbx   : (let ((a!1 (bvlshr ((_ extract 127 0) %ymm1)
+                   (bvshl (concat #b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+                                  ((_ extract 2 0) Imm8))
+                          #x00000000000000000000000000000004))))
+  (concat #x00000000 (concat #x0000 ((_ extract 15 0) a!1))))
+
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : sigsegv
+

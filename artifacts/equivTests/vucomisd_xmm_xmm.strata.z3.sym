@@ -1,0 +1,41 @@
+code: vucomisd %xmm2, %xmm1
+
+  maybe read:      { %xmm1 %xmm2 }
+  must read:       { %xmm1 %xmm2 }
+  maybe write:     { %cf %pf %af %zf %sf %of }
+  must write:      { %cf %pf %af %zf %sf %of }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { avx }
+
+Formula:
+
+%cf    : (let ((a!1 (or (= (comisd ((_ extract 63 0) %ymm1) ((_ extract 63 0) %ymm2))
+                  #b00)
+               (= (comisd ((_ extract 63 0) %ymm1) ((_ extract 63 0) %ymm2))
+                  #b10))))
+  (ite a!1 #b1 #b0))
+
+%pf    : (ite (= (comisd ((_ extract 63 0) %ymm1) ((_ extract 63 0) %ymm2)) #b00)
+     #b1
+     #b0)
+
+%af    : #b0
+
+%zf    : (let ((a!1 (or (= (comisd ((_ extract 63 0) %ymm1) ((_ extract 63 0) %ymm2))
+                  #b00)
+               (= (comisd ((_ extract 63 0) %ymm1) ((_ extract 63 0) %ymm2))
+                  #b11))))
+  (ite a!1 #b1 #b0))
+
+%sf    : #b0
+
+%of    : #b0
+
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : sigsegv
+

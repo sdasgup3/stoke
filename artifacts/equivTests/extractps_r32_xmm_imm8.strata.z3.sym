@@ -1,0 +1,25 @@
+code: extractps $0x0, %xmm1, %ebx
+
+  maybe read:      { %xmm1 }
+  must read:       { %xmm1 }
+  maybe write:     { %rbx }
+  must write:      { %rbx }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { sse4_1 }
+
+Formula:
+
+%rbx   : (let ((a!1 (bvlshr ((_ extract 127 0) %ymm1)
+                   (bvshl (concat #b000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+                                  ((_ extract 1 0) Imm8))
+                          #x00000000000000000000000000000005))))
+  (concat #x00000000 ((_ extract 31 0) a!1)))
+
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : sigsegv
+

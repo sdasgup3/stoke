@@ -1,0 +1,24 @@
+code: vextracti128 $0x0, %ymm1, %xmm1
+
+  maybe read:      { %ymm1 }
+  must read:       { %ymm1 }
+  maybe write:     { %ymm1 }
+  must write:      { %ymm1 }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { avx2 }
+
+Formula:
+
+%ymm1  : (concat #x00000000000000000000000000000000
+        (ite (= ((_ extract 0 0) Imm8) #b0)
+             ((_ extract 127 0) %ymm1)
+             ((_ extract 255 128) %ymm1)))
+
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : sigsegv
+
