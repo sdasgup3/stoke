@@ -1,0 +1,26 @@
+code: rorxl $0x0, %ecx, %ebx
+
+  maybe read:      { %ecx }
+  must read:       { %ecx }
+  maybe write:     { %rbx }
+  must write:      { %rbx }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { bmi2 }
+
+Formula:
+
+%rbx   : (let ((a!1 (bvshl ((_ extract 31 0) %rcx)
+                  (bvsub #x00000020 (bvand (concat #x000000 Imm8) #x0000001f)))))
+(let ((a!2 (bvor (bvlshr ((_ extract 31 0) %rcx)
+                         (bvand (concat #x000000 Imm8) #x0000001f))
+                 a!1)))
+  (concat #x00000000 a!2)))
+
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : sigsegv
+

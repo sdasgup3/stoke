@@ -1,0 +1,25 @@
+code: vpextrb $0x0, %xmm1, %rbx
+
+  maybe read:      { %xmm1 }
+  must read:       { %xmm1 }
+  maybe write:     { %rbx }
+  must write:      { %rbx }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { avx }
+
+Formula:
+
+%rbx   : (let ((a!1 (bvlshr ((_ extract 127 0) %ymm1)
+                   (bvshl (concat #x0000000000000000000000000000000
+                                  ((_ extract 3 0) Imm8))
+                          #x00000000000000000000000000000003))))
+  (concat #x00000000000000 ((_ extract 7 0) a!1)))
+
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : sigsegv
+

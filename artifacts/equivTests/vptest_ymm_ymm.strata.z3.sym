@@ -1,0 +1,37 @@
+code: vptest %ymm2, %ymm1
+
+  maybe read:      { %ymm1 %ymm2 }
+  must read:       { %ymm1 %ymm2 }
+  maybe write:     { %cf %pf %af %zf %sf %of }
+  must write:      { %cf %pf %af %zf %sf %of }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { avx }
+
+Formula:
+
+%cf    : (ite (= (bvand (bvnot %ymm1) %ymm2)
+        #x0000000000000000000000000000000000000000000000000000000000000000)
+     #b1
+     #b0)
+
+%pf    : #b0
+
+%af    : #b0
+
+%zf    : (ite (= (bvand %ymm1 %ymm2)
+        #x0000000000000000000000000000000000000000000000000000000000000000)
+     #b1
+     #b0)
+
+%sf    : #b0
+
+%of    : #b0
+
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : sigsegv
+

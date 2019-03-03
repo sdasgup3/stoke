@@ -39,9 +39,11 @@ void ComboHandler::build_circuit(const Instruction& instr, SymState& ss) {
 
   SupportLevel level;
   Handler* h = get_handler(instr, level);
+  // std::string name = get_handler_name(instr);
   if (level == Handler::NONE) {
     error_ = "Instruction not supported";
   } else {
+    // std::cout << name << "\n";
     assert(h != 0);
     h->build_circuit(instr, ss);
     if (h->has_error()) {

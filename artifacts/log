@@ -1,0 +1,27 @@
+cvtsd2si:cvtsd2si:cvtsd2si_r32_m64
+cvtsd2si:cvtsd2si:cvtsd2si_r32_xmm
+cvtss2si:cvtss2si:cvtss2si_r32_m32
+cvtss2si:cvtss2si:cvtss2si_r32_xmm
+cvttsd2si:cvttsd2si:cvttsd2si_r32_m64
+cvttsd2si:cvttsd2si:cvttsd2si_r32_xmm
+cvttss2si:cvttss2si:cvttss2si_r32_m32
+cvttss2si:cvttss2si:cvttss2si_r32_xmm
+vcvtdq2pd:vcvtdq2pd:vcvtdq2pd_ymm_xmm
+vcvtpd2dq:vcvtpd2dq:vcvtpd2dq_xmm_m128
+vcvtpd2dq:vcvtpd2dq:vcvtpd2dq_xmm_xmm
+vcvtsd2si:vcvtsd2si:vcvtsd2si_r32_m64
+vcvtsd2si:vcvtsd2si:vcvtsd2si_r32_xmm
+vcvtss2si:vcvtss2si:vcvtss2si_r32_m32
+vcvtss2si:vcvtss2si:vcvtss2si_r32_xmm
+vcvttsd2si:vcvttsd2si:vcvttsd2si_r32_m64
+vcvttsd2si:vcvttsd2si:vcvttsd2si_r32_xmm
+vcvttss2si:vcvttss2si:vcvttss2si_r32_m32
+vcvttss2si:vcvttss2si:vcvttss2si_r32_xmm
+vpcmpgtq:vpcmpgtq:vpcmpgtq_ymm_ymm_m256
+vpcmpgtq:vpcmpgtq:vpcmpgtq_ymm_ymm_ymm
+=====================
+A: artifacts/supportlist.txt: 2474
+B: /home/sdasgup3/Github/strata/stoke/log: 2902
+A - B: 63
+B - A: 491
+A & B: 2411

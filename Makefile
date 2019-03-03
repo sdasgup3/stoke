@@ -253,6 +253,8 @@ BIN=\
 	bin/stoke_debug_circuit \
 	bin/stoke_debug_cfg \
 	bin/stoke_debug_formula \
+	bin/stoke_debug_circuit \
+	bin/stoke_which_handler \
 	bin/stoke_debug_cost \
 	bin/stoke_debug_diff \
 	bin/stoke_debug_effect \

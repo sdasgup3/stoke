@@ -1,0 +1,30 @@
+code: vpinsrq $0x0, %rbx, %xmm2, %xmm1
+
+  maybe read:      { %rbx %xmm2 }
+  must read:       { %rbx %xmm2 }
+  maybe write:     { %ymm1 }
+  must write:      { %ymm1 }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { avx }
+
+Formula:
+
+%ymm1  : (let ((a!1 (bvshl #x0000000000000000ffffffffffffffff
+                  (bvshl (concat #b0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+                                 ((_ extract 0 0) Imm8))
+                         #x00000000000000000000000000000006)))
+      (a!2 (bvshl (concat #x0000000000000000 %rbx)
+                  (bvshl (concat #b0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+                                 ((_ extract 0 0) Imm8))
+                         #x00000000000000000000000000000006))))
+  (concat #x00000000000000000000000000000000
+          (bvor (bvand ((_ extract 127 0) %ymm2) (bvnot a!1)) (bvand a!2 a!1))))
+
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : sigsegv
+

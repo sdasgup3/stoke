@@ -1,0 +1,35 @@
+code: blendps $0x0, %xmm2, %xmm1
+
+  maybe read:      { %xmm1 %xmm2 }
+  must read:       { %xmm1 %xmm2 }
+  maybe write:     { %xmm1 }
+  must write:      { %xmm1 }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { sse4_1 }
+
+Formula:
+
+%ymm1  : (let ((a!1 (concat (ite (= ((_ extract 1 1) Imm8) #b0)
+                        ((_ extract 63 32) %ymm1)
+                        ((_ extract 63 32) %ymm2))
+                   (ite (= ((_ extract 0 0) Imm8) #b0)
+                        ((_ extract 31 0) %ymm1)
+                        ((_ extract 31 0) %ymm2)))))
+(let ((a!2 (concat (ite (= ((_ extract 2 2) Imm8) #b0)
+                        ((_ extract 95 64) %ymm1)
+                        ((_ extract 95 64) %ymm2))
+                   a!1)))
+(let ((a!3 (concat (ite (= ((_ extract 3 3) Imm8) #b0)
+                        ((_ extract 127 96) %ymm1)
+                        ((_ extract 127 96) %ymm2))
+                   a!2)))
+  (concat ((_ extract 255 128) %ymm1) a!3))))
+
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : sigsegv
+

@@ -1,0 +1,27 @@
+code: cmpss $0x0, %xmm2, %xmm1
+
+  maybe read:      { %xmm1 %xmm2 }
+  must read:       { %xmm1 %xmm2 }
+  maybe write:     { %xmm1 }
+  must write:      { %xmm1 }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { sse }
+
+Formula:
+
+%ymm1  : (let ((a!1 (ite (= (cmp_single_pred ((_ extract 31 0) %ymm1)
+                                    ((_ extract 31 0) %ymm2)
+                                    Imm8)
+                   #b1)
+                #xffffffff
+                #x00000000)))
+  (concat ((_ extract 255 32) %ymm1) a!1))
+
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : sigsegv
+

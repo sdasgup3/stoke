@@ -1,0 +1,26 @@
+code: rorxq $0x0, %rcx, %rbx
+
+  maybe read:      { %rcx }
+  must read:       { %rcx }
+  maybe write:     { %rbx }
+  must write:      { %rbx }
+  maybe undef:     { }
+  must undef:      { }
+  required flags:  { bmi2 }
+
+Formula:
+
+%rbx   : (let ((a!1 (bvshl %rcx
+                  (bvsub #x0000000000000040
+                         (bvand (concat #x00000000000000 Imm8)
+                                #x000000000000003f)))))
+  (bvor (bvlshr %rcx (bvand (concat #x00000000000000 Imm8) #x000000000000003f))
+        a!1))
+
+
+sigfpe  : sigfpe
+
+sigbus  : sigbus
+
+sigsegv : sigsegv
+
