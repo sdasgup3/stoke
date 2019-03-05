@@ -241,6 +241,7 @@ int main(int argc, char** argv) {
       auto mem_op = instr.get_operand<M8>(instr.mem_index());
       eq = eq && is_eq(dummy, sym_validator.lookup(mem_op), sb_validator.lookup(mem_op), ss, cs);
     }
+
     if (!eq) {
       cout << ss.str() << endl;
     }
