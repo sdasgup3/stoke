@@ -1,0 +1,25 @@
+The followings do not pass the sat checks due to the presense of UIFs
+comisd_xmm_xmm
+comiss_xmm_xmm
+ucomisd_xmm_xmm
+ucomiss_xmm_xmm
+vaddsubpd_ymm_ymm_ymm
+vaddsubps_ymm_ymm_ymm
+vcomisd_xmm_xmm
+vcomiss_xmm_xmm
+vcvtph2ps_xmm_xmm
+vcvtph2ps_ymm_xmm
+vfmaddsub132pd_ymm_ymm_ymm
+vfmaddsub132ps_ymm_ymm_ymm
+vfmaddsub213pd_ymm_ymm_ymm
+vfmaddsub213ps_ymm_ymm_ymm
+vfmaddsub231pd_ymm_ymm_ymm
+vfmaddsub231ps_ymm_ymm_ymm
+vfmsubadd132pd_ymm_ymm_ymm
+vfmsubadd132ps_ymm_ymm_ymm
+vfmsubadd213pd_ymm_ymm_ymm
+vfmsubadd213ps_ymm_ymm_ymm
+vfmsubadd231pd_ymm_ymm_ymm
+vfmsubadd231ps_ymm_ymm_ymm
+vucomisd_xmm_xmm
+vucomiss_xmm_xmm
