@@ -253,6 +253,9 @@ BIN=\
 	bin/stoke_debug_formula \
 	bin/stoke_debug_circuit \
 	bin/stoke_which_handler \
+        bin/stoke_check_circuit \
+        bin/stoke_check_circuit_with_unsat_check \
+        bin/stoke_check_circuit_with_sat_check \
 	bin/stoke_debug_cost \
 	bin/stoke_debug_diff \
 	bin/stoke_debug_effect \
