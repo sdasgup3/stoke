@@ -42,7 +42,7 @@ ifeq ($(BUILD_TYPE), release)
 	OPT=-O3 -DNDEBUG $(MISC_OPTIONS)
 endif
 ifeq ($(BUILD_TYPE), debug)
-	OPT=-O2 -g $(MISC_OPTIONS)
+	OPT=-O0 -g $(MISC_OPTIONS)
 endif
 ifeq ($(BUILD_TYPE), profile)
 	OPT=-O3 -DNDEBUG -pg $(MISC_OPTIONS)
@@ -447,6 +447,7 @@ TEST_OBJ=\
          tests/fixture.o \
          \
          src/ext/gtest-1.7.0/libgtest.a \
+         /usr/local/lib/x86_64-linux-gnu/libjsoncpp.a \
          src/ext/gtest-1.7.0/libgtest_main.a
 
 TEST_LIBS=-ljsoncpp
