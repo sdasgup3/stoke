@@ -1,0 +1,60 @@
+cmpxchgb_r8_r8
+cmpxchgb_r8_rh
+
+cmpxchgb_rh_r8
+
+cmpxchgb_rh_rh
+  sd --code "cmpxchgb %ch, %bh" --k_format  |& tee  cmpxchgb_rh_rh_1.k
+  gvim ~/Github/strata-data/output-strata/instruction-summary/concrete_instances/register-variants/cmpxchgb_rh_rh/instructions/cmpxchgb_rh_rh/cmpxchgb_rh_rh.s
+  /home/sdasgup3/Github/binary-decompilation/x86-semantics/scripts/bvf2K.pl --opcode cmpxchgb_rh_rh --kfile cmpxchgb_rh_rh_1.k  --type register
+  meld ~/Github/binary-decompilation/x86-semantics/semantics/registerInstructions/cmpxchgb_rh_rh.k /home/sdasgup3/Github/develop_stoke/artifacts/cosimTests/registerInstructions/cmpxchgb_rh_rh.k
+  mv registerInstructions/cmpxchgb_rh_rh.k registerInstructions/cmpxchgb_rh_rh_1.k
+
+
+  sd --code "cmpxchgb %bh, %bh" --k_format  |& tee  cmpxchgb_rh_rh_1.k
+  sd --code "cmpxchgb %bh, %ah" --k_format  |& tee  cmpxchgb_rh_rh_1.k
+  sd --code "cmpxchgb %ah, %ah" --k_format  |& tee  cmpxchgb_rh_rh_1.k
+
+
+cmpxchgl_r32_r32
+  sd --code "cmpxchgl %ecx, %ebx" --k_format  |& tee  cmpxchgl_r32_r32_1.k
+  sd --code "cmpxchgl %ebx, %ebx" --k_format  |& tee  cmpxchgl_r32_r32_2.k
+  sd --code "cmpxchgl %ebx, %eax" --k_format  |& tee  cmpxchgl_r32_r32_3.k
+  sd --code "cmpxchgl %eax, %eax" --k_format  |& tee  cmpxchgl_r32_r32_4.k
+
+cmpxchgq_r64_r64
+  sd --code "cmpxchgq %rcx, %rbx" --k_format  |& tee  cmpxchgq_r64_r64_1.k
+  sd --code "cmpxchgq %rbx, %rbx" --k_format  |& tee  cmpxchgq_r64_r64_2.k
+  sd --code "cmpxchgq %rbx, %rax" --k_format  |& tee  cmpxchgq_r64_r64_3.k
+  sd --code "cmpxchgq %rax, %rax" --k_format  |& tee  cmpxchgq_r64_r64_4.k
+
+
+
+cmpxchgw_r16_r16
+  sd --code "cmpxchgw %cx, %bx" --k_format  |& tee  cmpxchgw_r16_r16_1.k
+  sd --code "cmpxchgw %bx, %bx" --k_format  |& tee  cmpxchgw_r16_r16_2.k
+  sd --code "cmpxchgw %bx, %ax" --k_format  |& tee  cmpxchgw_r16_r16_3.k
+  sd --code "cmpxchgw %ax, %ax" --k_format  |& tee  cmpxchgw_r16_r16_4.k
+
+
+  cmpxchgb_m8_r8
+    sd --code "cmpxchgb %cl, (%rbx)" --k_format  |& tee  cmpxchgb_m8_r8_1.k
+    sd --code "cmpxchgb %cl, (%rax)" --k_format  |& tee  cmpxchgb_m8_r8_2.k
+
+  cmpxchgb_m8_rh
+    sd --code "cmpxchgb %ch, (%rbx)" --k_format  |& tee  cmpxchgb_m8_rh_4.k
+    sd --code "cmpxchgb %ah, (%rbx)" --k_format  |& tee  cmpxchgb_m8_rh_1.k
+    sd --code "cmpxchgb %ch, (%rax)" --k_format  |& tee  cmpxchgb_m8_rh_2.k
+    sd --code "cmpxchgb %bh, (%rbx)" --k_format  |& tee  cmpxchgb_m8_rh_3.k
+
+  cmpxchgl_m32_r32
+    sd --code "cmpxchgl %ecx, (%rbx)" --k_format  |& tee  cmpxchgl_m32_r32_1.k
+    sd --code "cmpxchgl %ecx, (%rax)" --k_format  |& tee  cmpxchgl_m32_r32_2.k
+
+  cmpxchgq_m64_r64
+    sd --code "cmpxchgq %rcx, (%rbx)" --k_format  |& tee  cmpxchgq_m64_r64_1.k
+    sd --code "cmpxchgq %rcx, (%rax)" --k_format  |& tee  cmpxchgq_m64_r64_2.k
+
+  cmpxchgw_m16_r16.k
+    sd --code "cmpxchgw %cx, (%rbx)" --k_format  |& tee  cmpxchgw_m16_r16_1.k
+    sd --code "cmpxchgw %cx, (%rax)" --k_format  |& tee  cmpxchgw_m16_r16_2.k
