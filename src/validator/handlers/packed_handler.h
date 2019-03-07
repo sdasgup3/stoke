@@ -358,7 +358,6 @@ public:
       return a + b;
     }, 32);
 
-    // Extend Immediate Instructions; Ungeneralized; Stratified; UnStoked
 
     // dppd
     add_opcode("dppd", [] (SymBitVector a, SymBitVector b, SymBitVector c, uint16_t k) {
@@ -442,35 +441,6 @@ public:
       return result;
     }, 0, 0);
 
-    // insertps
-    add_opcode("insertps", [] (SymBitVector a, SymBitVector b, SymBitVector imm8, uint16_t k) {
-      short unsigned int vec_len = 32;
-      auto dest_width = a.width();
-
-      auto count_s = imm8[7][6];
-      auto count_d = imm8[5][4];
-      auto zmask   = imm8[3][0];
-
-      auto temp = (count_s == SymBitVector::constant(2, 0x0)).ite(
-                    b[31][0], (count_s == SymBitVector::constant(2, 0x1)).ite(
-                      b[63][32], (count_s == SymBitVector::constant(2, 0x2)).ite(
-                        b[95][64], (count_s == SymBitVector::constant(2, 0x3)).ite(
-                          b[127][96], b[127][96]))));
-
-      auto temp2 =      (count_d == SymBitVector::constant(2, 0x0)).ite( a[127][32] || temp,
-                        (count_d == SymBitVector::constant(2, 0x1)).ite( a[127][64] || temp || a[31][0],
-                            (count_d == SymBitVector::constant(2, 0x2)).ite( a[127][96] || temp || a[63][0],
-                                (count_d == SymBitVector::constant(2, 0x3)).ite( temp || a[95][0], temp || a[95][0]))));
-
-      auto result = (zmask[3][3] == SymBitVector::constant(1, 0x1)).ite(SymBitVector::constant(32, 0x0), temp2[127][96])
-                    || (zmask[2][2] == SymBitVector::constant(1, 0x1)).ite(SymBitVector::constant(32, 0x0), temp2[95][64])
-                    || (zmask[1][1] == SymBitVector::constant(1, 0x1)).ite(SymBitVector::constant(32, 0x0), temp2[63][32])
-                    || (zmask[0][0] == SymBitVector::constant(1, 0x1)).ite(SymBitVector::constant(32, 0x0), temp2[31][0]);
-
-      return result;
-    }, 0, 0);
-
-
     // blendpd
     add_opcode("blendpd", [] (SymBitVector a, SymBitVector b, SymBitVector imm, uint16_t k) {
       short unsigned int vec_len = 64;
@@ -552,9 +522,7 @@ public:
     }, 0, 0);
 
 
-    // END Extend Immediate Instructions; Ungeneralized; Stratified; UnStoked
 
-    // Extend Immediate Instructions; Ungeneralized; Unstratified; Unstoked
 
     // roundpd
     add_opcode("roundpd", [] (SymBitVector a, SymBitVector b, SymBitVector imm, uint16_t k) {
@@ -688,9 +656,7 @@ public:
     }, 0, 0);
 
 
-    // END Extend Immediate Instructions; Ungeneralized; Unstratified; Unstoked
 
-    // Extend Register Instructions; Unstratified; Unstoked
 
     // vpermps
     add_opcode("vpermps", [this] (SymBitVector a, SymBitVector b) {
@@ -971,7 +937,6 @@ public:
       return result;
     }, 0);
 
-    // END Extend Register Instructions; Unstratified; Unstoked
 
     add_opcode("paddq", [] (SymBitVector a, SymBitVector b) {
       return a + b;

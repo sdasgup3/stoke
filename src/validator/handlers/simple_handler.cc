@@ -577,10 +577,8 @@ void SimpleHandler::add_all() {
     auto res = f(a[31][0], b[31][0], c[31][0]);
     ss.set(dst, SymBitVector::constant(128, 0) || ss[dst][127][32] || res, true);
   });
-  // END
 
 
-  // Extend Memory Instructions; Ungeneralized; Stratified; UnStoked
   add_opcode_str({"cmpxchg8b", "cmpxchg16b"},
   [this] (Operand dst, SymBitVector dest_bv, SymState& ss) {
     auto width = dest_bv.width();
@@ -626,21 +624,140 @@ void SimpleHandler::add_all() {
       assert(0);
     }
 
-    // For accumulator == a; rax should remain unchanged
-    // For accumulator != a; rax  == 0 || a
-    // Where as for dst, while accumulator != a; the ppoer bits need to be preserved even if
-    // the witdth of dest is 32 bits.
 
-    if (32 == width) {
-      ss.set(rax, (accumulator == a).ite(ss[Constants::rax()],  SymBitVector::constant(64 - width, 0) || a));
-    } else if (64 == width) {
-      ss.set(rax, (accumulator == a).ite(ss[Constants::rax()],  a));
+    // For the case cmpxchng %bl, (%rax), if the accumulator is
+    // updated before the dst, then rax is updated to new_rax before  
+    // the access to the dest; which means the dest which is actually 
+    // accessed later for modification is (new_rax) as opposed to the expected (rax)
+    // For this reason, we update the dest before the accumulator.
+
+    if(32 == width && !dst.is_typical_memory()) {
+      // If the destination register is 32-bit, then we depending upon
+      // accuulator == a, we might have to update the lower 32-bit of
+      // the 64-bit destination register or keep it unmodified. The first
+      // can be achieved using preserve32 == false of the SymState::set function and the
+      // later using preserve32 == true. But as we are using a single Symstate::set
+      // invocation to cover both cases, we need to work with the 64-bit destination
+      // as shown below.  
+      if (dst == eax) {
+          ss.set(rax, SymBitVector::constant(32, 0) || b);
+      }
+      if (dst == ebx) {
+          ss.set(rbx, (accumulator == a).ite(
+              SymBitVector::constant(32, 0) || b,
+              ss[Constants::rbx()]));
+      }
+      if(dst == ecx) {
+          ss.set(rcx, (accumulator == a).ite(
+              SymBitVector::constant(32, 0) || b,
+              ss[Constants::rcx()]));
+      }
+      if(dst == edx) {
+          ss.set(rdx, (accumulator == a).ite(
+              SymBitVector::constant(32, 0) || b,
+              ss[Constants::rdx()]));
+      }
+      if(dst == esi) {
+          ss.set(rsi, (accumulator == a).ite(
+              SymBitVector::constant(32, 0) || b,
+              ss[Constants::rsi()]));
+      }
+      if(dst == edi) {
+          ss.set(rdi, (accumulator == a).ite(
+              SymBitVector::constant(32, 0) || b,
+              ss[Constants::rdi()]));
+      }
+      if(dst == esp) {
+          ss.set(rsp, (accumulator == a).ite(
+              SymBitVector::constant(32, 0) || b,
+              ss[Constants::rsp()]));
+      }
+      if(dst == ebp) {
+          ss.set(rbp, (accumulator == a).ite(
+              SymBitVector::constant(32, 0) || b,
+              ss[Constants::rbp()]));
+      }
+      if(dst == r8d) {
+          ss.set(r8, (accumulator == a).ite(
+              SymBitVector::constant(32, 0) || b,
+              ss[Constants::r8()]));
+      }
+      if(dst == r9d) {
+          ss.set(r9, (accumulator == a).ite(
+              SymBitVector::constant(32, 0) || b,
+              ss[Constants::r9()]));
+      }
+      if(dst == r10d) {
+          ss.set(r10, (accumulator == a).ite(
+              SymBitVector::constant(32, 0) || b,
+              ss[Constants::r10()]));
+      }
+      if(dst == r11d) {
+          ss.set(r11, (accumulator == a).ite(
+              SymBitVector::constant(32, 0) || b,
+              ss[Constants::r11()]));
+      }
+      if(dst == r12d) {
+          ss.set(r12, (accumulator == a).ite(
+              SymBitVector::constant(32, 0) || b,
+              ss[Constants::r12()]));
+      }
+      if(dst == r13d) {
+          ss.set(r13, (accumulator == a).ite(
+              SymBitVector::constant(32, 0) || b,
+              ss[Constants::r13()]));
+      }
+      if(dst == r14d) {
+          ss.set(r14, (accumulator == a).ite(
+              SymBitVector::constant(32, 0) || b,
+              ss[Constants::r14()]));
+      }
+      if(dst == r15d) {
+          ss.set(r15, (accumulator == a).ite(
+              SymBitVector::constant(32, 0) || b,
+              ss[Constants::r15()]));
+      }
     } else {
-      ss.set(rax, (accumulator == a).ite(ss[Constants::rax()],  ss[Constants::rax()][63][width] || a));
+      ss.set(dst, (accumulator == a).ite(b, a), false, true);
     }
 
-    ss.set(dst, (accumulator == a).ite(b, a), false, true);
-
+    // Modifications of accumulator
+    if(32 == width) {
+      if (dst == eax) {
+          ss.set(eax, b, false, false);
+      } else {
+          ss.set(rax, (accumulator == a).ite(
+              ss[Constants::rax()],
+              SymBitVector::constant(32, 0) || a));
+      }
+    }
+    if(64 == width) {
+      if (dst == rax) {
+          ss.set(rax, b);
+      } else {
+          ss.set(rax, (accumulator == a).ite(
+              ss[Constants::rax()],
+              a));
+      }
+    }
+    if(16 == width) {
+      if (dst == ax) {
+          ss.set(ax, b, false, true);
+      } else {
+          ss.set(rax, (accumulator == a).ite(
+              ss[Constants::rax()],
+              ss[Constants::rax()][63][width] || a));
+      }
+    }
+    if(8 == width) {
+      if (dst == al) {
+          ss.set(al, b, false, true);
+      } else {
+          ss.set(rax, (accumulator == a).ite(
+              ss[Constants::rax()],
+              ss[Constants::rax()][63][width] || a));
+      }
+    }
 
     SymBitVector src_bv = a;
     SymBitVector dst_bv = accumulator;
@@ -772,7 +889,6 @@ void SimpleHandler::add_all() {
     }
 
   });
-  // END Extend Memory Instructions; Ungeneralized; Stratified; UnStoked
 
   // pslldq
   add_opcode_str({"pslldq"},
@@ -1143,11 +1259,76 @@ void SimpleHandler::add_all() {
     ss.set(dst, (a & !mask) | temp, true);
   });
 
-  // END Extend Immediate Instructions; Ungeneralized; Stratified; UnStoked
+    // insertps
+  add_opcode_str({"insertps"},
+  [this] (Operand dst, Operand src, Operand imm_, SymBitVector a, SymBitVector b,  SymBitVector imm8, SymState& ss) {
+   // add_opcode("insertps", [] (SymBitVector a, SymBitVector b, SymBitVector imm8, uint16_t k) {
+      short unsigned int vec_len = 32;
+      auto dest_width = a.width();
 
-  // END Extend Immediate Instructions; Ungeneralized; Stratified; Stoked
+      auto count_s = imm8[7][6];
+      auto count_d = imm8[5][4];
+      auto zmask   = imm8[3][0];
 
-  // Extend Immediate Instructions; Ungeneralized; Unstratified; Unstoked
+      SymBitVector temp;
+      if(src.is_typical_memory()) {
+        temp = b;
+      } else {
+        temp = (count_s == SymBitVector::constant(2, 0x0)).ite(
+                    b[31][0], (count_s == SymBitVector::constant(2, 0x1)).ite(
+                      b[63][32], (count_s == SymBitVector::constant(2, 0x2)).ite(
+                        b[95][64], (count_s == SymBitVector::constant(2, 0x3)).ite(
+                          b[127][96], b[127][96]))));
+      }
+
+      auto temp2 =      (count_d == SymBitVector::constant(2, 0x0)).ite( a[127][32] || temp,
+                        (count_d == SymBitVector::constant(2, 0x1)).ite( a[127][64] || temp || a[31][0],
+                            (count_d == SymBitVector::constant(2, 0x2)).ite( a[127][96] || temp || a[63][0],
+                                (count_d == SymBitVector::constant(2, 0x3)).ite( temp || a[95][0], temp || a[95][0]))));
+
+      auto result = (zmask[3][3] == SymBitVector::constant(1, 0x1)).ite(SymBitVector::constant(32, 0x0), temp2[127][96])
+                    || (zmask[2][2] == SymBitVector::constant(1, 0x1)).ite(SymBitVector::constant(32, 0x0), temp2[95][64])
+                    || (zmask[1][1] == SymBitVector::constant(1, 0x1)).ite(SymBitVector::constant(32, 0x0), temp2[63][32])
+                    || (zmask[0][0] == SymBitVector::constant(1, 0x1)).ite(SymBitVector::constant(32, 0x0), temp2[31][0]);
+
+      ss.set(dst, result);
+    });
+
+    // vinsertps
+  add_opcode_str({"vinsertps"},
+  [this] (Operand dst, Operand src1, Operand src2, Operand imm_, SymBitVector d, SymBitVector a, SymBitVector b,  SymBitVector imm8, SymState& ss) {
+   // add_opcode("insertps", [] (SymBitVector a, SymBitVector b, SymBitVector imm8, uint16_t k) {
+      short unsigned int vec_len = 32;
+      auto dest_width = a.width();
+
+      auto count_s = imm8[7][6];
+      auto count_d = imm8[5][4];
+      auto zmask   = imm8[3][0];
+
+      SymBitVector temp;
+      if(src2.is_typical_memory()) {
+        temp = b;
+      } else {
+        temp = (count_s == SymBitVector::constant(2, 0x0)).ite(
+                    b[31][0], (count_s == SymBitVector::constant(2, 0x1)).ite(
+                      b[63][32], (count_s == SymBitVector::constant(2, 0x2)).ite(
+                        b[95][64], (count_s == SymBitVector::constant(2, 0x3)).ite(
+                          b[127][96], b[127][96]))));
+      }
+
+      auto temp2 =      (count_d == SymBitVector::constant(2, 0x0)).ite( a[127][32] || temp,
+                        (count_d == SymBitVector::constant(2, 0x1)).ite( a[127][64] || temp || a[31][0],
+                            (count_d == SymBitVector::constant(2, 0x2)).ite( a[127][96] || temp || a[63][0],
+                                (count_d == SymBitVector::constant(2, 0x3)).ite( temp || a[95][0], temp || a[95][0]))));
+
+      auto result = (zmask[3][3] == SymBitVector::constant(1, 0x1)).ite(SymBitVector::constant(32, 0x0), temp2[127][96])
+                    || (zmask[2][2] == SymBitVector::constant(1, 0x1)).ite(SymBitVector::constant(32, 0x0), temp2[95][64])
+                    || (zmask[1][1] == SymBitVector::constant(1, 0x1)).ite(SymBitVector::constant(32, 0x0), temp2[63][32])
+                    || (zmask[0][0] == SymBitVector::constant(1, 0x1)).ite(SymBitVector::constant(32, 0x0), temp2[31][0]);
+
+      ss.set(dst, result, true);
+    });
+
   // pclmulqdq
   add_opcode_str({"pclmulqdq"},
   [this] (Operand dst, Operand src, Operand imm_, SymBitVector a, SymBitVector b,  SymBitVector imm8, SymState& ss) {
@@ -1480,9 +1661,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // END Extend Register Instructions; Unstratified; Stoked by Master
 
-  // Extend Register Instructions; Unstratified; Unstoked
   // vpermilps
   add_opcode_str({"vpermilps"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector d, SymBitVector a, SymBitVector b, SymState& ss) {
@@ -1535,7 +1714,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base:  blsil/q
+  // blsil/q
   add_opcode_str({"blsiq", "blsil"},
   [this] (Operand dst, Operand src, SymBitVector a, SymBitVector b, SymState& ss) {
     auto dest_width = a.width();
@@ -1550,7 +1729,7 @@ void SimpleHandler::add_all() {
     ss.set(eflags_of, SymBool::_false());
   });
 
-  // Extend Strata Base:  bzhil(q)
+  // bzhil(q)
 
   add_opcode_str({"bzhil", "bzhiq"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector d, SymBitVector a, SymBitVector b, SymState& ss) {
@@ -1577,7 +1756,7 @@ void SimpleHandler::add_all() {
     ss.set(eflags_of, SymBool::_false());
   });
 
-  // Extend Strata Base:  blsmskl(q)
+  // blsmskl(q)
 
   add_opcode_str({"blsmskl", "blsmskq"},
   [this] (Operand dst, Operand src,  SymBitVector a, SymBitVector b, SymState& ss) {
@@ -1594,7 +1773,7 @@ void SimpleHandler::add_all() {
     ss.set(eflags_af, SymBool::tmp_var());
   });
 
-  // Extend Strata Base:  sarxl(q)
+  // sarxl(q)
 
   add_opcode_str({"sarxl", "sarxq"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector d, SymBitVector a, SymBitVector b, SymState& ss) {
@@ -1608,7 +1787,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, a.s_shr(b & countmask));
   });
 
-  // Extend Strata Base:  shlxl(q)
+  // shlxl(q)
 
   add_opcode_str({"shlxl", "shlxq"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector d, SymBitVector a, SymBitVector b, SymState& ss) {
@@ -1622,7 +1801,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, a << (b & countmask));
   });
 
-  // Extend Strata Base:  mulxl(q)
+  // mulxl(q)
 
   add_opcode_str({"mulxl", "mulxq"},
   [this] (Operand dst1, Operand dst2, Operand src2, SymBitVector d1, SymBitVector d2, SymBitVector s2, SymState& ss) {
@@ -1640,7 +1819,7 @@ void SimpleHandler::add_all() {
     ss.set(dst1, (us1*us2)[2*dest_width-1][dest_width]);
   });
 
-  // Extend Strata Base:  pdepl(q)
+  // pdepl(q)
   add_opcode_str({"pdepl", "pdepq"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector d, SymBitVector a, SymBitVector b, SymState& ss) {
     auto dest_width = a.width();
@@ -1671,7 +1850,7 @@ void SimpleHandler::add_all() {
   });
 
 
-  // Extend Strata Base:  tzcntw(l/q)
+  // tzcntw(l/q)
   add_opcode_str({"tzcntw", "tzcntl", "tzcntq"},
   [this] (Operand dst, Operand src, SymBitVector a, SymBitVector b, SymState& ss) {
     auto dest_width = a.width();
@@ -1692,7 +1871,7 @@ void SimpleHandler::add_all() {
     ss.set(eflags_af, SymBool::tmp_var());
   });
 
-  // Extend Strata Base:  lzcntw(l/q)
+  // lzcntw(l/q)
   add_opcode_str({"lzcntw", "lzcntl", "lzcntq"},
   [this] (Operand dst, Operand src, SymBitVector a, SymBitVector b, SymState& ss) {
     auto dest_width = a.width();
@@ -1714,7 +1893,7 @@ void SimpleHandler::add_all() {
   });
 
 
-  // Extend Strata Base:  vcvtph2ps
+  // vcvtph2ps
   // This is not an avx or avx2 instr, so cannot get binefited from
   // packed handler infrastructure.
   add_opcode_str({"vcvtph2ps"},
@@ -1735,7 +1914,7 @@ void SimpleHandler::add_all() {
       ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: movmskps
+  // movmskps
   add_opcode_str({"movmskps", "vmovmskps"},
   [] (Operand dst, Operand src, SymBitVector a, SymBitVector b, SymState& ss) {
     size_t dst_size = dst.size();
@@ -1754,7 +1933,7 @@ void SimpleHandler::add_all() {
 
   });
 
-  // Extend Strata Base: psrad
+  // psrad
   add_opcode_str({"psrad"},
   [] (Operand dst, Operand src, SymBitVector a, SymBitVector b, SymState& ss) {
     auto b_ = b;
@@ -1777,7 +1956,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result);
   });
 
-  // Extend Strata Base: vpsrad
+  // vpsrad
   add_opcode_str({"vpsrad"},
   [] (Operand dst, Operand src1, Operand src2, SymBitVector d, SymBitVector a, SymBitVector b, SymState& ss) {
     auto b_ = b;
@@ -1799,7 +1978,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: psraw
+  // psraw
   add_opcode_str({"psraw"},
   [] (Operand dst, Operand src, SymBitVector a, SymBitVector b, SymState& ss) {
     auto b_ = b;
@@ -1822,7 +2001,7 @@ void SimpleHandler::add_all() {
   });
 
 
-  // Extend Strata Base: vpsraw
+  // vpsraw
   add_opcode_str({"vpsraw"},
   [] (Operand dst, Operand src1, Operand src2, SymBitVector d, SymBitVector a, SymBitVector b, SymState& ss) {
     auto b_ = b;
@@ -1844,7 +2023,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: (v)ptest
+  // (v)ptest
   add_opcode_str({"ptest", "vptest"},
   [] (Operand dst, Operand src, SymBitVector a, SymBitVector b, SymState& ss) {
     auto aa = a[dst.size()-1][0];
@@ -1861,7 +2040,7 @@ void SimpleHandler::add_all() {
     ss.set(eflags_sf, SymBool::_false());
   });
 
-  // Extend Strata Base: vtestpd
+  // vtestpd
   add_opcode_str({"vtestpd"},
   [] (Operand dst, Operand src, SymBitVector a, SymBitVector b, SymState& ss) {
     auto aa = a[dst.size()-1][0];
@@ -1885,7 +2064,7 @@ void SimpleHandler::add_all() {
     ss.set(eflags_sf, SymBool::_false());
   });
 
-  // Extend Strata Base: vtestps
+  // vtestps
   add_opcode_str({"vtestps"},
   [] (Operand dst, Operand src, SymBitVector a, SymBitVector b, SymState& ss) {
     auto aa = a[dst.size()-1][0];
@@ -1909,7 +2088,7 @@ void SimpleHandler::add_all() {
     ss.set(eflags_sf, SymBool::_false());
   });
 
-  // Extend Strata Base: (v)comisd
+  // (v)comisd
   add_opcode_str({"comisd", "vcomisd", "ucomisd", "vucomisd"},
   [] (Operand dst, Operand src, SymBitVector a, SymBitVector b, SymState& ss) {
     SymFunction f("comisd", 2, {64, 64});
@@ -1930,7 +2109,7 @@ void SimpleHandler::add_all() {
     ss.set(eflags_sf, SymBool::_false());
   });
 
-  // Extend Strata Base: (v)comiss
+  // (v)comiss
   add_opcode_str({"comiss", "vcomiss", "ucomiss", "vucomiss"},
   [] (Operand dst, Operand src, SymBitVector a, SymBitVector b, SymState& ss) {
     SymFunction f("comiss", 2, {32, 32});
@@ -1951,7 +2130,7 @@ void SimpleHandler::add_all() {
     ss.set(eflags_sf, SymBool::_false());
   });
 
-  // Extend Strata Base: pblendvb
+  // pblendvb
   add_opcode_str({"pblendvb"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
 
@@ -1964,7 +2143,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result);
   });
 
-  // Extend Strata Base: vpblendvb
+  // vpblendvb
   add_opcode_str({"vpblendvb"},
                  [this] (Operand dst, Operand src1, Operand src2, Operand src3, SymBitVector a, SymBitVector b, SymBitVector c,
   SymBitVector d, SymState& ss) {
@@ -1978,7 +2157,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: blendvpd
+  // blendvpd
   add_opcode_str({"blendvpd"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
 
@@ -1992,7 +2171,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result);
   });
 
-  // Extend Strata Base: vblendvpd
+  // vblendvpd
   add_opcode_str({"vblendvpd"},
                  [this] (Operand dst, Operand src1, Operand src2, Operand src3, SymBitVector d, SymBitVector a, SymBitVector b,
   SymBitVector c, SymState& ss) {
@@ -2007,7 +2186,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: blendvps
+  // blendvps
   add_opcode_str({"blendvps"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
 
@@ -2021,7 +2200,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result);
   });
 
-  // Extend Strata Base: vblendvps
+  // vblendvps
   add_opcode_str({"vblendvps"},
                  [this] (Operand dst, Operand src1, Operand src2, Operand src3, SymBitVector d, SymBitVector a, SymBitVector b,
   SymBitVector c, SymState& ss) {
@@ -2036,7 +2215,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: vfmaddsub132pd
+  // vfmaddsub132pd
   // (cannot have it in packed_handler as this need 3rd src operand and that handlercould not support that)
   add_opcode_str({"vfmaddsub132pd"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
@@ -2055,7 +2234,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: vfmaddsub132ps
+  // vfmaddsub132ps
   add_opcode_str({"vfmaddsub132ps"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
     auto dest_size = a.width();
@@ -2073,7 +2252,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: vfmsubadd132pd
+  // vfmsubadd132pd
   add_opcode_str({"vfmsubadd132pd"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
     auto dest_size = a.width();
@@ -2091,7 +2270,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: vfmsubadd132ps
+  // vfmsubadd132ps
   add_opcode_str({"vfmsubadd132ps"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
     auto dest_size = a.width();
@@ -2109,7 +2288,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: vfmaddsub213pd
+  // vfmaddsub213pd
   add_opcode_str({"vfmaddsub213pd"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
     auto dest_size = a.width();
@@ -2127,7 +2306,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: vfmaddsub213ps
+  // vfmaddsub213ps
   add_opcode_str({"vfmaddsub213ps"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
     auto dest_size = a.width();
@@ -2145,7 +2324,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: vfmsubadd213pd
+  // vfmsubadd213pd
   add_opcode_str({"vfmsubadd213pd"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
     auto dest_size = a.width();
@@ -2163,7 +2342,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: vfmsubadd213ps
+  // vfmsubadd213ps
   add_opcode_str({"vfmsubadd213ps"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
     auto dest_size = a.width();
@@ -2181,7 +2360,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: vfmaddsub231pd
+  // vfmaddsub231pd
   add_opcode_str({"vfmaddsub231pd"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
     auto dest_size = a.width();
@@ -2199,7 +2378,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: vfmaddsub231ps
+  // vfmaddsub231ps
   add_opcode_str({"vfmaddsub231ps"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
     auto dest_size = a.width();
@@ -2217,7 +2396,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: vfmsubadd231pd
+  // vfmsubadd231pd
   add_opcode_str({"vfmsubadd231pd"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
     auto dest_size = a.width();
@@ -2235,7 +2414,7 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // Extend Strata Base: vfmsubadd231ps
+  // vfmsubadd231ps
   add_opcode_str({"vfmsubadd231ps"},
   [this] (Operand dst, Operand src1, Operand src2, SymBitVector a, SymBitVector b, SymBitVector c, SymState& ss) {
     auto dest_size = a.width();
@@ -2253,9 +2432,6 @@ void SimpleHandler::add_all() {
     ss.set(dst, result, true);
   });
 
-  // END Extend Register Instructions; Unstratified; Unstoked
-
-  // Borrowed from master Stoke
 
   add_opcode_str({"pshufb"},
   [this] (Operand dst, Operand src, SymBitVector b, SymBitVector c, SymState& ss) {
@@ -2293,8 +2469,6 @@ void SimpleHandler::add_all() {
     }
     ss.set(dst, result, false);
   });
-
-  // End Borrowed from master Stoke
 
   // for min/max|ss/sd: can't be done with packed handler because the upper 96/64 bits are from src1, not dest in the v variant
 
