@@ -176,7 +176,8 @@ cpputil::BitVector Z3Solver::get_model_bv(const std::string& var, uint16_t bits)
     expr extract = to_expr(context_, Z3_mk_extract(context_, max_bits, i*64, v));
     expr number = to_expr(context_, Z3_mk_bv2int(context_, extract, true));
     expr eval = model_->eval(number, true);
-    Z3_get_numeral_int64(context_, eval, (long long int*)&oct);
+    //Z3_get_numeral_int64(context_, eval, (long long int*)&oct);
+    Z3_get_numeral_int64(context_, eval, (int64_t*)&oct);
 
     assert((max_bits + 1) % 8 == 0);
     size_t k = 0;
@@ -240,8 +241,8 @@ pair<map<uint64_t, cpputil::BitVector>, uint8_t> Z3Solver::get_model_array(
     z3::expr v = e.arg(2);
     uint64_t addr;
     uint64_t value;
-    Z3_get_numeral_uint64(context_, k, (long long unsigned int*)&addr);
-    Z3_get_numeral_uint64(context_, v, (long long unsigned int*)&value);
+    Z3_get_numeral_uint64(context_, k, (uint64_t*)&addr);
+    Z3_get_numeral_uint64(context_, v, (uint64_t*)&value);
 
     assert(value <= 0xff);
     cpputil::BitVector bv_v(8);
@@ -259,7 +260,7 @@ pair<map<uint64_t, cpputil::BitVector>, uint8_t> Z3Solver::get_model_array(
 
     z3::expr arg = e.arg(0);
     uint64_t value;
-    Z3_get_numeral_uint64(context_, arg, (long long unsigned int*)&value);
+    Z3_get_numeral_uint64(context_, arg, (uint64_t*)&value);
     assert(value <= 0xff);
 
     pair<map<uint64_t, cpputil::BitVector>, uint8_t> result;
@@ -282,8 +283,8 @@ pair<map<uint64_t, cpputil::BitVector>, uint8_t> Z3Solver::get_model_array(
 
       uint64_t addr;
       uint64_t value;
-      Z3_get_numeral_uint64(context_, k, (long long unsigned int*)&addr);
-      Z3_get_numeral_uint64(context_, v, (long long unsigned int*)&value);
+      Z3_get_numeral_uint64(context_, k, (uint64_t*)&addr);
+      Z3_get_numeral_uint64(context_, v, (uint64_t*)&value);
 
       assert(value <= 0xff);
 
@@ -324,7 +325,8 @@ z3::expr Z3Solver::ExprConverter::visit(const SymBitVectorConcat * const bv) {
 
 /** Visit a bit-vector constant */
 z3::expr Z3Solver::ExprConverter::visit(const SymBitVectorConstant * const bv) {
-  return z3::expr(context_, context_.bv_val((long long unsigned int)bv->constant_, bv->size_));
+  //return z3::expr(context_, context_.bv_val((long long unsigned int)bv->constant_, bv->size_));
+  return z3::expr(context_, context_.bv_val(bv->constant_, bv->size_));
 }
 
 /** Visit a bit-vector DIV */

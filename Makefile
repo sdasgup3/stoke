@@ -118,6 +118,7 @@ endif
 
 SRC_OBJ=\
 	src/cfg/cfg.o \
+	src/cfg/dfg.o \
 	src/cfg/cfg_transforms.o \
 	src/cfg/dominators.o \
 	src/cfg/dot_writer.o \
@@ -252,6 +253,8 @@ BIN=\
 	bin/stoke_which_handler \
 	bin/stoke_debug_circuit \
 	bin/stoke_debug_cfg \
+	bin/stoke_debug_dfg \
+	bin/stoke_debug_instruction_rwset \
 	bin/stoke_debug_formula \
 	bin/stoke_debug_circuit \
 	bin/stoke_which_handler \
@@ -335,7 +338,8 @@ depend:
 
 ##### EXTERNAL TARGETS
 
-external: cpputil x64asm z3 cvc4 pintool src/ext/gtest-1.7.0/libgtest.a
+#external: cpputil x64asm z3 cvc4 pintool src/ext/gtest-1.7.0/libgtest.a
+external: cpputil x64asm z3 cvc4  src/ext/gtest-1.7.0/libgtest.a
 	if [ ! -f .depend ]; then \
 		$(MAKE) -C . depend; \
 	fi
@@ -447,7 +451,6 @@ TEST_OBJ=\
          tests/fixture.o \
          \
          src/ext/gtest-1.7.0/libgtest.a \
-         /usr/local/lib/x86_64-linux-gnu/libjsoncpp.a \
          src/ext/gtest-1.7.0/libgtest_main.a
 
 TEST_LIBS=-ljsoncpp
@@ -510,7 +513,7 @@ dist_clean: clean
 	rm -f src/ext/gtest-1.7.0/CMakeCache.txt
 	./scripts/make/submodule-reset.sh src/ext/cpputil
 	./scripts/make/submodule-reset.sh src/ext/x64asm
-	./scripts/make/submodule-reset.sh src/ext/z3
+#./scripts/make/submodule-reset.sh src/ext/z3
 	- $(MAKE) -C src/ext/gtest-1.7.0 clean
 	rm -rf src/ext/z3/build
 	rm -rf $(CVC4_OUTDIR) $(CVC4_SRCDIR)

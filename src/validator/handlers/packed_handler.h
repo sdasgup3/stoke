@@ -18,6 +18,7 @@
 
 #include <map>
 #include <functional>
+#include <cmath>
 
 #include "src/validator/handler.h"
 

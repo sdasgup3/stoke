@@ -20,8 +20,47 @@
 #include "src/ext/x64asm/include/x64asm.h"
 
 #include "src/cfg/cfg.h"
+#include "src/cfg/dfg.h"
 
 namespace stoke {
+
+class KeyCache {
+private:
+  std::map<std::string, std::string> Store;
+  typedef std::pair<std::string, bool> P;
+public:
+  std::string getHash() {
+    std::string str("");
+    char alphabet[] =
+      "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    for (int i = 0; i < 6; i++) {
+      auto r = rand() % 62;
+      // cout << r << " "  ;
+      str += alphabet[r];
+    }
+
+    return str;
+  }
+
+  //P getKey(std::string str, size_t idx) {
+  P getKey(std::string str) {
+    //std::string key = str + std::to_string(idx);
+    std::string key = str;
+    if (Store.count(key))
+      return P(Store.at(key), true);
+
+    auto hash = getHash();
+    while (Store.count(hash)) {
+      hash = getHash();
+    }
+    //hash += std::to_string(idx);
+    hash = "I" + hash;
+
+    Store[key] = hash;
+    return P(hash, false);
+  }
+};
 
 class DotWriter {
 public:
@@ -43,6 +82,11 @@ public:
     return *this;
   }
 
+  DotWriter &set_dfg(bool flag) {
+    dfg_ = flag;
+    return *this;
+  }
+
   /** Emits a control flow graph in .dot format. */
   void operator()(std::ostream& os, const Cfg& cfg) const {
     os << "digraph g {" << std::endl;
@@ -53,6 +97,14 @@ public:
     write_blocks(os, cfg);
     write_edges(os, cfg);
 
+    os << "}";
+  }
+
+  /** Emits a control flow graph in .dot format. */
+  void operator()(std::ostream &os, const Dfg &dfg) const {
+    os << "digraph g {" << std::endl;
+    os << "colorscheme = blues6" << std::endl;
+    write_dfg(os, dfg);
     os << "}";
   }
 
@@ -69,6 +121,8 @@ private:
   void write_edges(std::ostream& os, const Cfg& cfg) const;
   /** Write the contents of a register set. */
   void write_reg_set(std::ostream& os, const x64asm::RegSet& rs) const;
+  void write_dfg(std::ostream &os, const Dfg &dfg) const;
+  void write_dfg_node(std::ostream &os, const Dfg &cfg, KeyCache &cache) const;	
 
   /** Write the defined-in relation for blocks? */
   bool def_in_block_;
@@ -76,6 +130,7 @@ private:
   bool def_in_instr_;
   /** Write the live-out relation for blocks? */
   bool live_out_block_;
+  bool dfg_;
 };
 
 } // namespace stoke

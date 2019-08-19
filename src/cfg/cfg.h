@@ -45,6 +45,10 @@ public:
   typedef x64asm::Code::const_iterator instr_iterator;
   /** Iterator over a basic block's successors. */
   typedef std::vector<id_type>::const_iterator pred_iterator;
+
+  /** Iterator over an instructions's predecessors. */
+  typedef std::vector<loc_type>::const_iterator pred_instr_iterator;
+
   /** Iterator over a basic block's predecssors. */
   typedef std::vector<id_type>::const_iterator succ_iterator;
   /** Iterator over reachable blocks. */
@@ -84,6 +88,7 @@ public:
     recompute_labels();
     recompute_succs();
     recompute_preds();
+    recompute_preds_instrs();
     recompute_reachable();
   }
   /** Recomputes the defined-in relation for instructions; modifying an instruction will invalidate
@@ -159,7 +164,32 @@ public:
     return get_code().begin() + blocks_[id + 1];
   }
 
-  /** Returns an iterator that points to the beginning of this block's predecessor list. */
+  pred_instr_iterator pred_begin_instr(loc_type id) const {
+    assert(id.first < num_blocks());
+    auto idx = get_index(id);
+    assert(idx < get_code().size());
+    return preds_instrs_[idx].begin();
+  }
+
+  pred_instr_iterator pred_end_instr(loc_type id) const {
+    assert(id.first < num_blocks());
+    auto idx = get_index(id);
+    assert(idx < get_code().size());
+    return preds_instrs_[idx].end();
+  }
+
+  pred_instr_iterator pred_begin_instr(size_t idx) const {
+    assert(idx < get_code().size());
+    return preds_instrs_[idx].begin();
+  }
+
+  pred_instr_iterator pred_end_instr(size_t idx) const {
+    assert(idx < get_code().size());
+    return preds_instrs_[idx].end();
+  }
+
+  /** Returns an iterator that points to the beginning of this block's
+   * predecessor list. */
   pred_iterator pred_begin(id_type id) const {
     assert(id < num_blocks());
     return preds_[id].begin();
@@ -179,6 +209,11 @@ public:
   succ_iterator succ_end(id_type id) const {
     assert(id < num_blocks());
     return succs_[id].end();
+  }
+  /** Returns the number of successors a block has. */
+  size_t succ_size(id_type id) const {
+    assert(id < num_blocks());
+    return succs_[id].size();
   }
 
   /** Returns true if control can pass from this basic block to another either because it is
@@ -438,6 +473,7 @@ private:
   std::vector<size_t> blocks_;
   /** Basic block predecessor lists. */
   std::vector<std::vector<id_type>> preds_;
+  std::vector<std::vector<loc_type>> preds_instrs_;
   /** Basic block successor lists. */
   std::vector<std::vector<id_type>> succs_;
   /** The set of reachable basic blocks. */
@@ -472,7 +508,9 @@ private:
   void recompute_succs();
   /** Recompute the contents of preds_; assumes blocks_ and succs_ are up to date. */
   void recompute_preds();
-  /** Recompute the contents of reachable_; assumes blocks_ and succs_ are up to date. */
+  void recompute_preds_instrs();
+  /** Recompute the contents of reachable_; assumes blocks_ and succs_ are up to
+   * date. */
   void recompute_reachable();
 
   /** Recomputes the gen and kill sets used by recompute_defs(). */

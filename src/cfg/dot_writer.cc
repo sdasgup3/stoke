@@ -124,4 +124,37 @@ void DotWriter::write_reg_set(ostream& os, const RegSet& rs) const {
   os << "\\" << s.substr(0, s.size() - 1) << "\\}";
 }
 
+
+static string plot_node(ostream &os, const Cfg &cfg, KeyCache &cache, std::string str) {
+  auto p = cache.getKey(str);
+  auto nodeid = p.first;
+  os << nodeid << " [";
+  os << "shape=record  ";
+  os << "label=\"{" << str << "}\"];" << endl;
+  return nodeid;
+}
+
+void DotWriter::write_dfg(ostream &os, const Dfg &dfg) const {
+  KeyCache cache;
+  assert(dfg.num_nodes == dfg.per_dfg_node_reaching_defs_in_.size() && "Check!");
+  for (size_t i = 0 ; i < dfg.num_nodes ; i++) {
+    std::stringstream ss_dest;
+    dfg.printNode(ss_dest, i);
+
+    auto def_ins = dfg.per_dfg_node_reaching_defs_in_[i];
+    for (size_t j = 0 ; j < dfg.num_nodes ; j++) {
+      if (def_ins[j]) {
+        std::stringstream ss_src;
+        dfg.printNode(ss_src, j);
+
+        auto dest_id = plot_node(os, dfg.getCfg(), cache, ss_dest.str());
+        auto src_id = plot_node(os, dfg.getCfg(), cache, ss_src.str());
+        os << src_id << "->" << dest_id << " [";
+        os << "style=bold";
+        os << " color=";
+        os << "black];" << endl;
+      }
+    }
+  }
+}
 } // namespace stoke

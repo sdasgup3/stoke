@@ -1,3 +1,25 @@
+Exclusive Features
+=================
+1. Can build with gcc version >= 4.9. Tested with gcc 6.3
+2. The pin tool is disabled in the Makefile:341 because of gcc compatibility issues
+3. The master branch of z3 is used as opposed to some specific tag.
+4. Also, in the Makefile dist_clean target is not alowed to reset z3 fro master to specific z3 tag.
+
+Also, we have tested that we can build this repo using gcc 4.9 with master z3 (and with pin as before).
+
+## Build instructions
+```
+git clone --recursive  git@github.com:sdasgup3/stoke.git stoke-develop
+cd stoke-develop
+git checkout working
+./configure -d
+make debug -j8
+```
+
+
+
+
+
 [![Build Status](https://travis-ci.org/StanfordPL/stoke.svg?branch=develop)](https://travis-ci.org/StanfordPL/stoke)
 
 STOKE

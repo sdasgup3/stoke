@@ -18,6 +18,7 @@
 #include "src/cfg/cfg.h"
 #include "src/ext/x64asm/include/x64asm.h"
 #include "src/validator/validator.h"
+#include <random>
 
 namespace stoke {
 

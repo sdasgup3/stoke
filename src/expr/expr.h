@@ -16,6 +16,7 @@
 #define STOKE_SRC_EXPR_EXPR_H
 
 #include <functional>
+#include <cmath>
 
 
 namespace stoke {

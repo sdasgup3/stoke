@@ -199,6 +199,35 @@ void Cfg::recompute_preds() {
   }
 }
 
+void Cfg::recompute_preds_instrs() {
+  preds_instrs_.resize(get_code().size()+1);
+  for (auto& p : preds_instrs_)
+    p.clear();
+
+  for (auto i = get_entry(), ie = get_exit(); i < ie; ++i) {
+    for (size_t j = 0, je = num_instrs(i); j < je; ++j) {
+      if (j == 0) {
+        for (auto p = pred_begin(i), pe = pred_end(i); p != pe; ++p) {
+          preds_instrs_[get_index({i, 0})].push_back({*p, num_instrs(*p)-1});
+        }
+      } else {
+        preds_instrs_[get_index({i, j})].push_back({i, j-1});
+      }
+    }
+  }
+#ifdef DEBUG_CFG_RD
+  std::cout << "\tTesting Predecessors Iterators:\n=====================\n\n";
+  for (size_t k = 0 ; k < get_code().size(); k++) {
+    std::cout << get_code()[k] << "\n";
+    std::cout << "\tpredecessors:\n";
+    for (auto p = pred_begin_instr(k), pe = pred_end_instr(k); p != pe; ++p) {
+      std::cout << "\t\t" << (*p).first << " " << (*p).second << "\n";
+      //std::cout << "\t\t" << get_code()[get_index(*p)] << "\n";
+    }
+  }
+#endif
+}
+
 void Cfg::recompute_reachable() {
   reachable_.resize_for_bits(num_blocks());
   reachable_.reset();
