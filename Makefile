@@ -99,6 +99,8 @@ INC=$(addprefix -I./, $(INC_FOLDERS))
 DEPS=\
 	src/ext/x64asm/lib/libx64asm.a
 
+STOKE_LIB=\
+          lib/libstoke.a
 LIB=\
 	src/ext/x64asm/lib/libx64asm.a \
 	-pthread \
@@ -441,9 +443,11 @@ tools/io/%.o: tools/io/%.cc $(DEPS)
 	$(STOKE_CXX) $(TARGET) $(OPT) $(ARCH_OPT) $(INC) -c $< -o $@
 
 ##### BINARY TARGETS
+$(STOKE_LIB): $(SRC_OBJ)
+	ar rcs $@ $(SRC_OBJ)
 
-bin/%: tools/apps/%.cc $(DEPS) $(SRC_OBJ) $(TOOL_NON_ARG_OBJ) tools/gadgets/*.h
-	$(STOKE_CXX) $(TARGET) $(OPT) $(ARCH_OPT) $(INC) $< -o $@ $(SRC_OBJ) $(TOOL_NON_ARG_OBJ) $(LIB) $(LDFLAGS)
+bin/%: tools/apps/%.cc $(DEPS) $(STOKE_LIB) $(TOOL_NON_ARG_OBJ) tools/gadgets/*.h
+	$(STOKE_CXX) $(TARGET) $(OPT) $(ARCH_OPT) $(INC) $< -o $@ $(TOOL_NON_ARG_OBJ) $(STOKE_LIB) $(LIB) $(LDFLAGS)
 
 ##### TESTING
 
@@ -465,12 +469,12 @@ tests/validator/handlers.h: .FORCE
 tests/%.o: tests/%.cc tests/%.h
 	$(STOKE_CXX) $(TARGET) $(OPT) $(ARCH_OPT) $(INC) -c $< -o $@ $(TEST_LIBS)
 
-bin/stoke_test: tools/apps/stoke_test.cc $(DEPS) $(SRC_OBJ) $(TEST_OBJ) $(TOOL_NON_ARG_OBJ) $(wildcard src/*/*.h) $(wildcard tests/*.h) $(wildcard tests/*/*.h) $(wildcard tests/*/*/*.h) tests/validator/handlers.h
-	$(STOKE_CXX) $(TARGET) $(OPT) $(ARCH_OPT) $(INC) $< -o $@ $(SRC_OBJ) $(TEST_OBJ) $(TOOL_NON_ARG_OBJ) $(LIB) $(LDFLAGS) $(TEST_LIBS)
+bin/stoke_test: tools/apps/stoke_test.cc $(DEPS) $(STOKE_LIB) $(TEST_OBJ) $(TOOL_NON_ARG_OBJ) $(wildcard src/*/*.h) $(wildcard tests/*.h) $(wildcard tests/*/*.h) $(wildcard tests/*/*/*.h) tests/validator/handlers.h
+	$(STOKE_CXX) $(TARGET) $(OPT) $(ARCH_OPT) $(INC) $< -o $@ $(STOKE_LIB) $(TEST_OBJ) $(TOOL_NON_ARG_OBJ) $(LIB) $(LDFLAGS) $(TEST_LIBS)
 
 ## MISC
 
-.SECONDARY: $(SRC_OBJ) $(TOOL_OBJ)
+.SECONDARY: $(STOKE_LIB) $(SRC_OBJ) $(TOOL_OBJ)
 
 zsh_completion: bin/_stoke
 bin/_stoke: $(BIN) tools/scripts/completion_generator.py
@@ -498,7 +502,7 @@ hooks: .git/hooks/pre-commit .git/hooks/post-merge-checkout
 ##### CLEAN TARGETS
 
 stoke_clean:
-	rm -rf $(SRC_OBJ) $(TOOL_OBJ) $(TEST_OBJ) $(BIN) $(TEST_BIN) tags bin/stoke_* bin/_stoke bin/stoke.bash
+	rm -rf $(STOKE_LIB) $(SRC_OBJ) $(TOOL_OBJ) $(TEST_OBJ) $(BIN) $(TEST_BIN) tags bin/stoke_* bin/_stoke bin/stoke.bash
 	rm -rf $(VALIDATOR_AUTOGEN)
 
 clean: stoke_clean

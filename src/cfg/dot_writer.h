@@ -29,6 +29,9 @@ private:
   std::map<std::string, std::string> Store;
   typedef std::pair<std::string, bool> P;
 public:
+  KeyCache() {
+    srand(5);
+  }
   std::string getHash() {
     std::string str("");
     char alphabet[] =
