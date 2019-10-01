@@ -142,6 +142,9 @@ SRC_OBJ=\
 	\
 	src/solver/z3solver.o \
 	\
+	src/specgen/specgen.o \
+        src/specgen/support.o \
+	\
 	src/state/cpu_state.o \
 	src/state/cpu_states.o \
 	src/state/error_code.o \
@@ -279,7 +282,9 @@ BIN=\
 	bin/stoke_benchmark_sandbox \
 	bin/stoke_benchmark_search \
 	bin/stoke_benchmark_state \
-	bin/stoke_benchmark_verify
+	bin/stoke_benchmark_verify \
+	bin/opcode_to_instruction \
+	bin/specgen_setup
 
 # used to force a target to rebuild
 .PHONY: .FORCE
@@ -426,6 +431,8 @@ src/stategen/%.o: src/stategen/%.cc $(DEPS)
 	$(STOKE_CXX) $(TARGET) $(OPT) $(ARCH_OPT) $(INC) -c $< -o $@
 src/symstate/%.o: src/symstate/%.cc $(DEPS)
 	$(STOKE_CXX) $(TARGET) $(OPT) $(ARCH_OPT) $(INC) -c $< -o $@
+src/specgen/%.o: src/specgen/%.cc $(DEPS)
+	$(CXX) $(TARGET) $(OPT) $(ARCH_OPT) $(INC) -c $< -o $@
 src/target/%.o: src/target/%.cc src/target/%.h $(DEPS)
 	$(STOKE_CXX) $(TARGET) $(OPT) $(ARCH_OPT) $(INC) -c $< -o $@
 src/transform/%.o: src/transform/%.cc $(DEPS)
