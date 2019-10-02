@@ -124,7 +124,7 @@ bool is_register_only(Opcode opcode) {
 //   return true;
 // }
 
-bool is_gp_type(const Type& t) {
+static bool is_gp_type(const Type& t) {
   switch (t) {
   case x64asm::Type::RH:
   case x64asm::Type::AL:
@@ -144,7 +144,7 @@ bool is_gp_type(const Type& t) {
   return true;
 }
 
-bool is_imm_type(const Type& t) {
+static bool is_imm_type(const Type& t) {
   switch (t) {
   case x64asm::Type::IMM_8:
   case x64asm::Type::IMM_16:

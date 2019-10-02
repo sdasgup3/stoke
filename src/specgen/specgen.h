@@ -43,6 +43,13 @@ enum class SupportedReason {
 SupportedReason is_supported_type_reason(x64asm::Type t);
 /** Can specgen currently handle this x64asm::Type? */
 bool is_supported_type(x64asm::Type t);
+bool is_gpr_type(const x64asm::Type& t);
+bool is_mem_type(const x64asm::Type& t);
+bool is_imm_type(const x64asm::Type& t);
+bool is_any_operand_mem_type(x64asm::Instruction instr);
+bool is_any_operand_imm_type(x64asm::Instruction instr);
+bool is_any_operand_gpr_type(x64asm::Instruction instr);
+
 x64asm::Operand get_next_operand(x64asm::Type t, uint8_t imm8_val, bool samereg
                                  = false);
 // deprecated, should not be used anymore probably
@@ -53,7 +60,7 @@ x64asm::Operand get_random_operand(x64asm::Type t, std::default_random_engine& g
 x64asm::Instruction get_random_instruction(x64asm::Opcode opc, std::default_random_engine& gen);
 
 x64asm::Instruction get_instruction_from_string(std::string xopcode, bool
-    samereg = false);
+    samereg = false, bool handle_imm = false);
 
 void measure_complexity(SymState& state, x64asm::RegSet& rs, size_t* nodes, size_t* uifs, size_t* muls, bool simplify = false);
 

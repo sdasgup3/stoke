@@ -145,6 +145,8 @@ SRC_OBJ=\
 	src/specgen/specgen.o \
         src/specgen/support.o \
 	\
+	src/decompiler_setup/decompiler_setup.o \
+	\
 	src/state/cpu_state.o \
 	src/state/cpu_states.o \
 	src/state/error_code.o \
@@ -284,7 +286,8 @@ BIN=\
 	bin/stoke_benchmark_state \
 	bin/stoke_benchmark_verify \
 	bin/opcode_to_instruction \
-	bin/specgen_setup
+	bin/specgen_setup \
+	bin/decompiler_setup_driver
 
 # used to force a target to rebuild
 .PHONY: .FORCE
@@ -432,6 +435,8 @@ src/stategen/%.o: src/stategen/%.cc $(DEPS)
 src/symstate/%.o: src/symstate/%.cc $(DEPS)
 	$(STOKE_CXX) $(TARGET) $(OPT) $(ARCH_OPT) $(INC) -c $< -o $@
 src/specgen/%.o: src/specgen/%.cc $(DEPS)
+	$(CXX) $(TARGET) $(OPT) $(ARCH_OPT) $(INC) -c $< -o $@
+src/decompiler_setup/%.o: src/decompiler_setup/%.cc $(DEPS)
 	$(CXX) $(TARGET) $(OPT) $(ARCH_OPT) $(INC) -c $< -o $@
 src/target/%.o: src/target/%.cc src/target/%.h $(DEPS)
 	$(STOKE_CXX) $(TARGET) $(OPT) $(ARCH_OPT) $(INC) -c $< -o $@

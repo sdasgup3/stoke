@@ -16,13 +16,13 @@
 #include <fstream>
 #include <iostream>
 #include <random>
+#include <regex>
 #include <string>
 #include <vector>
-#include <regex>
 
-#include "src/symstate/visitor.h"
-#include "src/symstate/simplify.h"
 #include "src/specgen/specgen.h"
+#include "src/symstate/simplify.h"
+#include "src/symstate/visitor.h"
 
 using namespace std;
 using namespace stoke;
@@ -35,60 +35,63 @@ class Counter : public SymVisitor<size_t, size_t, size_t> {
 public:
   Counter(size_t c) : constant_(c) {}
   Counter() : constant_(0) {}
-  virtual size_t operator()(const SymBitVector& bv) {
+  virtual size_t operator()(const SymBitVector &bv) {
     return SymVisitor<size_t, size_t, size_t>::operator()(bv.ptr);
   }
-  virtual size_t operator()(const SymBool& bv) {
+  virtual size_t operator()(const SymBool &bv) {
     return SymVisitor<size_t, size_t, size_t>::operator()(bv.ptr);
   }
-  virtual size_t operator()(const SymArray& a) {
+  virtual size_t operator()(const SymArray &a) {
     return SymVisitor<size_t, size_t, size_t>::operator()(a.ptr);
   }
-  virtual size_t operator()(const SymBitVectorAbstract * const bv) {
+  virtual size_t operator()(const SymBitVectorAbstract *const bv) {
     // return 0 if we have already seen this one
-    if (seen_bits_.find((SymBitVectorAbstract*)bv) != seen_bits_.end()) return 0;
-    seen_bits_.insert((SymBitVectorAbstract*)bv);
+    if (seen_bits_.find((SymBitVectorAbstract *)bv) != seen_bits_.end())
+      return 0;
+    seen_bits_.insert((SymBitVectorAbstract *)bv);
     return SymVisitor<size_t, size_t, size_t>::operator()(bv);
   }
-  virtual size_t operator()(const SymBoolAbstract * const bv) {
+  virtual size_t operator()(const SymBoolAbstract *const bv) {
     // return 0 if we have already seen this one
-    if (seen_bool_.find((SymBoolAbstract*)bv) != seen_bool_.end()) return 0;
-    seen_bool_.insert((SymBoolAbstract*)bv);
+    if (seen_bool_.find((SymBoolAbstract *)bv) != seen_bool_.end())
+      return 0;
+    seen_bool_.insert((SymBoolAbstract *)bv);
     return SymVisitor<size_t, size_t, size_t>::operator()(bv);
   }
-  virtual size_t operator()(const SymArrayAbstract * const bv) {
+  virtual size_t operator()(const SymArrayAbstract *const bv) {
     // return 0 if we have already seen this one
-    if (seen_array_.find((SymArrayAbstract*)bv) != seen_array_.end()) return 0;
-    seen_array_.insert((SymArrayAbstract*)bv);
+    if (seen_array_.find((SymArrayAbstract *)bv) != seen_array_.end())
+      return 0;
+    seen_array_.insert((SymArrayAbstract *)bv);
     return SymVisitor<size_t, size_t, size_t>::operator()(bv);
   }
-  size_t visit_binop(const SymBitVectorBinop * const bv) {
+  size_t visit_binop(const SymBitVectorBinop *const bv) {
     auto lhs = (*this)(bv->a_);
     auto rhs = (*this)(bv->b_);
     return lhs + rhs + constant_;
   }
-  size_t visit_binop(const SymBoolBinop * const bv) {
+  size_t visit_binop(const SymBoolBinop *const bv) {
     auto lhs = (*this)(bv->a_);
     auto rhs = (*this)(bv->b_);
     return lhs + rhs + constant_;
   }
-  size_t visit_unop(const SymBitVectorUnop * const bv) {
+  size_t visit_unop(const SymBitVectorUnop *const bv) {
     auto lhs = (*this)(bv->bv_);
     return lhs + constant_;
   }
-  size_t visit_compare(const SymBoolCompare * const bv) {
+  size_t visit_compare(const SymBoolCompare *const bv) {
     auto lhs = (*this)(bv->a_);
     auto rhs = (*this)(bv->b_);
     return lhs + rhs + constant_;
   }
-  size_t visit(const SymBitVectorConstant * const bv) {
+  size_t visit(const SymBitVectorConstant *const bv) {
     return constant_;
   }
-  size_t visit(const SymBitVectorExtract * const bv) {
+  size_t visit(const SymBitVectorExtract *const bv) {
     auto lhs = (*this)(bv->bv_);
     return lhs + constant_;
   }
-  size_t visit(const SymBitVectorFunction * const bv) {
+  size_t visit(const SymBitVectorFunction *const bv) {
     size_t res = 0;
     for (size_t i = 0; i < bv->args_.size(); ++i) {
       auto arg = (*this)(bv->args_[i]);
@@ -96,57 +99,57 @@ public:
     }
     return res + constant_;
   }
-  size_t visit(const SymBitVectorIte * const bv) {
+  size_t visit(const SymBitVectorIte *const bv) {
     auto c = (*this)(bv->cond_);
     auto lhs = (*this)(bv->a_);
     auto rhs = (*this)(bv->b_);
     return c + lhs + rhs + constant_;
   }
-  size_t visit(const SymBitVectorSignExtend * const bv) {
+  size_t visit(const SymBitVectorSignExtend *const bv) {
     auto lhs = (*this)(bv->bv_);
     return lhs + constant_;
   }
-  size_t visit(const SymBitVectorVar * const bv) {
+  size_t visit(const SymBitVectorVar *const bv) {
     return constant_;
   }
-  size_t visit(const SymBoolFalse * const b) {
+  size_t visit(const SymBoolFalse *const b) {
     return constant_;
   }
-  size_t visit(const SymBoolNot * const b) {
+  size_t visit(const SymBoolNot *const b) {
     auto lhs = (*this)(b->b_);
     return lhs + constant_;
   }
-  size_t visit(const SymBitVectorArrayLookup * const bv) {
+  size_t visit(const SymBitVectorArrayLookup *const bv) {
     auto a = (*this)(bv->a_);
     auto key = (*this)(bv->key_);
     return a + key + constant_;
   };
-  size_t visit(const SymBoolTrue * const b) {
+  size_t visit(const SymBoolTrue *const b) {
     return constant_;
   }
-  size_t visit(const SymBoolVar * const b) {
+  size_t visit(const SymBoolVar *const b) {
     return constant_;
   }
-  size_t visit(const SymBoolArrayEq * const bv) {
+  size_t visit(const SymBoolArrayEq *const bv) {
     auto lhs = (*this)(bv->a_);
     auto rhs = (*this)(bv->b_);
     return lhs + rhs + constant_;
   }
-  size_t visit(const SymArrayStore * const b) {
+  size_t visit(const SymArrayStore *const b) {
     auto a = (*this)(b->a_);
     auto key = (*this)(b->key_);
     auto value = (*this)(b->value_);
     return a + key + value + constant_;
   }
-  size_t visit(const SymArrayVar * const a) {
+  size_t visit(const SymArrayVar *const a) {
     return constant_;
   }
 
 private:
   size_t constant_;
-  std::set<SymBoolAbstract*> seen_bool_;
-  std::set<SymBitVectorAbstract*> seen_bits_;
-  std::set<SymArrayAbstract*> seen_array_;
+  std::set<SymBoolAbstract *> seen_bool_;
+  std::set<SymBitVectorAbstract *> seen_bits_;
+  std::set<SymArrayAbstract *> seen_array_;
 };
 
 class NodeCounter : public Counter {
@@ -156,7 +159,7 @@ public:
 
 class UninterpretedFunctionCounter : public Counter {
 public:
-  size_t visit(const SymBitVectorFunction * const bv) {
+  size_t visit(const SymBitVectorFunction *const bv) {
     size_t res = 0;
     for (size_t i = 0; i < bv->args_.size(); ++i) {
       auto arg = (*this)(bv->args_[i]);
@@ -168,11 +171,10 @@ public:
 
 class MulDivCounter : public Counter {
 public:
-  size_t visit_binop(const SymBitVectorBinop * const bv) {
+  size_t visit_binop(const SymBitVectorBinop *const bv) {
     auto lhs = (*this)(bv->a_);
     auto rhs = (*this)(bv->b_);
-    if (bv->type() == SymBitVector::DIV ||
-        bv->type() == SymBitVector::MOD ||
+    if (bv->type() == SymBitVector::DIV || bv->type() == SymBitVector::MOD ||
         bv->type() == SymBitVector::MULT ||
         bv->type() == SymBitVector::SIGN_DIV ||
         bv->type() == SymBitVector::SIGN_MOD) {
@@ -182,7 +184,8 @@ public:
   }
 };
 
-void measure_complexity(SymState& state, RegSet& rs, size_t* nodes, size_t* uifs, size_t* muls, bool should_simplify) {
+void measure_complexity(SymState &state, RegSet &rs, size_t *nodes,
+                        size_t *uifs, size_t *muls, bool should_simplify) {
   NodeCounter node_counter;
   UninterpretedFunctionCounter uif_counter;
   MulDivCounter mul_counter;
@@ -192,13 +195,13 @@ void measure_complexity(SymState& state, RegSet& rs, size_t* nodes, size_t* uifs
   *muls = 0;
 
   SymSimplify simplifier;
-  auto simplify = [&simplifier, &should_simplify](SymBitVector& circuit) {
+  auto simplify = [&simplifier, &should_simplify](SymBitVector &circuit) {
     if (should_simplify) {
       return simplifier.simplify(circuit);
     }
     return circuit;
   };
-  auto simplifybool = [&simplifier, &should_simplify](SymBool& circuit) {
+  auto simplifybool = [&simplifier, &should_simplify](SymBool &circuit) {
     if (should_simplify) {
       return simplifier.simplify(circuit);
     }
@@ -240,6 +243,100 @@ void measure_complexity(SymState& state, RegSet& rs, size_t* nodes, size_t* uifs
   // uifs += uif_counter(circuit);
   // muls += mul_counter(circuit);
 }
+
+bool is_gpr_type(const x64asm::Type& t) {
+  switch (t) {
+  case x64asm::Type::RH:
+  case x64asm::Type::AL:
+  case x64asm::Type::CL:
+  case x64asm::Type::R_8:
+  case x64asm::Type::AX:
+  case x64asm::Type::DX:
+  case x64asm::Type::R_16:
+  case x64asm::Type::EAX:
+  case x64asm::Type::R_32:
+  case x64asm::Type::RAX:
+  case x64asm::Type::R_64:
+    break;
+  default:
+    return false;
+  }
+  return true;
+}
+
+bool is_imm_type(const x64asm::Type& t) {
+  switch (t) {
+  case x64asm::Type::IMM_8:
+  case x64asm::Type::IMM_16:
+  case x64asm::Type::IMM_32:
+  case x64asm::Type::IMM_64:
+    return true;
+  default:
+    break;
+  }
+  return false;
+}
+
+bool is_mem_type(const x64asm::Type& t) {
+  switch (t) {
+  case x64asm::Type::M_8:
+  case x64asm::Type::M_16:
+  case x64asm::Type::M_32:
+  case x64asm::Type::M_64:
+  case x64asm::Type::M_128:
+  case x64asm::Type::M_256:
+  case x64asm::Type::M_16_INT:
+  case x64asm::Type::M_32_INT:
+  case x64asm::Type::M_64_INT:
+  case x64asm::Type::M_32_FP:
+  case x64asm::Type::M_64_FP:
+  case x64asm::Type::M_80_FP:
+  case x64asm::Type::M_80_BCD:
+  case x64asm::Type::M_2_BYTE:
+  case x64asm::Type::M_28_BYTE:
+  case x64asm::Type::M_108_BYTE:
+  case x64asm::Type::M_512_BYTE:
+    return true;
+  default:
+    return false;
+  }
+
+  return false;
+}
+
+bool is_any_operand_mem_type(x64asm::Instruction instr) {
+  for (size_t i = 0; i < instr.arity(); i++) {
+    const x64asm::Type instr_t = instr.type(i);
+    if (is_mem_type(instr_t)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool is_any_operand_imm_type(x64asm::Instruction instr) {
+  for (size_t i = 0; i < instr.arity(); i++) {
+    const x64asm::Type instr_t = instr.type(i);
+    if (is_imm_type(instr_t)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool is_any_operand_gpr_type(x64asm::Instruction instr) {
+  for (size_t i = 0; i < instr.arity(); i++) {
+    const x64asm::Type instr_t = instr.type(i);
+    if (is_gpr_type(instr_t)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 
 SupportedReason is_supported_type_reason(x64asm::Type t) {
   switch (t) {
@@ -324,29 +421,88 @@ bool is_supported_type(x64asm::Type t) {
   return is_supported_type_reason(t) == SupportedReason::SUPPORTED;
 }
 
-
-
-
 std::map<x64asm::Type, std::vector<x64asm::Operand>> operands_ = {
-  {x64asm::Type::RH,    {x64asm::Constants::ah(), x64asm::Constants::bh(), x64asm::Constants::ch(), x64asm::Constants::dh()}},
-  {x64asm::Type::R_8,   {x64asm::Constants::bl(), x64asm::Constants::cl(), x64asm::Constants::dl()}},
-  {x64asm::Type::R_16,  {x64asm::Constants::bx(), x64asm::Constants::cx(), x64asm::Constants::dx()}},
-  {x64asm::Type::R_32,  {x64asm::Constants::ebx(), x64asm::Constants::ecx(), x64asm::Constants::edx()}},
-  {x64asm::Type::R_64,  {x64asm::Constants::rbx(), x64asm::Constants::rcx(), x64asm::Constants::rdx()}},
-  {x64asm::Type::M_8,   {x64asm::M8(x64asm::Constants::rbx()),   x64asm::M8(x64asm::Constants::rcx()),    x64asm::M8(x64asm::Constants::rdx())}},
-  {x64asm::Type::M_16,  {x64asm::M16(x64asm::Constants::rbx()),  x64asm::M16(x64asm::Constants::rcx()),   x64asm::M16(x64asm::Constants::rdx())}},
-  {x64asm::Type::M_32,  {x64asm::M32(x64asm::Constants::rbx()),  x64asm::M32(x64asm::Constants::rcx()),   x64asm::M32(x64asm::Constants::rdx())}},
-  {x64asm::Type::M_64,  {x64asm::M64(x64asm::Constants::rbx()),  x64asm::M64(x64asm::Constants::rcx()),   x64asm::M64(x64asm::Constants::rdx())}},
-  {x64asm::Type::M_128, {x64asm::M128(x64asm::Constants::rbx()), x64asm::M128(x64asm::Constants::rcx()),  x64asm::M128(x64asm::Constants::rdx())}},
-  {x64asm::Type::M_256, {x64asm::M256(x64asm::Constants::rbx()), x64asm::M256(x64asm::Constants::rcx()),  x64asm::M256(x64asm::Constants::rdx())}},
-  {x64asm::Type::XMM, {x64asm::Constants::xmm1(), x64asm::Constants::xmm2(), x64asm::Constants::xmm3(), x64asm::Constants::xmm4()}},
-  {x64asm::Type::YMM, {x64asm::Constants::ymm1(), x64asm::Constants::ymm2(), x64asm::Constants::ymm3(), x64asm::Constants::ymm4()}},
-  {x64asm::Type::MM, {x64asm::Constants::mm0(), x64asm::Constants::mm1(), x64asm::Constants::mm2(), x64asm::Constants::mm3()}}
+  { x64asm::Type::RH,
+    { x64asm::Constants::ah(), x64asm::Constants::bh(), x64asm::Constants::ch(),
+      x64asm::Constants::dh()
+    }
+  },
+  { x64asm::Type::R_8,
+    { x64asm::Constants::bl(), x64asm::Constants::cl(),
+      x64asm::Constants::dl()
+    }
+  },
+  { x64asm::Type::R_16,
+    { x64asm::Constants::bx(), x64asm::Constants::cx(),
+      x64asm::Constants::dx()
+    }
+  },
+  { x64asm::Type::R_32,
+    { x64asm::Constants::ebx(), x64asm::Constants::ecx(),
+      x64asm::Constants::edx()
+    }
+  },
+  { x64asm::Type::R_64,
+    { x64asm::Constants::rbx(), x64asm::Constants::rcx(),
+      x64asm::Constants::rdx()
+    }
+  },
+  { x64asm::Type::M_8,
+    { x64asm::M8(x64asm::Constants::rbx()),
+      x64asm::M8(x64asm::Constants::rcx()),
+      x64asm::M8(x64asm::Constants::rdx())
+    }
+  },
+  { x64asm::Type::M_16,
+    { x64asm::M16(x64asm::Constants::rbx()),
+      x64asm::M16(x64asm::Constants::rcx()),
+      x64asm::M16(x64asm::Constants::rdx())
+    }
+  },
+  { x64asm::Type::M_32,
+    { x64asm::M32(x64asm::Constants::rbx()),
+      x64asm::M32(x64asm::Constants::rcx()),
+      x64asm::M32(x64asm::Constants::rdx())
+    }
+  },
+  { x64asm::Type::M_64,
+    { x64asm::M64(x64asm::Constants::rbx()),
+      x64asm::M64(x64asm::Constants::rcx()),
+      x64asm::M64(x64asm::Constants::rdx())
+    }
+  },
+  { x64asm::Type::M_128,
+    { x64asm::M128(x64asm::Constants::rbx()),
+      x64asm::M128(x64asm::Constants::rcx()),
+      x64asm::M128(x64asm::Constants::rdx())
+    }
+  },
+  { x64asm::Type::M_256,
+    { x64asm::M256(x64asm::Constants::rbx()),
+      x64asm::M256(x64asm::Constants::rcx()),
+      x64asm::M256(x64asm::Constants::rdx())
+    }
+  },
+  { x64asm::Type::XMM,
+    { x64asm::Constants::xmm1(), x64asm::Constants::xmm2(),
+      x64asm::Constants::xmm3(), x64asm::Constants::xmm4()
+    }
+  },
+  { x64asm::Type::YMM,
+    { x64asm::Constants::ymm1(), x64asm::Constants::ymm2(),
+      x64asm::Constants::ymm3(), x64asm::Constants::ymm4()
+    }
+  },
+  { x64asm::Type::MM,
+    { x64asm::Constants::mm0(), x64asm::Constants::mm1(),
+      x64asm::Constants::mm2(), x64asm::Constants::mm3()
+    }
+  }
 };
-std::map<x64asm::Type, int> operands_idx_ = {
-};
+std::map<x64asm::Type, int> operands_idx_ = {};
 
-x64asm::Operand get_next_operand(x64asm::Type t, uint8_t imm8_val, bool samereg) {
+x64asm::Operand get_next_operand(x64asm::Type t, uint8_t imm8_val,
+                                 bool samereg) {
   // std::cout << "Type: " << t << "\n";
   if (t == x64asm::Type::IMM_8) {
     return x64asm::Imm8(imm8_val);
@@ -419,7 +575,8 @@ x64asm::Operand get_next_operand(x64asm::Type t, uint8_t imm8_val, bool samereg)
   std::vector<x64asm::Operand> candidates = operands_[t];
   assert((int)operands_[t].size() > operands_idx_[t]);
   operands_idx_[t] += 1;
-  // increment other counters, too, so that we don't reuse the same register id multiple times
+  // increment other counters, too, so that we don't reuse the same register id
+  // multiple times
 
   auto incr_mem_counters = [&operands_idx_]() -> void {
     if (operands_idx_.find(x64asm::Type::M_8) == operands_idx_.end())
@@ -447,19 +604,14 @@ x64asm::Operand get_next_operand(x64asm::Type t, uint8_t imm8_val, bool samereg)
     operands_idx_[x64asm::Type::M_256] += 1;
   };
 
-  if (t == x64asm::Type::R_8
-      || t == x64asm::Type::R_16
-      || t == x64asm::Type::R_32
-      || t == x64asm::Type::R_64) {
+  if (t == x64asm::Type::R_8 || t == x64asm::Type::R_16 ||
+      t == x64asm::Type::R_32 || t == x64asm::Type::R_64) {
     incr_mem_counters();
   }
 
-  if (t == x64asm::Type::M_8
-      || t == x64asm::Type::M_16
-      || t == x64asm::Type::M_32
-      || t == x64asm::Type::M_64
-      || t == x64asm::Type::M_128
-      || t == x64asm::Type::M_256 ) {
+  if (t == x64asm::Type::M_8 || t == x64asm::Type::M_16 ||
+      t == x64asm::Type::M_32 || t == x64asm::Type::M_64 ||
+      t == x64asm::Type::M_128 || t == x64asm::Type::M_256) {
     if (operands_idx_.find(x64asm::Type::R_8) == operands_idx_.end())
       operands_idx_[x64asm::Type::R_8] = 0;
     operands_idx_[x64asm::Type::R_8] += 1;
@@ -510,7 +662,8 @@ x64asm::Operand get_next_operand(x64asm::Type t, uint8_t imm8_val, bool samereg)
   return operands_[t][operands_idx_[t] - 1];
 }
 
-x64asm::Instruction get_instruction(x64asm::Opcode opc, uint8_t imm8_val, bool samereg) {
+x64asm::Instruction get_instruction(x64asm::Opcode opc, uint8_t imm8_val,
+                                    bool samereg) {
   operands_idx_ = {};
   x64asm::Instruction instr(opc);
   // std::cout << instr << std::endl;
@@ -585,8 +738,7 @@ x64asm::Instruction get_instruction(x64asm::Opcode opc, uint8_t imm8_val, bool s
     instr.set_operand(0, Constants::eax());
     instr.set_operand(1, Constants::ebx());
     instr.set_operand(2, Constants::ecx());
-  }
-  else if (opc == MULX_R64_R64_R64) {
+  } else if (opc == MULX_R64_R64_R64) {
     instr.set_operand(0, Constants::rax());
     instr.set_operand(1, Constants::rbx());
     instr.set_operand(2, Constants::rcx());
@@ -597,14 +749,14 @@ x64asm::Instruction get_instruction(x64asm::Opcode opc, uint8_t imm8_val, bool s
     for (size_t i = 0; i < instr.arity(); i++) {
       auto t = instr.type(i);
       // std::cout << "processing type: " << t << std::endl;
-      if (is_supported_type(t)
-          || is_supported_type_reason(t) == SupportedReason::MM
-          || is_supported_type_reason(t) == SupportedReason::IMMEDIATE
-          || is_supported_type_reason(t) == SupportedReason::MEMORY) {
+      if (is_supported_type(t) ||
+          is_supported_type_reason(t) == SupportedReason::MM ||
+          is_supported_type_reason(t) == SupportedReason::IMMEDIATE ||
+          is_supported_type_reason(t) == SupportedReason::MEMORY) {
         instr.set_operand(i, get_next_operand(t, imm8_val, samereg));
       } else {
         std::cout << "unsupported type: " << t << std::endl;
-        std::cout << (int) opc << std::endl;
+        std::cout << (int)opc << std::endl;
         std::cout << opc << std::endl;
         std::cout << instr << std::endl;
         exit(1);
@@ -620,17 +772,16 @@ x64asm::Instruction get_instruction(x64asm::Opcode opc, uint8_t imm8_val, bool s
 }
 
 template <typename T>
-Operand choice(const T& input, default_random_engine& gen) {
+Operand choice(const T &input, default_random_engine &gen) {
   assert(input.size() > 0);
   return input[gen() % input.size()];
 }
-template <typename T>
-R64 choice64(const T& input, default_random_engine& gen) {
+template <typename T> R64 choice64(const T &input, default_random_engine &gen) {
   assert(input.size() > 0);
   return input[gen() % input.size()];
 }
 
-x64asm::Operand get_random_operand(x64asm::Type t, default_random_engine& gen) {
+x64asm::Operand get_random_operand(x64asm::Type t, default_random_engine &gen) {
   switch (t) {
   case Type::IMM_8:
     return Imm8(gen() % (1ULL << 8));
@@ -727,7 +878,9 @@ x64asm::Operand get_random_operand(x64asm::Type t, default_random_engine& gen) {
   return Imm8(0); // make the compiler happy
 }
 
-Instruction get_random_instruction_helper(x64asm::Opcode opc, default_random_engine& gen, int tries_left) {
+Instruction get_random_instruction_helper(x64asm::Opcode opc,
+    default_random_engine &gen,
+    int tries_left) {
 
   x64asm::Instruction instr(opc);
 
@@ -740,34 +893,42 @@ Instruction get_random_instruction_helper(x64asm::Opcode opc, default_random_eng
       std::cout << "no valid instruction found: " << instr << std::endl;
       exit(1);
     } else {
-      return get_random_instruction_helper(opc, gen, tries_left-1);
+      return get_random_instruction_helper(opc, gen, tries_left - 1);
     }
   }
   return instr; // make compiler happy
 }
 
-x64asm::Instruction get_random_instruction(x64asm::Opcode opc, default_random_engine& gen) {
+x64asm::Instruction get_random_instruction(x64asm::Opcode opc,
+    default_random_engine &gen) {
   return get_random_instruction_helper(opc, gen, 200);
 }
 
-x64asm::Instruction get_instruction_from_string(std::string xopcode, bool samereg) {
+x64asm::Instruction get_instruction_from_string(std::string xopcode,
+    bool samereg, bool handle_imm) {
   // parse opcode
   // we use opc_8 to indicate that we want to use 8 as the imm8 argument
   smatch result;
   regex reg("(.*?)(_([0-9]+))?");
   string opc_str;
   uint8_t num;
-  if (regex_match(xopcode, result, reg)) {
-    if (result[2] == "") {
-      num = 0;
+  if (handle_imm) {
+    if (regex_match(xopcode, result, reg)) {
+      if (result[2] == "") {
+        num = 0;
+      } else {
+        string t = result[3];
+        num = stoi(t);
+      }
+      opc_str = result[1];
     } else {
-      string t = result[3];
-      num = stoi(t);
+      exit(3);
     }
-    opc_str = result[1];
   } else {
-    exit(3);
+    opc_str = xopcode;
+    num = 0;
   }
+
   Opcode opc;
   stringstream ss(opc_str);
   ss >> opc;
@@ -777,5 +938,6 @@ x64asm::Instruction get_instruction_from_string(std::string xopcode, bool samere
   }
   return get_instruction(opc, num, samereg);
 }
+
 
 } // namespace stoke
