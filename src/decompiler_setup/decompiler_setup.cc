@@ -24,6 +24,7 @@
 #include "src/ext/cpputil/include/system/terminal.h"
 #include "src/decompiler_setup/decompiler_setup.h"
 #include <boost/filesystem.hpp>
+#include <boost/regex.hpp>
 
 using namespace std;
 using namespace stoke;
@@ -46,11 +47,13 @@ vector<string> &extractFromStream(vector<string> &ss, redi::ipstream &ips) {
     return ss;
 }
 
-static string normalize_spaces(const string &str) {
+string normalize_spaces(const string &str) {
     string retval("");
     for(auto c: str) {
-        if(c == ' ') {
+        if(c == ' ' || c == '(' || c == ')' || c == ',' || c == '$' || c == '%') {
             retval += "_";
+        } else if(c == '-') {
+            retval += "MINUS";
         } else {
             retval += c;
         }
@@ -61,7 +64,7 @@ static string normalize_spaces(const string &str) {
 
 bool run_command(const string &cmd, bool ret_stream,
                  redi::ipstream **retval) {
-    Console::msg() << "Executing: " << cmd << "\n";
+    Console::msg() << "\nExecuting: " << cmd << "\n";
     auto stream = new redi::ipstream(cmd, redi::pstreams::pstdout);
     if (!stream) {
         Console::error(1) << "Unknown error spawning: " + cmd;
@@ -94,21 +97,47 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
     auto normalizedOpcode = normalize_spaces(ss_instr.str());
     auto out = workdir + "/" + normalizedOpcode;
     boost::filesystem::path dir(out);
+
+    Console::msg() << "Instr: " << instr << endl;
+    Console::msg() << "Workdir: " << out << endl;
+    Console::msg() << "Generating artifacts..." << endl;
+
+    if(boost::filesystem::exists(dir)) {
+        Console::msg() << "Already Exists" << endl;
+        return true;
+    }
+
     boost::filesystem::create_directories(dir);
 
-    Console::msg() << "Generating workdirs artifacts for instr(" << instr << "): " << out << endl;
 
-    ofstream seed_code;
-    seed_code.open(out + "/" + "seed.s");
-    seed_code << ".target:" << endl;
-    seed_code << "  " << instr << endl;
-    seed_code << "  retq" << endl;
-    seed_code.close();
+    //ofstream seed_code;
+    //seed_code.open(out + "/" + "seed.s");
+    //seed_code << ".target:" << endl;
+    //seed_code << "  " << instr << endl;
+    //if(instr.is_any_jump()) {
+    //  auto lbl = instr.get_operand<Label>(0);
+    //  seed_code << "  " << lbl << ":" << endl;
+    //}
+    //seed_code << "  retq" << endl;
+    //seed_code.close();
 
     ofstream c_code;
     c_code.open(out + "/" + "test.c");
     c_code << "void main() {" << endl;
-    c_code << "  __asm__(\"" << instr << "\");" << endl;
+
+    if(instr.is_any_jump()) {
+
+        std::string replaceWith = "jmp";
+        boost::regex re("jmpq");
+        std::string result = boost::regex_replace(ss_instr.str(), re, replaceWith);
+        c_code << "  __asm__(\"" << result << "\");" << endl;
+
+        auto lbl = instr.get_operand<Label>(0);
+        c_code << "  __asm__(\"" << lbl << ":\");" << endl;
+    } else {
+        c_code << "  __asm__(\"" << instr << "\");" << endl;
+    }
+
     c_code << "}" << endl;
     c_code.close();
 
@@ -142,26 +171,55 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
     make_code << "	gcc -Os $< -o test" << endl;
 
     make_code.close();
+    Console::msg() << "Generating artifacts... Done." << endl;
+
+    return true;
+}
 
 
-    redi::ipstream *stream = NULL;
+vector<string> runSetup(const Instruction instr, const string &workdir, const string &scriptsPath) {
     vector<string> result;
+    redi::ipstream *stream = NULL;
 
-    run_command("make -C " + out + " binary", true, &stream);
+    if(workdir == "") return result;
+
+    stringstream ss_instr;
+    ss_instr << instr;
+
+    auto normalizedOpcode = normalize_spaces(ss_instr.str());
+    auto out = workdir + "/" + normalizedOpcode;
+
+    Console::msg() << "Running artifacts..." << endl;
+
+    auto targetArtifact  = out + "/test.mod.ll";
+    boost::filesystem::path dir(targetArtifact);
+    if(boost::filesystem::exists(dir)) {
+        Console::msg() << "Already Ran" << endl;
+
+        auto cmd = scriptsPath + "/specialize_template.pl   --file " +
+                   targetArtifact;
+        if(!run_command(cmd, true, &stream)) return result;
+        extractFromStream(result, *stream);
+        return result;
+    }
+
+    if(!run_command("make -C " + out + " binary", true, &stream)) return result;
     extractFromStream(result, *stream);
 
-    run_command("make -C " + out + " mcsema", true, &stream);
+    if(!run_command("make -C " + out + " mcsema", true, &stream)) return result;
     extractFromStream(result, *stream);
 
-    run_command("make -C " + out + " declutter", true, &stream);
+    if(!run_command("make -C " + out + " declutter", true, &stream)) return result;
     extractFromStream(result, *stream);
 
     auto cmd = scriptsPath + "/specialize_template.pl   --file " +
-               out + "/test.mod.ll";
-    run_command(cmd, true, &stream);
+               targetArtifact;
+    if(!run_command(cmd, true, &stream)) return result;
     extractFromStream(result, *stream);
 
-    return true;
+    Console::msg() << "Running artifacts...Done." << endl;
+
+    return result;
 }
 
 } // namespace stoke

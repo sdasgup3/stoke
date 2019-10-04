@@ -87,5 +87,7 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
+    runSetup(code[0], workdir_arg.value(), scriptsPath);
+
     return 0;
 }

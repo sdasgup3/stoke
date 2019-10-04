@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef STOKE_TOOLS_APPS_SPECGEN_H
-#define STOKE_TOOLS_APPS_SPECGEN_H
+#ifndef STOKE_DECOMPILER_SETUP_H
+#define STOKE_DECOMPILER_SETUP_H
 
 #include <chrono>
 #include <fstream>
@@ -32,9 +32,11 @@ using namespace x64asm;
 namespace stoke {
 
 bool createSetup(const Instruction instr, const string &workdir, const string &scriptsPath);
+vector<string> runSetup(const Instruction instr, const string &workdir, const string &scriptsPath);
 vector<string> &extractFromStream(vector<string> &ss, redi::ipstream &ips);
 bool run_command(const string &cmd, bool ret_stream = false,
                  redi::ipstream **retval = NULL);
+string normalize_spaces(const string &str);
 
 
 } // namespace stoke
