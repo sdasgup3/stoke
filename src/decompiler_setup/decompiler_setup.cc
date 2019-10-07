@@ -164,7 +164,7 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
     make_code << endl;
 
     make_code << "declutter: test.ll" << endl;
-    make_code << "	${DVAL_SCRIPT_DIR}/declutter.pl --file $< --opc " << normalizedOpcode  << endl;
+    make_code << "	${DVAL_SCRIPT_DIR}/declutter.pl --file $< --norenameintrinsics --opc " << normalizedOpcode  << endl;
     make_code << endl;
 
     make_code << "binary: test.c" << endl;
@@ -191,23 +191,18 @@ vector<string> runSetup(const Instruction instr, const string &workdir, const st
 
     Console::msg() << "Running artifacts..." << endl;
 
-    auto targetArtifact  = out + "/test.mod.ll";
+    auto targetArtifact  = out + "/test.ll";
     boost::filesystem::path dir(targetArtifact);
-    if(boost::filesystem::exists(dir)) {
-        Console::msg() << "Already Ran" << endl;
 
-        auto cmd = scriptsPath + "/specialize_template.pl   --file " +
-                   targetArtifact;
-        if(!run_command(cmd, true, &stream)) return result;
-        extractFromStream(result, *stream);
-        return result;
+    if(boost::filesystem::exists(dir) == false) {
+      if(!run_command("make -C " + out + " binary", true, &stream)) return result;
+      extractFromStream(result, *stream);
+
+      if(!run_command("make -C " + out + " mcsema", true, &stream)) return result;
+      extractFromStream(result, *stream);
+    } else {
+        Console::msg() << "McSema Already Ran" << endl;
     }
-
-    if(!run_command("make -C " + out + " binary", true, &stream)) return result;
-    extractFromStream(result, *stream);
-
-    if(!run_command("make -C " + out + " mcsema", true, &stream)) return result;
-    extractFromStream(result, *stream);
 
     if(!run_command("make -C " + out + " declutter", true, &stream)) return result;
     extractFromStream(result, *stream);
