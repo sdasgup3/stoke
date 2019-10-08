@@ -177,7 +177,8 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
 }
 
 
-vector<string> runSetup(const Instruction instr, const string &workdir, const string &scriptsPath) {
+vector<string> runSetup(const Instruction instr, const string &workdir, const string &scriptsPath,
+                        bool forceGen) {
     vector<string> result;
     redi::ipstream *stream = NULL;
 
@@ -191,24 +192,30 @@ vector<string> runSetup(const Instruction instr, const string &workdir, const st
 
     Console::msg() << "Running artifacts..." << endl;
 
-    auto targetArtifact  = out + "/test.ll";
-    boost::filesystem::path dir(targetArtifact);
+    auto mcsemaArtifact  = out + "/test.ll";
+    boost::filesystem::path dir1(mcsemaArtifact);
 
-    if(boost::filesystem::exists(dir) == false) {
-      if(!run_command("make -C " + out + " binary", true, &stream)) return result;
-      extractFromStream(result, *stream);
+    if(boost::filesystem::exists(dir1) == false) {
+        if(!run_command("make -C " + out + " binary", true, &stream)) return result;
+        extractFromStream(result, *stream);
 
-      if(!run_command("make -C " + out + " mcsema", true, &stream)) return result;
-      extractFromStream(result, *stream);
+        if(!run_command("make -C " + out + " mcsema", true, &stream)) return result;
+        extractFromStream(result, *stream);
     } else {
-        Console::msg() << "McSema Already Ran" << endl;
+        Console::msg() << "Skip McSema run ..." << endl;
     }
 
-    if(!run_command("make -C " + out + " declutter", true, &stream)) return result;
-    extractFromStream(result, *stream);
+    auto declutterArtifact  = out + "/test.mod.ll";
+    boost::filesystem::path dir2(declutterArtifact);
+    if(boost::filesystem::exists(dir2) == false || forceGen) {
+        if(!run_command("make -C " + out + " declutter", true, &stream)) return result;
+        extractFromStream(result, *stream);
+    } else {
+        Console::msg() << "Skip Declutter ..." << endl;
+    }
 
     auto cmd = scriptsPath + "/specialize_template.pl   --file " +
-               targetArtifact;
+               declutterArtifact;
     if(!run_command(cmd, true, &stream)) return result;
     extractFromStream(result, *stream);
 
