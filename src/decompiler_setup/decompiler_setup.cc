@@ -96,13 +96,14 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
 
     auto normalizedOpcode = normalize_spaces(ss_instr.str());
     auto out = workdir + "/" + normalizedOpcode;
+    boost::filesystem::path makefile(out + "/Makefile");
     boost::filesystem::path dir(out);
 
     Console::msg() << "Instr: " << instr << endl;
     Console::msg() << "Workdir: " << out << endl;
     Console::msg() << "Generating artifacts..." << endl;
 
-    if(boost::filesystem::exists(dir)) {
+    if(boost::filesystem::exists(makefile)) {
         Console::msg() << "Already Exists" << endl;
         return true;
     }
