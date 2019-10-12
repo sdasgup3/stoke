@@ -126,7 +126,7 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
     c_code.open(out + "/" + "test.c");
     c_code << "void main() {" << endl;
 
-    if(instr.is_any_jump()) {
+    if(instr.is_any_jump() || instr.is_any_call()) {
 
         std::string replaceWith = "jmp";
         boost::regex re("jmpq");
@@ -160,7 +160,7 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
     make_code << endl;
 
     make_code << "assemble: test.c" << endl;
-    make_code << "	gcc -Os $< -S -o test.s" << endl;
+    make_code << "	clang -Os $< -S -o test.s" << endl;
     make_code << "	${CLEAN_ASM} -i --file test.s" << endl;
     make_code << endl;
 
@@ -169,7 +169,7 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
     make_code << endl;
 
     make_code << "binary: test.c" << endl;
-    make_code << "	gcc -Os $< -o test" << endl;
+    make_code << "	clang -Os $< -o test" << endl;
 
     make_code.close();
     Console::msg() << "Generating artifacts... Done." << endl;
@@ -196,19 +196,21 @@ vector<string> runSetup(const Instruction instr, const string &workdir, const st
     auto mcsemaArtifact  = out + "/test.ll";
     boost::filesystem::path dir1(mcsemaArtifact);
 
+    bool mcsemaRan = false;
     if(boost::filesystem::exists(dir1) == false) {
         if(!run_command("make -C " + out + " binary", true, &stream)) return result;
         extractFromStream(result, *stream);
 
         if(!run_command("make -C " + out + " mcsema", true, &stream)) return result;
         extractFromStream(result, *stream);
+        mcsemaRan = true;
     } else {
         Console::msg() << "Skip McSema run ..." << endl;
     }
 
     auto declutterArtifact  = out + "/test.mod.ll";
     boost::filesystem::path dir2(declutterArtifact);
-    if(boost::filesystem::exists(dir2) == false || forceGen) {
+    if(boost::filesystem::exists(dir2) == false || forceGen || mcsemaRan) {
         if(!run_command("make -C " + out + " declutter", true, &stream)) return result;
         extractFromStream(result, *stream);
     } else {

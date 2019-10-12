@@ -482,6 +482,13 @@ ostream& TUnit::write_text(ostream& os) const {
   for (size_t i = 0, ie = code_.size(); i < ie; ++i) {
     col << dec << "OPC=" << code_[i].get_opcode() << endl;
   }
+  col.filter().next();
+
+  // Print opcode label
+  col << "Target" << endl;
+  for (size_t i = 0, ie = code_.size(); i < ie; ++i) {
+    col << dec << code_[i].get_target() << endl;
+  }
   col.filter().done();
 
   // Finish up
