@@ -216,7 +216,8 @@ string Disassembler::fix_instruction(const string& line) {
     } else if (is_prefix(line, "nop") || is_prefix(line, "data") || is_prefix(line, "rex.W nop")) {
         return "nop";
     } else if (is_prefix(line, "movabsq")) {
-        return "movq" + line.substr(7);
+        // DSAND: movabsq and movq gives diff sizes for gcc//clang asembler.
+        // return "movq" + line.substr(7);
     }
 
     // Append q to the end of call and jump
@@ -476,10 +477,12 @@ int Disassembler::parse_function(ipstream& ips, const string& line, FunctionCall
 
     // Parse the contents of this function
     // This function inserts missing lines such as labels and splits lock into two instructions
-    const auto lines = parse_lines(ips, name);
+    //const auto lines = parse_lines(ips, name);
+    auto lines = parse_lines(ips, name);
     stringstream ss;
 
-    for (const auto& l : lines) {
+    //for (const auto& l : lines) {
+    for (auto& l : lines) {
 
         // For each line, try encoding it in different sizes, starting with the size that's
         // found in the disassembly.  If we have to go down, then insert nops to pad it out.
@@ -493,11 +496,17 @@ int Disassembler::parse_function(ipstream& ips, const string& line, FunctionCall
             ss << "nop # SIZE=1" << endl;
             ss << "retq # SIZE=1" << endl;
         } else {
+            stringstream tagmovabsq;
+            if(is_prefix(l.instr, "movabsq")) {
+              tagmovabsq << "# ISMOVABSQ";
+              l.instr = "movq" + l.instr.substr(7);
+            }
+
             stringstream tmp;
             if(l.target == uint64_t(-1))
-                tmp << l.instr << " # SIZE=" << l.hex_bytes << endl;
+                tmp << l.instr << " # SIZE=" << l.hex_bytes << tagmovabsq.str() << endl;
             else
-                tmp << l.instr << " # SIZE=" << l.hex_bytes << " # TARGET=" << l.target << endl;
+                tmp << l.instr << " # SIZE=" << l.hex_bytes << " # TARGET=" << l.target << tagmovabsq.str() << endl;
 
             Code c;
             tmp >> c;
@@ -505,9 +514,9 @@ int Disassembler::parse_function(ipstream& ips, const string& line, FunctionCall
                 fail(ss) << "Could not encode '" << l.instr << "' within " << l.hex_bytes << " bytes." << endl;
             } else {
                 if(l.target == uint64_t(-1))
-                    ss << l.instr << " # SIZE=" << l.hex_bytes << endl;
+                    ss << l.instr << " # SIZE=" << l.hex_bytes << tagmovabsq.str() << endl;
                 else
-                    ss << l.instr << " # SIZE=" << l.hex_bytes << " # TARGET=" << l.target << endl;
+                    ss << l.instr << " # SIZE=" << l.hex_bytes << " # TARGET=" << l.target << tagmovabsq.str() << endl;
             }
         }
     }

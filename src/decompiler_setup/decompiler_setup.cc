@@ -136,7 +136,11 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
         auto lbl = instr.get_operand<Label>(0);
         c_code << "  __asm__(\"" << lbl << ":\");" << endl;
     } else {
-        c_code << "  __asm__(\"" << instr << "\");" << endl;
+        if(instr.is_movabsq()) {
+          c_code << "  __asm__(\"" << "movabsq" << ss_instr.str().substr(4) << "\");" << endl;
+        } else {
+          c_code << "  __asm__(\"" << instr << "\");" << endl;
+        }
     }
 
     c_code << "}" << endl;
