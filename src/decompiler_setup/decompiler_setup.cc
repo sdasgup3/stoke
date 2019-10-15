@@ -221,8 +221,9 @@ vector<string> runSetup(const Instruction instr, const string &workdir, const st
         Console::msg() << "Skip Declutter ..." << endl;
     }
 
-    auto cmd = scriptsPath + "/specialize_template.pl   --file " +
-               declutterArtifact;
+    // auto cmd = scriptsPath + "/specialize_template.pl   --file " +
+    //            declutterArtifact;
+    auto cmd = "cat " + declutterArtifact;
     if(!run_command(cmd, true, &stream)) return result;
     extractFromStream(result, *stream);
 
