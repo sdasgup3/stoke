@@ -34,7 +34,7 @@ namespace stoke {
 bool createSetup(const Instruction instr, const string &workdir, const string &scriptsPath);
 vector<string> runSetup(const Instruction instr, const string &workdir, const string &scriptsPath,
     bool forceGen = false);
-vector<string> &extractFromStream(vector<string> &ss, redi::ipstream &ips);
+vector<string> &extractFromStream(vector<string> &ss, redi::ipstream &ips, bool show_cmd_out = true);
 bool run_command(const string &cmd, bool ret_stream = false,
                  redi::ipstream **retval = NULL);
 string normalize_spaces(const string &str);

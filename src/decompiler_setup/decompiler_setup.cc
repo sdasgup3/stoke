@@ -34,15 +34,15 @@ using namespace boost;
 
 namespace stoke {
 
-vector<string> &extractFromStream(vector<string> &ss, redi::ipstream &ips) {
+vector<string> &extractFromStream(vector<string> &ss, redi::ipstream &ips, bool show_cmd_out) {
     string line;
     ss.clear();
 
     while (getline(ips, line)) {
-#ifdef DS_DEBUG
+      if(show_cmd_out) {
         Console::msg() << line << "\n";
-#endif
-        ss.push_back(line);
+      }
+      ss.push_back(line);
     }
     return ss;
 }
@@ -225,7 +225,7 @@ vector<string> runSetup(const Instruction instr, const string &workdir, const st
     //            declutterArtifact;
     auto cmd = "cat " + declutterArtifact;
     if(!run_command(cmd, true, &stream)) return result;
-    extractFromStream(result, *stream);
+    extractFromStream(result, *stream, false);
 
     Console::msg() << "Running artifacts...Done." << endl;
 
