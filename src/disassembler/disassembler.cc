@@ -547,7 +547,7 @@ int Disassembler::parse_function(ipstream& ips, const string& line, FunctionCall
     return 1;
 }
 
-void Disassembler::disassemble(const std::string& filename) {
+void Disassembler::disassemble(const std::string& filename, const std::string& funcname) {
     // We're starting out fresh, so reset the error tracker
     clear_error();
 
@@ -587,6 +587,15 @@ void Disassembler::disassemble(const std::string& filename) {
         // Skip lines until we find a function name
         if (line[0] == '0' && line.find_first_of('<') != line.npos && line.find_first_of('>') != line.npos) {
             // we found a function!
+
+            if(funcname != "") {
+              // Get the name of the function
+              const auto begin = line.find_first_of('<') + 1;
+              const auto len = line.find_last_of('>') - begin;
+              string name = mangle_lable(line.substr(begin, len));
+              if(name != funcname) continue;
+            }
+
             retval = parse_function(*body, line, data, text_offset);
             if (retval == 1) {
                 if (!callback_closure_) {

@@ -24,7 +24,6 @@
 #include "src/ext/cpputil/include/system/terminal.h"
 #include "src/decompiler_setup/decompiler_setup.h"
 #include <boost/filesystem.hpp>
-#include <boost/regex.hpp>
 
 using namespace std;
 using namespace stoke;
@@ -50,7 +49,7 @@ vector<string> &extractFromStream(vector<string> &ss, redi::ipstream &ips, bool 
 string normalize_spaces(const string &str) {
     string retval("");
     for(auto c: str) {
-        if(c == ' ' || c == '(' || c == ')' || c == ',' || c == '$' || c == '%') {
+        if(c == ' ' || c == '(' || c == ')' || c == ',' || c == '$' || c == '%' || c == ':') {
             retval += "_";
         } else if(c == '-') {
             retval += "MINUS";
@@ -75,6 +74,9 @@ bool run_command(const string &cmd, bool ret_stream,
         delete stream;
         return false;
     }
+
+    // DSAND TO DO:
+    // Optain the exit status of the pstream and report accordingly
 
     if (!ret_stream) {
         delete stream;
@@ -129,8 +131,8 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
     if(instr.is_any_jump() || instr.is_any_call()) {
 
         std::string replaceWith = "jmp";
-        boost::regex re("jmpq");
-        std::string result = boost::regex_replace(ss_instr.str(), re, replaceWith);
+        std::regex re("jmpq");
+        std::string result = std::regex_replace(ss_instr.str(), re, replaceWith);
         c_code << "  __asm__(\"" << result << "\");" << endl;
 
         auto lbl = instr.get_operand<Label>(0);

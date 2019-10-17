@@ -66,7 +66,7 @@ public:
     }
 
     /** Disassembles a file and invokes the function callback for each result. */
-    void disassemble(const std::string& filename);
+    void disassemble(const std::string& filename, const std::string& funcname = "");
 
 private:
     /** Tracks if an error occurred. */
