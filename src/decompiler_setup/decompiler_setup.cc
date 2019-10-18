@@ -38,10 +38,10 @@ vector<string> &extractFromStream(vector<string> &ss, redi::ipstream &ips, bool 
     ss.clear();
 
     while (getline(ips, line)) {
-      if(show_cmd_out) {
-        Console::msg() << line << "\n";
-      }
-      ss.push_back(line);
+        if(show_cmd_out) {
+            Console::msg() << line << "\n";
+        }
+        ss.push_back(line);
     }
     return ss;
 }
@@ -103,7 +103,7 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
 
     Console::msg() << "Instr: " << instr << endl;
     Console::msg() << "Workdir: " << out << endl;
-    Console::msg() << "Generating artifacts..." << endl;
+    Console::msg() << "Running artifacts..." << endl;
 
     if(boost::filesystem::exists(makefile)) {
         Console::msg() << "Already Exists" << endl;
@@ -139,9 +139,9 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
         c_code << "  __asm__(\"" << lbl << ":\");" << endl;
     } else {
         if(instr.is_movabsq()) {
-          c_code << "  __asm__(\"" << "movabsq" << ss_instr.str().substr(4) << "\");" << endl;
+            c_code << "  __asm__(\"" << "movabsq" << ss_instr.str().substr(4) << "\");" << endl;
         } else {
-          c_code << "  __asm__(\"" << instr << "\");" << endl;
+            c_code << "  __asm__(\"" << instr << "\");" << endl;
         }
     }
 
@@ -178,11 +178,10 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
     make_code << "	clang -Os $< -o test" << endl;
 
     make_code.close();
-    Console::msg() << "Generating artifacts... Done." << endl;
+    Console::msg() << "Running artifacts... Done." << endl;
 
     return true;
 }
-
 
 vector<string> runSetup(const Instruction instr, const string &workdir, const string &scriptsPath,
                         bool forceGen) {
@@ -199,39 +198,115 @@ vector<string> runSetup(const Instruction instr, const string &workdir, const st
 
     Console::msg() << "Running artifacts..." << endl;
 
+    // Binary Artifacts
+    auto cmdBinary = "make -C " + out + " binary";
+
+    // Mcsema Artifacts
     auto mcsemaArtifact  = out + "/test.ll";
     boost::filesystem::path dir1(mcsemaArtifact);
+    bool ifMcsemaOutputAvail = boost::filesystem::exists(dir1);
+    auto cmdMcsema = "make -C " + out + " mcsema";
 
-    bool mcsemaRan = false;
-    if(boost::filesystem::exists(dir1) == false) {
-        if(!run_command("make -C " + out + " binary", true, &stream)) return result;
-        extractFromStream(result, *stream);
-
-        if(!run_command("make -C " + out + " mcsema", true, &stream)) return result;
-        extractFromStream(result, *stream);
-        mcsemaRan = true;
-    } else {
-        Console::msg() << "Skip McSema run ..." << endl;
-    }
-
+    // Declutter Artifacts
     auto declutterArtifact  = out + "/test.mod.ll";
     boost::filesystem::path dir2(declutterArtifact);
-    if(boost::filesystem::exists(dir2) == false || forceGen || mcsemaRan) {
-        if(!run_command("make -C " + out + " declutter", true, &stream)) return result;
-        extractFromStream(result, *stream);
-    } else {
-        Console::msg() << "Skip Declutter ..." << endl;
+    bool ifDeclutterOutputAvail = boost::filesystem::exists(dir2);
+    auto cmdDeclutter = "make -C " + out + " declutter";
+
+    // Cat Artifacts
+    auto cmdCat = "cat " + declutterArtifact;
+
+    // If test.mod.ll is present, then use it
+    if(ifDeclutterOutputAvail) {
+        if(!run_command(cmdCat, true, &stream)) return result;
+        extractFromStream(result, *stream, false);
+        Console::msg() << "Reusing Declutter Output: " << declutterArtifact << endl;
+
+        return result;
     }
 
-    // auto cmd = scriptsPath + "/specialize_template.pl   --file " +
-    //            declutterArtifact;
-    auto cmd = "cat " + declutterArtifact;
-    if(!run_command(cmd, true, &stream)) return result;
+    // If test.mod.ll is absent, but test.ll is present,
+    // then generate test.mod.ll
+    if(ifMcsemaOutputAvail) {
+        if(!run_command(cmdDeclutter, true, &stream)) return result;
+        extractFromStream(result, *stream);
+
+        if(!run_command(cmdCat, true, &stream)) return result;
+        extractFromStream(result, *stream, false);
+
+        Console::msg() << "Reusing " <<  mcsemaArtifact  << endl;
+        Console::msg() << "Generating Declutter Output: " << declutterArtifact << endl;
+
+        return result;
+    }
+
+    if(!run_command(cmdBinary, true, &stream)) return result;
+    extractFromStream(result, *stream);
+
+    if(!run_command(cmdMcsema, true, &stream)) return result;
+    extractFromStream(result, *stream);
+
+    if(!run_command(cmdDeclutter, true, &stream)) return result;
+    extractFromStream(result, *stream);
+
+    if(!run_command(cmdCat, true, &stream)) return result;
     extractFromStream(result, *stream, false);
+
+    Console::msg() << "Generating Binary -> McSema -> Declutter: " << declutterArtifact << endl;
 
     Console::msg() << "Running artifacts...Done." << endl;
 
     return result;
 }
+
+//vector<string> runSetup(const Instruction instr, const string &workdir, const string &scriptsPath,
+//                        bool forceGen) {
+//    vector<string> result;
+//    redi::ipstream *stream = NULL;
+//
+//    if(workdir == "") return result;
+//
+//    stringstream ss_instr;
+//    ss_instr << instr;
+//
+//    auto normalizedOpcode = normalize_spaces(ss_instr.str());
+//    auto out = workdir + "/" + normalizedOpcode;
+//
+//    Console::msg() << "Running artifacts..." << endl;
+//
+//    auto mcsemaArtifact  = out + "/test.ll";
+//    boost::filesystem::path dir1(mcsemaArtifact);
+//
+//    bool mcsemaRan = false;
+//    if(boost::filesystem::exists(dir1) == false) {
+//        if(!run_command("make -C " + out + " binary", true, &stream)) return result;
+//        extractFromStream(result, *stream);
+//
+//        if(!run_command("make -C " + out + " mcsema", true, &stream)) return result;
+//        extractFromStream(result, *stream);
+//        mcsemaRan = true;
+//    } else {
+//        Console::msg() << "Skip McSema run ..." << endl;
+//    }
+//
+//    auto declutterArtifact  = out + "/test.mod.ll";
+//    boost::filesystem::path dir2(declutterArtifact);
+//    if(boost::filesystem::exists(dir2) == false || forceGen || mcsemaRan) {
+//        if(!run_command("make -C " + out + " declutter", true, &stream)) return result;
+//        extractFromStream(result, *stream);
+//    } else {
+//        Console::msg() << "Skip Declutter ..." << endl;
+//    }
+//
+//    // auto cmd = scriptsPath + "/specialize_template.pl   --file " +
+//    //            declutterArtifact;
+//    auto cmd = "cat " + declutterArtifact;
+//    if(!run_command(cmd, true, &stream)) return result;
+//    extractFromStream(result, *stream, false);
+//
+//    Console::msg() << "Running artifacts...Done." << endl;
+//
+//    return result;
+//}
 
 } // namespace stoke

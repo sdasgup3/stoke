@@ -592,7 +592,7 @@ void Disassembler::disassemble(const std::string& filename, const std::string& f
               // Get the name of the function
               const auto begin = line.find_first_of('<') + 1;
               const auto len = line.find_last_of('>') - begin;
-              string name = mangle_lable(line.substr(begin, len));
+              string name = line.substr(begin, len);
               if(name != funcname) continue;
             }
 
