@@ -81,7 +81,7 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    string scriptsPath("/home/sdasgup3/Github/validating-binary-decompilation/"
+    string scriptsPath("${HOME}/Github/validating-binary-decompilation/"
                        "single_instruction_translation_validation/scripts/");
     if(!createSetup(code[0], workdir_arg.value(), scriptsPath)) {
         exit(1);

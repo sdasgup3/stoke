@@ -103,10 +103,11 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
 
     Console::msg() << "Instr: " << instr << endl;
     Console::msg() << "Workdir: " << out << endl;
-    Console::msg() << "Running artifacts..." << endl;
+    Console::msg() << "Creating artifacts..." << endl;
 
     if(boost::filesystem::exists(makefile)) {
         Console::msg() << "Already Exists" << endl;
+        Console::msg() << "Creating artifacts... Done." << endl;
         return true;
     }
 
@@ -178,7 +179,7 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
     make_code << "	clang -Os $< -o test" << endl;
 
     make_code.close();
-    Console::msg() << "Running artifacts... Done." << endl;
+    Console::msg() << "Creating artifacts... Done." << endl << endl;
 
     return true;
 }
@@ -218,43 +219,54 @@ vector<string> runSetup(const Instruction instr, const string &workdir, const st
 
     // If test.mod.ll is present, then use it
     if(ifDeclutterOutputAvail) {
+        Console::msg() << "Reusing Declutter Output..." << endl;
+
         if(!run_command(cmdCat, true, &stream)) return result;
         extractFromStream(result, *stream, false);
-        Console::msg() << "Reusing Declutter Output: " << declutterArtifact << endl;
+        delete stream;
 
+        Console::msg() << "Running artifacts...Done." << endl << endl;
         return result;
     }
 
     // If test.mod.ll is absent, but test.ll is present,
     // then generate test.mod.ll
     if(ifMcsemaOutputAvail) {
+        Console::msg() << "Reusing " <<  mcsemaArtifact  << endl;
+        Console::msg() << "Generating Declutter Output: " << declutterArtifact << endl << endl;
+
         if(!run_command(cmdDeclutter, true, &stream)) return result;
         extractFromStream(result, *stream);
+        delete stream;
 
         if(!run_command(cmdCat, true, &stream)) return result;
         extractFromStream(result, *stream, false);
+        delete stream;
 
-        Console::msg() << "Reusing " <<  mcsemaArtifact  << endl;
-        Console::msg() << "Generating Declutter Output: " << declutterArtifact << endl;
-
+        Console::msg() << "Running artifacts...Done." << endl << endl;
         return result;
     }
 
+    Console::msg() << "Generating Binary -> McSema -> Declutter -> Cat: " << declutterArtifact << endl << endl;
+
     if(!run_command(cmdBinary, true, &stream)) return result;
     extractFromStream(result, *stream);
+    delete stream;
 
     if(!run_command(cmdMcsema, true, &stream)) return result;
     extractFromStream(result, *stream);
+    delete stream;
 
     if(!run_command(cmdDeclutter, true, &stream)) return result;
     extractFromStream(result, *stream);
+    delete stream;
 
     if(!run_command(cmdCat, true, &stream)) return result;
     extractFromStream(result, *stream, false);
+    delete stream;
 
-    Console::msg() << "Generating Binary -> McSema -> Declutter: " << declutterArtifact << endl;
 
-    Console::msg() << "Running artifacts...Done." << endl;
+    Console::msg() << "Running artifacts...Done." << endl << endl;
 
     return result;
 }
