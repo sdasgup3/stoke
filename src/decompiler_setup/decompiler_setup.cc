@@ -172,7 +172,7 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
     make_code << endl;
 
     make_code << "declutter: test.ll" << endl;
-    make_code << "	${DVAL_SCRIPT_DIR}/declutter.pl --file $< --norenameintrinsics --opc " << normalizedOpcode  << endl;
+    make_code << "	${DVAL_SCRIPT_DIR}/declutter.pl --file $< --programiv --opc " << normalizedOpcode  << endl;
     make_code << endl;
 
     make_code << "binary: test.c" << endl;
