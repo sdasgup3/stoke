@@ -33,13 +33,22 @@ using namespace boost;
 
 namespace stoke {
 
-vector<string> &extractFromStream(vector<string> &ss, redi::ipstream &ips, bool show_cmd_out) {
+/*
+monitor_error: Monitor the error by searcing error tokens in the stdout output.
+The stdout output is captured in ips by execting a command by run_command.
+Make sure to redirect the std_error on the command to stdout.
+*/
+vector<string> &extractFromStream(vector<string> &ss, redi::ipstream &ips, bool show_cmd_out, bool monitor_error) {
     string line;
     ss.clear();
 
+    smatch sm;
     while (getline(ips, line)) {
         if(show_cmd_out) {
             Console::msg() << line << "\n";
+        }
+        if(monitor_error && regex_search(line, sm, regex("error|Error"))) {
+          exit(1);
         }
         ss.push_back(line);
     }
@@ -222,7 +231,7 @@ vector<string> runSetup(const Instruction instr, const string &workdir, const st
         Console::msg() << "Reusing Declutter Output..." << endl;
 
         if(!run_command(cmdCat, true, &stream)) return result;
-        extractFromStream(result, *stream, false);
+        extractFromStream(result, *stream, false, false);
         delete stream;
 
         Console::msg() << "Running artifacts...Done." << endl << endl;
@@ -236,11 +245,11 @@ vector<string> runSetup(const Instruction instr, const string &workdir, const st
         Console::msg() << "Generating Declutter Output: " << declutterArtifact << endl << endl;
 
         if(!run_command(cmdDeclutter, true, &stream)) return result;
-        extractFromStream(result, *stream);
+        extractFromStream(result, *stream, true, true);
         delete stream;
 
         if(!run_command(cmdCat, true, &stream)) return result;
-        extractFromStream(result, *stream, false);
+        extractFromStream(result, *stream, false, false);
         delete stream;
 
         Console::msg() << "Running artifacts...Done." << endl << endl;
@@ -250,19 +259,19 @@ vector<string> runSetup(const Instruction instr, const string &workdir, const st
     Console::msg() << "Generating Binary -> McSema -> Declutter -> Cat: " << declutterArtifact << endl << endl;
 
     if(!run_command(cmdBinary, true, &stream)) return result;
-    extractFromStream(result, *stream);
+    extractFromStream(result, *stream, true, true);
     delete stream;
 
     if(!run_command(cmdMcsema, true, &stream)) return result;
-    extractFromStream(result, *stream);
+    extractFromStream(result, *stream, true, true);
     delete stream;
 
     if(!run_command(cmdDeclutter, true, &stream)) return result;
-    extractFromStream(result, *stream);
+    extractFromStream(result, *stream, true, true);
     delete stream;
 
     if(!run_command(cmdCat, true, &stream)) return result;
-    extractFromStream(result, *stream, false);
+    extractFromStream(result, *stream, false, false);
     delete stream;
 
 
