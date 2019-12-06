@@ -31,7 +31,7 @@ using namespace x64asm;
 
 namespace stoke {
 
-bool createSetup(const Instruction instr, const string &workdir, const string &scriptsPath);
+bool createSetup(const Instruction instr, const string &workdir, const string &scriptsPath, bool force_artifact_gen);
 vector<string> runSetup(const Instruction instr, const string &workdir, const string &scriptsPath,
     bool forceGen = false);
 vector<string> &extractFromStream(vector<string> &ss, redi::ipstream &ips, bool show_cmd_out = true, bool monitor_error = false);

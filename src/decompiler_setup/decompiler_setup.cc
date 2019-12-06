@@ -99,7 +99,7 @@ bool run_command(const string &cmd, bool ret_stream,
 //
 // ./bin/decompiler_setup_driver --workdir ~/Junk/ --code "addq %rax, %rbx"
 //
-bool createSetup(const Instruction instr, const string &workdir, const string &scriptsPath) {
+bool createSetup(const Instruction instr, const string &workdir, const string &scriptsPath, bool force_artifact_gen) {
     if(workdir == "") return false;
 
     stringstream ss_instr;
@@ -114,7 +114,7 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
     Console::msg() << "Workdir: " << out << endl;
     Console::msg() << "Creating artifacts..." << endl;
 
-    if(boost::filesystem::exists(makefile)) {
+    if(!force_artifact_gen && boost::filesystem::exists(makefile)) {
         Console::msg() << "Already Exists" << endl;
         Console::msg() << "Creating artifacts... Done." << endl;
         return true;
@@ -185,7 +185,7 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
     make_code << endl;
 
     make_code << "binary: test.c" << endl;
-    make_code << "	clang -Os $< -o test" << endl;
+    make_code << "	/usr/bin/clang-6.0 -Os $< -o test" << endl;
 
     make_code.close();
     Console::msg() << "Creating artifacts... Done." << endl << endl;
@@ -194,7 +194,7 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
 }
 
 vector<string> runSetup(const Instruction instr, const string &workdir, const string &scriptsPath,
-                        bool forceGen) {
+                        bool force_artifact_gen) {
     vector<string> result;
     redi::ipstream *stream = NULL;
 
@@ -236,6 +236,11 @@ vector<string> runSetup(const Instruction instr, const string &workdir, const st
 
         Console::msg() << "Running artifacts...Done." << endl << endl;
         return result;
+    }
+
+    if(force_artifact_gen) {
+      ifMcsemaOutputAvail = false;
+      ifDeclutterOutputAvail = false;
     }
 
     // If test.mod.ll is absent, but test.ll is present,

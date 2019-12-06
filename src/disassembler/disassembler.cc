@@ -456,13 +456,26 @@ vector<Disassembler::LineInfo> Disassembler::parse_lines(ipstream& ips, const st
         }
         result.push_back({l.offset, l.hex_bytes, fix_instruction(l.instr), l.target});
 
-        // DSAND: Dont consider instructions beyond ret
-        if(is_prefix(l.instr, "ret")) {
-          break;
-        }
     }
 
-    return result;
+    // DSAND: Remove trailing nops
+    vector<LineInfo> resultFinal;
+    int lastNonNOPInstrIdx = result.size() - 1;
+    for(; lastNonNOPInstrIdx >= 0 ; lastNonNOPInstrIdx--) {
+      // if(result[lastNonNOPInstrIdx].instr != "nop") break;
+      if(is_prefix(result[lastNonNOPInstrIdx].instr, "ret")) break;
+      if(is_prefix(result[lastNonNOPInstrIdx].instr, "jmp")) break;
+      if(is_prefix(result[lastNonNOPInstrIdx].instr, "call")) break;
+    }
+
+    for(int i = 0 ; i <= lastNonNOPInstrIdx ; i++) {
+      resultFinal.push_back(result[i]);
+    }
+    //if(is_prefix(l.instr, "ret")) {
+    //  break;
+    //}
+
+    return resultFinal;
 }
 
 int Disassembler::parse_function(ipstream& ips, const string& line, FunctionCallbackData& data, uint64_t text_offset) {
