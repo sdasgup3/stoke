@@ -114,7 +114,8 @@ bool createSetup(const Instruction instr, const string &workdir, const string &s
     Console::msg() << "Workdir: " << out << endl;
     Console::msg() << "Creating artifacts..." << endl;
 
-    if(!force_artifact_gen && boost::filesystem::exists(makefile)) {
+    // if(!force_artifact_gen && boost::filesystem::exists(makefile)) {
+    if(boost::filesystem::exists(makefile)) {
         Console::msg() << "Already Exists" << endl;
         Console::msg() << "Creating artifacts... Done." << endl;
         return true;
@@ -226,6 +227,13 @@ vector<string> runSetup(const Instruction instr, const string &workdir, const st
     // Cat Artifacts
     auto cmdCat = "cat " + declutterArtifact;
 
+    // If force_artifact_gen is enabled, regenerate all artifacts even if
+    // available.
+    // if(force_artifact_gen) {
+    //   ifMcsemaOutputAvail = false;
+    //   ifDeclutterOutputAvail = false;
+    // }
+
     // If test.mod.ll is present, then use it
     if(ifDeclutterOutputAvail) {
         Console::msg() << "Reusing Declutter Output..." << endl;
@@ -236,11 +244,6 @@ vector<string> runSetup(const Instruction instr, const string &workdir, const st
 
         Console::msg() << "Running artifacts...Done." << endl << endl;
         return result;
-    }
-
-    if(force_artifact_gen) {
-      ifMcsemaOutputAvail = false;
-      ifDeclutterOutputAvail = false;
     }
 
     // If test.mod.ll is absent, but test.ll is present,
